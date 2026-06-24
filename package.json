@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "",
+    "build": "turbo run build",
     "dev": "",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
@@ -17,6 +17,7 @@
     "oxfmt": "^0.56.0",
     "oxlint": "^1.71.0",
     "react": "^18.2.0",
+    "turbo": "^2.9.18",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
