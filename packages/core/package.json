@@ -1,6 +1,5 @@
 {
   "name": "@svgr2/core",
-  "type": "module",
   "description": "Transform SVG into React Components.",
   "version": "0.1.0",
   "main": "./dist/index.js",
@@ -40,6 +39,7 @@
     "snake-case": "^3.0.4"
   },
   "devDependencies": {
+    "@types/prettier": "^3.0.0",
     "svgo": "^3.0.2",
     "tsdown": "catalog:",
     "vitest": "catalog:"

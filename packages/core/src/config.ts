@@ -3,8 +3,8 @@ import type { Options as PrettierOptions } from 'prettier';
 import type { Config as SvgoConfig } from 'svgo';
 import type { Options as TransformOptions } from '@svgr2/babel-preset';
 import type { TransformOptions as BabelTransformOptions } from '@babel/core';
-import type { ConfigPlugin } from './plugins.js';
-import type { State } from './state.js';
+import type { ConfigPlugin } from './plugins';
+import type { State } from './state';
 
 export interface Config {
   ref?: boolean;

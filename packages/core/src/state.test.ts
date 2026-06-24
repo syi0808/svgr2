@@ -1,4 +1,4 @@
-import { expandState } from './state.js';
+import { expandState } from './state';
 
 describe('state', () => {
   describe('#expandState', () => {

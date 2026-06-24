@@ -1,6 +1,6 @@
-import type { Config } from './config.js';
-import type { State } from './state.js';
-import { transform } from './transform.js';
+import type { Config } from './config';
+import type { State } from './state';
+import { transform } from './transform';
 
 function convertWithAllPlugins(
   code: string,

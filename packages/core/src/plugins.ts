@@ -1,5 +1,5 @@
-import { Config } from './config.js';
-import type { State } from './state.js';
+import { Config } from './config';
+import type { State } from './state';
 
 export interface Plugin {
   (code: string, config: Config, state: State): string;

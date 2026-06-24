@@ -179,6 +179,9 @@ importers:
         specifier: ^3.0.4
         version: 3.0.4
     devDependencies:
+      '@types/prettier':
+        specifier: ^3.0.0
+        version: 3.0.0
       svgo:
         specifier: ^3.0.2
         version: 3.3.3
@@ -1342,6 +1345,10 @@ packages:
 
   '@types/node@26.0.0':
     resolution: {integrity: sha512-vf2YFi1iY9lHGwNJMs01biZFbKJkrZR1T6/MlzjhJLPdntOHLhTrDSnSVcdtvjihi4VQNlrFRIxLsDBlQpAipA==}
+
+  '@types/prettier@3.0.0':
+    resolution: {integrity: sha512-mFMBfMOz8QxhYVbuINtswBp9VL2b4Y0QqYHwqLz3YbgtfAcat2Dl6Y1o4e22S/OVE6Ebl9m7wWiMT2lSbAs1wA==}
+    deprecated: This is a stub types definition. prettier provides its own type definitions, so you do not need this installed.
 
   '@types/svg-parser@2.0.6':
     resolution: {integrity: sha512-xrXwOltwMcLrKy79rv4MoalnD82oYLyXAVeeSyrkvR7XdCH4i7YqLNQWxyZ8KPpawtQShiKOse+pmtLeSLtCfQ==}
@@ -3739,6 +3746,10 @@ snapshots:
   '@types/node@26.0.0':
     dependencies:
       undici-types: 8.3.0
+
+  '@types/prettier@3.0.0':
+    dependencies:
+      prettier: 2.8.8
 
   '@types/svg-parser@2.0.6': {}
 
