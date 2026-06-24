@@ -1,10 +1,10 @@
 import { parse } from 'svg-parser'
-import hastToBabelAst from '@svgr/hast-util-to-babel-ast'
+import hastToBabelAst from '@svgr2/hast-util-to-babel-ast'
 import { transformFromAstSync, createConfigItem } from '@babel/core'
 import svgrBabelPreset, {
   Options as SvgrPresetOptions,
-} from '@svgr/babel-preset'
-import type { Plugin, Config } from '@svgr/core'
+} from '@svgr2/babel-preset'
+import type { Plugin, Config } from '@svgr2/core'
 
 const getJsxRuntimeOptions = (config: Config): Partial<SvgrPresetOptions> => {
   if (config.jsxRuntimeImport) {

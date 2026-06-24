@@ -1,4 +1,4 @@
-import jsx from '@svgr/plugin-jsx';
+import jsx from '@svgr2/plugin-jsx';
 import { getPlugins, resolvePlugin } from './plugins.js';
 import type { State } from './state.js';
 import type { Config } from './config.js';

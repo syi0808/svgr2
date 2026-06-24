@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import { promises as fs } from 'fs'
 import { red } from 'chalk'
-import { transform, Config, State } from '@svgr/core'
-import svgo from '@svgr/plugin-svgo'
-import jsx from '@svgr/plugin-jsx'
-import prettier from '@svgr/plugin-prettier'
+import { transform, Config, State } from '@svgr2/core'
+import svgo from '@svgr2/plugin-svgo'
+import jsx from '@svgr2/plugin-jsx'
+import prettier from '@svgr2/plugin-prettier'
 // @ts-ignore
 import camelCase from 'camelcase'
 // @ts-ignore

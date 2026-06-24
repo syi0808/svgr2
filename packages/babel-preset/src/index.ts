@@ -2,18 +2,18 @@
 import { ConfigAPI } from '@babel/core'
 import addJSXAttribute, {
   Attribute,
-} from '@svgr/babel-plugin-add-jsx-attribute'
-import removeJSXAttribute from '@svgr/babel-plugin-remove-jsx-attribute'
-import removeJSXEmptyExpression from '@svgr/babel-plugin-remove-jsx-empty-expression'
+} from '@svgr2/babel-plugin-add-jsx-attribute'
+import removeJSXAttribute from '@svgr2/babel-plugin-remove-jsx-attribute'
+import removeJSXEmptyExpression from '@svgr2/babel-plugin-remove-jsx-empty-expression'
 import replaceJSXAttributeValue, {
   Value,
-} from '@svgr/babel-plugin-replace-jsx-attribute-value'
-import svgDynamicTitle from '@svgr/babel-plugin-svg-dynamic-title'
-import svgEmDimensions from '@svgr/babel-plugin-svg-em-dimensions'
-import transformReactNativeSVG from '@svgr/babel-plugin-transform-react-native-svg'
+} from '@svgr2/babel-plugin-replace-jsx-attribute-value'
+import svgDynamicTitle from '@svgr2/babel-plugin-svg-dynamic-title'
+import svgEmDimensions from '@svgr2/babel-plugin-svg-em-dimensions'
+import transformReactNativeSVG from '@svgr2/babel-plugin-transform-react-native-svg'
 import transformSvgComponent, {
   Options as TransformOptions,
-} from '@svgr/babel-plugin-transform-svg-component'
+} from '@svgr2/babel-plugin-transform-svg-component'
 
 export interface Options extends TransformOptions {
   ref?: boolean

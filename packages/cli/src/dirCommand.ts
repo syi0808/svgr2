@@ -2,7 +2,7 @@
 import { promises as fs } from 'fs'
 import * as path from 'path'
 import { grey, white } from 'chalk'
-import { loadConfig, Config } from '@svgr/core'
+import { loadConfig, Config } from '@svgr2/core'
 import { format, resolveConfig } from 'prettier'
 import {
   convertFile,

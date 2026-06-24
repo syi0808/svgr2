@@ -24,7 +24,7 @@ yarn add --dev @svgr/rollup
 **rollup.config.js**
 
 ```js
-import svgr from '@svgr/rollup'
+import svgr from '@svgr2/rollup'
 
 export default {
   plugins: [svgr()],
@@ -55,7 +55,7 @@ SVGR let you specify options in a runtime config file like `svgr.config.js` or d
 **rollup.config.js**
 
 ```js
-import svgr from '@svgr/rollup'
+import svgr from '@svgr2/rollup'
 
 export default {
   plugins: [svgr({ icon: true })],
@@ -77,7 +77,7 @@ It is possible to use it with [`@rollup/plugin-url`](https://github.com/rollup/p
 
 ```js
 import url from '@rollup/plugin-url'
-import svgr from '@svgr/rollup'
+import svgr from '@svgr2/rollup'
 
 export default {
   plugins: [url(), svgr({ icon: true })],

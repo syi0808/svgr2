@@ -1,7 +1,7 @@
 import { format, resolveConfig } from 'prettier'
 // @ts-ignore
 import deepmerge from 'deepmerge'
-import type { Plugin } from '@svgr/core'
+import type { Plugin } from '@svgr2/core'
 
 const prettierPlugin: Plugin = (code, config, state) => {
   if (!config.prettier) return code

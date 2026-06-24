@@ -13,7 +13,7 @@ npm install @svgr/core
 ## Usage
 
 ```js
-import { transform } from '@svgr/core';
+import { transform } from '@svgr2/core';
 
 const svgCode = `
 <svg xmlns="http://www.w3.org/2000/svg"

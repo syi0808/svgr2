@@ -1,9 +1,9 @@
 import { callbackify } from 'util'
 import { transformAsync, createConfigItem } from '@babel/core'
-import { transform, Config, State } from '@svgr/core'
+import { transform, Config, State } from '@svgr2/core'
 import { normalize } from 'path'
-import svgo from '@svgr/plugin-svgo'
-import jsx from '@svgr/plugin-jsx'
+import svgo from '@svgr2/plugin-svgo'
+import jsx from '@svgr2/plugin-jsx'
 // @ts-ignore
 import presetReact from '@babel/preset-react'
 // @ts-ignore

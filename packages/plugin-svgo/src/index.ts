@@ -1,6 +1,6 @@
 import { optimize } from 'svgo'
 import { getSvgoConfig } from './config'
-import type { Plugin } from '@svgr/core'
+import type { Plugin } from '@svgr2/core'
 
 const svgoPlugin: Plugin = (code, config, state) => {
   if (!config.svgo) return code

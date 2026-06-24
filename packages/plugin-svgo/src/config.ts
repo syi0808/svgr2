@@ -1,5 +1,5 @@
 import { cosmiconfigSync } from 'cosmiconfig'
-import type { Config, State } from '@svgr/core'
+import type { Config, State } from '@svgr2/core'
 
 const explorer = cosmiconfigSync('svgo', {
   searchPlaces: [

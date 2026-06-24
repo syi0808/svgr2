@@ -28,7 +28,7 @@ Import `transform` from `@svgr/core` to transform a file. It takes three argumen
 - `state`: a state linked to the transformation
 
 ```js
-import { transform } from '@svgr/core'
+import { transform } from '@svgr2/core'
 
 const svgCode = `
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,7 @@ npm install @svgr/plugin-jsx @svgr/plugin-prettier
 ```
 
 ```js
-import { transform } from '@svgr/core'
+import { transform } from '@svgr2/core'
 
 const svgCode = `
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +90,7 @@ const jsCode = await transform(
 SVGR provides two API, an asynchronous one and a synchronous one. It is recommended to use the asynchronous one as possible, but sometimes you may have to use the synchronous one. SVGR exposes `transform.sync` for synchronous usage.
 
 ```js
-import { transform } from '@svgr/core'
+import { transform } from '@svgr2/core'
 
 const svgCode = `
 <svg xmlns="http://www.w3.org/2000/svg"
