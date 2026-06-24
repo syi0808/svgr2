@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 
 export const ChevronLeft = (props) => (
   <svg
@@ -15,4 +15,4 @@ export const ChevronLeft = (props) => (
   >
     <path d="M15 18l-6-6 6-6" />
   </svg>
-)
+);

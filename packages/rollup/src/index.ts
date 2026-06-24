@@ -1,18 +1,18 @@
-import * as fs from 'fs'
-import { transform, Config } from '@svgr2/core'
-import { createFilter, CreateFilter } from '@rollup/pluginutils'
-import { transformAsync, createConfigItem } from '@babel/core'
-import svgo from '@svgr2/plugin-svgo'
-import jsx from '@svgr2/plugin-jsx'
+import * as fs from 'fs';
+import { transform, Config } from '@svgr2/core';
+import { createFilter, CreateFilter } from '@rollup/pluginutils';
+import { transformAsync, createConfigItem } from '@babel/core';
+import svgo from '@svgr2/plugin-svgo';
+import jsx from '@svgr2/plugin-jsx';
 // @ts-ignore
-import presetReact from '@babel/preset-react'
+import presetReact from '@babel/preset-react';
 // @ts-ignore
-import presetEnv from '@babel/preset-env'
+import presetEnv from '@babel/preset-env';
 // @ts-ignore
-import presetTS from '@babel/preset-typescript'
+import presetTS from '@babel/preset-typescript';
 // @ts-ignore
-import pluginTransformReactConstantElements from '@babel/plugin-transform-react-constant-elements'
-import type { PluginImpl } from 'rollup'
+import pluginTransformReactConstantElements from '@babel/plugin-transform-react-constant-elements';
+import type { PluginImpl } from 'rollup';
 
 const babelOptions = {
   babelrc: false,
@@ -22,7 +22,7 @@ const babelOptions = {
     createConfigItem([presetEnv, { modules: false }], { type: 'preset' }),
   ],
   plugins: [createConfigItem(pluginTransformReactConstantElements)],
-}
+};
 
 const typeScriptBabelOptions = {
   ...babelOptions,
@@ -33,27 +33,27 @@ const typeScriptBabelOptions = {
       { type: 'preset' },
     ),
   ],
-}
+};
 export interface Options extends Config {
-  include?: Parameters<CreateFilter>[0]
-  exclude?: Parameters<CreateFilter>[1]
-  babel?: boolean
+  include?: Parameters<CreateFilter>[0];
+  exclude?: Parameters<CreateFilter>[1];
+  babel?: boolean;
 }
 
 const plugin: PluginImpl<Options> = (options = {}) => {
-  const EXPORT_REGEX = /(module\.exports *= *|export default)/
-  const filter = createFilter(options.include || '**/*.svg', options.exclude)
-  const { babel = true } = options
+  const EXPORT_REGEX = /(module\.exports *= *|export default)/;
+  const filter = createFilter(options.include || '**/*.svg', options.exclude);
+  const { babel = true } = options;
 
   return {
     name: 'svgr',
     async transform(data, id) {
-      if (!filter(id)) return null
-      if (id.slice(-4) !== '.svg') return null
+      if (!filter(id)) return null;
+      if (id.slice(-4) !== '.svg') return null;
 
-      const load = fs.readFileSync(id, 'utf8')
+      const load = fs.readFileSync(id, 'utf8');
 
-      const previousExport = EXPORT_REGEX.test(data) ? data : null
+      const previousExport = EXPORT_REGEX.test(data) ? data : null;
 
       const jsCode = await transform(load, options, {
         filePath: id,
@@ -62,17 +62,17 @@ const plugin: PluginImpl<Options> = (options = {}) => {
           previousExport,
           defaultPlugins: [svgo, jsx],
         },
-      })
+      });
 
       if (babel) {
         const result = await transformAsync(
           jsCode,
           options.typescript ? typeScriptBabelOptions : babelOptions,
-        )
+        );
         if (!result?.code) {
-          throw new Error(`Error while transforming using Babel`)
+          throw new Error(`Error while transforming using Babel`);
         }
-        return { code: result.code, map: null }
+        return { code: result.code, map: null };
       }
 
       return {
@@ -85,9 +85,9 @@ const plugin: PluginImpl<Options> = (options = {}) => {
         },
         code: jsCode,
         map: null,
-      }
+      };
     },
-  }
-}
+  };
+};
 
-export default plugin
+export default plugin;

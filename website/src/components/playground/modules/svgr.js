@@ -1,4 +1,4 @@
-import fetch from 'isomorphic-fetch'
+import fetch from 'isomorphic-fetch';
 
 /* eslint-env browser */
 export async function svgr(code, options = {}) {
@@ -8,8 +8,8 @@ export async function svgr(code, options = {}) {
     },
     method: 'post',
     body: JSON.stringify({ code, options }),
-  })
-  const json = await res.json()
-  if (json.error) throw new Error(json.error)
-  return json.output
+  });
+  const json = await res.json();
+  if (json.error) throw new Error(json.error);
+  return json.output;
 }

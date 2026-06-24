@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { CheckGroup } from './CheckGroup'
-import { CheckboxControl } from './controls/CheckboxControl'
+import * as React from 'react';
+import { CheckGroup } from './CheckGroup';
+import { CheckboxControl } from './controls/CheckboxControl';
 
 export function SettingsFieldBoolean({ setting }) {
   return (
@@ -8,5 +8,5 @@ export function SettingsFieldBoolean({ setting }) {
       <CheckboxControl id={setting.name} name={setting.name} />
       <label htmlFor={setting.name}>{setting.label}</label>
     </CheckGroup>
-  )
+  );
 }

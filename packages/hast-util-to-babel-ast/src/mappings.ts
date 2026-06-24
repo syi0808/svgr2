@@ -483,7 +483,7 @@ export const ATTRIBUTE_MAPPING = {
   ychannelselector: 'yChannelSelector',
   z: 'z',
   zoomandpan: 'zoomAndPan',
-}
+};
 
 export const ELEMENT_ATTRIBUTE_MAPPING = {
   input: {
@@ -494,7 +494,7 @@ export const ELEMENT_ATTRIBUTE_MAPPING = {
   form: {
     enctype: 'encType',
   },
-}
+};
 
 // Reference: https://developer.mozilla.org/en-US/docs/Web/SVG/Element#SVG_elements
 export const ELEMENT_TAG_NAME_MAPPING: Record<string, string> = {
@@ -592,4 +592,4 @@ export const ELEMENT_TAG_NAME_MAPPING: Record<string, string> = {
   video: 'video',
   view: 'view',
   vkern: 'vkern',
-}
+};

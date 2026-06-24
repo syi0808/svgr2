@@ -1,4 +1,4 @@
-import jsx from '.'
+import jsx from '.';
 
 const svgBaseCode = `
 <?xml version="1.0" encoding="UTF-8"?>
@@ -14,42 +14,42 @@ const svgBaseCode = `
         </g>
     </g>
 </svg>
-`
+`;
 
 describe('plugin', () => {
   it('transforms code', () => {
-    const result = jsx(svgBaseCode, {}, { componentName: 'SvgComponent' })
+    const result = jsx(svgBaseCode, {}, { componentName: 'SvgComponent' });
     expect(result).toMatchInlineSnapshot(`
       "import * as React from "react";
       const SvgComponent = () => <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"><title>{"Dismiss"}</title><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
 
   it('supports "automatic" runtime', () => {
     const result = jsx(
       svgBaseCode,
       { jsxRuntime: 'automatic' },
       { componentName: 'SvgComponent' },
-    )
+    );
     expect(result).toMatchInlineSnapshot(`
       "const SvgComponent = () => <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"><title>{"Dismiss"}</title><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
 
   it('supports "preact" preset', () => {
     const result = jsx(
       svgBaseCode,
       { jsxRuntime: 'classic-preact' },
       { componentName: 'SvgComponent' },
-    )
+    );
     expect(result).toMatchInlineSnapshot(`
       "import { h } from "preact";
       const SvgComponent = () => <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"><title>{"Dismiss"}</title><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
 
   it('accepts jsx config', () => {
     const dropTitle = () => ({
@@ -58,21 +58,21 @@ describe('plugin', () => {
           if (
             path.get('openingElement.name').isJSXIdentifier({ name: 'title' })
           ) {
-            path.remove()
+            path.remove();
           }
         },
       },
-    })
+    });
 
     const result = jsx(
       svgBaseCode,
       { jsx: { babelConfig: { plugins: [dropTitle] } } },
       { componentName: 'SvgComponent' },
-    )
+    );
     expect(result).toMatchInlineSnapshot(`
       "import * as React from "react";
       const SvgComponent = () => <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
       export default SvgComponent;"
-    `)
-  })
-})
+    `);
+  });
+});

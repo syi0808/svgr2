@@ -1,11 +1,11 @@
-import { getSvgoConfig } from './config'
+import { getSvgoConfig } from './config';
 
-const state = { componentName: 'Icon' }
+const state = { componentName: 'Icon' };
 
 describe('#getSvgoConfig', () => {
   describe('with no specific config', () => {
     it('returns config with `prefixIds: true`', async () => {
-      const config = {}
+      const config = {};
       expect(await getSvgoConfig(config, state)).toEqual({
         plugins: [
           {
@@ -14,13 +14,13 @@ describe('#getSvgoConfig', () => {
           },
           'prefixIds',
         ],
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('with `config.icons` enabled', () => {
     it('returns config with `removeViewBox: false`', async () => {
-      const config = { icon: true }
+      const config = { icon: true };
       expect(await getSvgoConfig(config, state)).toEqual({
         plugins: [
           {
@@ -29,13 +29,13 @@ describe('#getSvgoConfig', () => {
           },
           'prefixIds',
         ],
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('with `config.dimensions` disabled', () => {
     it('returns config with `removeViewBox: false`', async () => {
-      const config = { dimensions: false }
+      const config = { dimensions: false };
       expect(await getSvgoConfig(config, state)).toEqual({
         plugins: [
           {
@@ -44,7 +44,7 @@ describe('#getSvgoConfig', () => {
           },
           'prefixIds',
         ],
-      })
-    })
-  })
-})
+      });
+    });
+  });
+});

@@ -1,7 +1,7 @@
-import * as path from 'path'
-import { webpack, ModuleOptions } from 'webpack'
+import * as path from 'path';
+import { webpack, ModuleOptions } from 'webpack';
 // @ts-ignore
-import MemoryFs from 'memory-fs'
+import MemoryFs from 'memory-fs';
 
 function compile(rules: ModuleOptions['rules']) {
   const compiler = webpack({
@@ -13,23 +13,23 @@ function compile(rules: ModuleOptions['rules']) {
       filename: 'bundle.js',
     },
     module: { rules },
-  })
+  });
 
-  compiler.outputFileSystem = new MemoryFs()
+  compiler.outputFileSystem = new MemoryFs();
 
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
-      if (err) reject(err)
+      if (err) reject(err);
       else {
         resolve(
           stats
             ?.toJson({ source: true })
             ?.modules?.find(({ name }) => name === './__fixtures__/icon.svg')
             ?.source,
-        )
+        );
       }
-    })
-  })
+    });
+  });
 }
 
 describe('webpack loader', () => {
@@ -46,28 +46,10 @@ describe('webpack loader', () => {
           },
         ],
       },
-    ])
+    ]);
 
-    expect(source).toMatchSnapshot()
-  })
-
-  it('transforms file', async () => {
-    const source = await compile([
-      {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: path.resolve(__dirname, '..'),
-            options: {
-              expandProps: false,
-            },
-          },
-        ],
-      },
-    ])
-
-    expect(source).toMatchSnapshot()
-  })
+    expect(source).toMatchSnapshot();
+  });
 
   it('transforms file', async () => {
     const source = await compile([
@@ -82,10 +64,28 @@ describe('webpack loader', () => {
           },
         ],
       },
-    ])
+    ]);
 
-    expect(source).toMatchSnapshot()
-  })
+    expect(source).toMatchSnapshot();
+  });
+
+  it('transforms file', async () => {
+    const source = await compile([
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: path.resolve(__dirname, '..'),
+            options: {
+              expandProps: false,
+            },
+          },
+        ],
+      },
+    ]);
+
+    expect(source).toMatchSnapshot();
+  });
 
   it('supports url-loader', async () => {
     const source = await compile([
@@ -101,10 +101,10 @@ describe('webpack loader', () => {
           'url-loader',
         ],
       },
-    ])
+    ]);
 
-    expect(source).toMatchSnapshot()
-  })
+    expect(source).toMatchSnapshot();
+  });
 
   it('transforms file (babel: false)', async () => {
     const source = await compile([
@@ -127,8 +127,8 @@ describe('webpack loader', () => {
           },
         ],
       },
-    ])
+    ]);
 
-    expect(source).toMatchSnapshot()
-  })
-})
+    expect(source).toMatchSnapshot();
+  });
+});

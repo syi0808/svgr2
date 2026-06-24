@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
-import { promises as fs } from 'fs'
-import { red } from 'chalk'
-import { transform, Config, State } from '@svgr2/core'
-import svgo from '@svgr2/plugin-svgo'
-import jsx from '@svgr2/plugin-jsx'
-import prettier from '@svgr2/plugin-prettier'
+import { promises as fs } from 'fs';
+import { red } from 'chalk';
+import { transform, Config, State } from '@svgr2/core';
+import svgo from '@svgr2/plugin-svgo';
+import jsx from '@svgr2/plugin-jsx';
+import prettier from '@svgr2/plugin-prettier';
 // @ts-ignore
-import camelCase from 'camelcase'
+import camelCase from 'camelcase';
 // @ts-ignore
-import dashify from 'dashify'
-import { snakeCase } from 'snake-case'
+import dashify from 'dashify';
+import { snakeCase } from 'snake-case';
 
 export function transformFilename(
   filename: string,
@@ -17,15 +17,15 @@ export function transformFilename(
 ): string {
   switch (filenameCase) {
     case 'kebab':
-      return dashify(filename.replace(/_/g, '-'), { condense: true })
+      return dashify(filename.replace(/_/g, '-'), { condense: true });
     case 'camel':
-      return camelCase(filename)
+      return camelCase(filename);
     case 'pascal':
-      return camelCase(filename, { pascalCase: true })
+      return camelCase(filename, { pascalCase: true });
     case 'snake':
-      return snakeCase(filename)
+      return snakeCase(filename);
     default:
-      throw new Error(`Unknown --filename-case ${filenameCase}`)
+      throw new Error(`Unknown --filename-case ${filenameCase}`);
   }
 }
 
@@ -40,36 +40,36 @@ export const convert = (
       name: '@svgr2/cli',
       defaultPlugins: [svgo, jsx, prettier],
     },
-  })
-}
+  });
+};
 
 export const convertFile = async (
   filePath: string,
   config: Config = {},
 ): Promise<string> => {
-  const code = await fs.readFile(filePath, 'utf-8')
-  return convert(code, config, { filePath })
-}
+  const code = await fs.readFile(filePath, 'utf-8');
+  return convert(code, config, { filePath });
+};
 
 export const exitError = (error: string): never => {
-  console.error(red(error))
-  process.exit(1)
-}
+  console.error(red(error));
+  process.exit(1);
+};
 
 export const politeWrite = (data: string, silent?: boolean): void => {
   if (!silent) {
-    process.stdout.write(data)
+    process.stdout.write(data);
   }
-}
+};
 
 export const formatExportName = (name: string): string => {
   if (/[-]/g.test(name) && /^\d/.test(name)) {
-    return `Svg${camelCase(name, { pascalCase: true })}`
+    return `Svg${camelCase(name, { pascalCase: true })}`;
   }
 
   if (/^\d/.test(name)) {
-    return `Svg${name}`
+    return `Svg${name}`;
   }
 
-  return camelCase(name, { pascalCase: true })
-}
+  return camelCase(name, { pascalCase: true });
+};

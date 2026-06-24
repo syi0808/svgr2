@@ -24,7 +24,7 @@ yarn add --dev @svgr2/rollup
 **rollup.config.js**
 
 ```js
-import svgr from '@svgr2/rollup'
+import svgr from '@svgr2/rollup';
 
 export default {
   plugins: [svgr()],
@@ -33,19 +33,19 @@ export default {
     file: 'bundle.js',
     format: 'cjs',
   },
-}
+};
 ```
 
 **Your code**
 
 ```js
-import Star from './star.svg'
+import Star from './star.svg';
 
 const App = () => (
   <div>
     <Star />
   </div>
-)
+);
 ```
 
 ## Options
@@ -55,7 +55,7 @@ SVGR let you specify options in a runtime config file like `svgr.config.js` or d
 **rollup.config.js**
 
 ```js
-import svgr from '@svgr2/rollup'
+import svgr from '@svgr2/rollup';
 
 export default {
   plugins: [svgr({ icon: true })],
@@ -64,7 +64,7 @@ export default {
     file: 'bundle.js',
     format: 'cjs',
   },
-}
+};
 ```
 
 [SVGR options reference](https://react-svgr.com/docs/options/) describes all options available.
@@ -76,8 +76,8 @@ It is possible to use it with [`@rollup/plugin-url`](https://github.com/rollup/p
 **rollup.config.js**
 
 ```js
-import url from '@rollup/plugin-url'
-import svgr from '@svgr2/rollup'
+import url from '@rollup/plugin-url';
+import svgr from '@svgr2/rollup';
 
 export default {
   plugins: [url(), svgr({ icon: true })],
@@ -86,20 +86,20 @@ export default {
     file: 'bundle.js',
     format: 'cjs',
   },
-}
+};
 ```
 
 **Your code**
 
 ```js
-import starUrl, { ReactComponent as Star } from './star.svg'
+import starUrl, { ReactComponent as Star } from './star.svg';
 
 const App = () => (
   <div>
     <img src={starUrl} alt="star" />
     <Star />
   </div>
-)
+);
 ```
 
 The named export defaults to `ReactComponent`, but can be customized with the `namedExport` option.
@@ -114,6 +114,6 @@ By default, `@svgr2/rollup` applies a babel transformation with [optimized confi
 
 ```js
 {
-  plugins: [svgr({ babel: false })]
+  plugins: [svgr({ babel: false })];
 }
 ```

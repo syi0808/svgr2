@@ -20,33 +20,33 @@ This steps describe how to configure mocha to handle SVG generated from SVGR. It
 Create a mock file `__mocks__/svg.js`:
 
 ```jsx
-export default 'SvgrURL'
-export const ReactComponent = 'div'
+export default 'SvgrURL';
+export const ReactComponent = 'div';
 ```
 
 The above mock would support the following import syntaxes:
 
 ```js
-import logoURL from '../assets/logo.svg'
+import logoURL from '../assets/logo.svg';
 // and
-import { ReactComponent as Logo } from '../assets/logo.svg'
+import { ReactComponent as Logo } from '../assets/logo.svg';
 ```
 
 ### 2. Create a custom loader
 
 ```js
 // mock-loader.js
-import { cwd } from 'node:process'
-import { pathToFileURL } from 'node:url'
+import { cwd } from 'node:process';
+import { pathToFileURL } from 'node:url';
 
-const baseURL = pathToFileURL(`${cwd()}/`).href
-const SVG_REGEX = /^[./a-zA-Z0-9$_-]+\.svg$/
+const baseURL = pathToFileURL(`${cwd()}/`).href;
+const SVG_REGEX = /^[./a-zA-Z0-9$_-]+\.svg$/;
 
 export async function resolve(specifier, context, defaultResolve) {
   if (SVG_REGEX.test(specifier)) {
-    return { url: new URL('./__mocks__/svg.js', baseURL).href }
+    return { url: new URL('./__mocks__/svg.js', baseURL).href };
   }
-  return defaultResolve(specifier, context, defaultResolve)
+  return defaultResolve(specifier, context, defaultResolve);
 }
 ```
 

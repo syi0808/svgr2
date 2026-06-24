@@ -42,10 +42,10 @@ const ${variables.componentName} = (${variables.props}) => (
 );
 
 ${variables.exports};
-`
-}
+`;
+};
 
-module.exports = template
+module.exports = template;
 ```
 
 Let's try something very simple. You want to add some PropTypes to your component:
@@ -68,10 +68,10 @@ ${componentName}.propTypes = {
 };
 
 ${exports}
-  `
-}
+  `;
+};
 
-module.exports = propTypesTemplate
+module.exports = propTypesTemplate;
 ```
 
 As you can see it is very natural, we just add code and use AST parts in the template.
@@ -92,7 +92,7 @@ Specify the template in `.svgrrc.js`:
 // .svgrrc.js
 module.exports = {
   template: require('./my-template'),
-}
+};
 ```
 
 ## Custom index template
@@ -107,49 +107,49 @@ The customization is the same, a file that exports a function. The function rece
 Default template only uses `path` and it is similar to this:
 
 ```js
-const path = require('path')
+const path = require('path');
 
 function defaultIndexTemplate(filePaths) {
   const exportEntries = filePaths.map(({ path: filePath }) => {
-    const basename = path.basename(filePath, path.extname(filePath))
-    const exportName = /^\d/.test(basename) ? `Svg${basename}` : basename
-    return `export { default as ${exportName} } from './${basename}'`
-  })
-  return exportEntries.join('\n')
+    const basename = path.basename(filePath, path.extname(filePath));
+    const exportName = /^\d/.test(basename) ? `Svg${basename}` : basename;
+    return `export { default as ${exportName} } from './${basename}'`;
+  });
+  return exportEntries.join('\n');
 }
 
-module.exports = defaultIndexTemplate
+module.exports = defaultIndexTemplate;
 ```
 
 but you could implement a more advanced template exploiting the original file name too:
 
 ```js
-const path = require('path')
+const path = require('path');
 
 function defaultIndexTemplate(filePaths) {
   const entries = filePaths.map(({ path: filePath, originalPath }) => {
     const originalFileName = path.basename(
       originalPath,
       path.extname(originalPath),
-    )
-    const basename = path.basename(filePath, path.extname(filePath))
-    const exportName = /^\d/.test(basename) ? `Svg${basename}` : basename
-    const importLine = `import ${exportName} from './${basename}';`
+    );
+    const basename = path.basename(filePath, path.extname(filePath));
+    const exportName = /^\d/.test(basename) ? `Svg${basename}` : basename;
+    const importLine = `import ${exportName} from './${basename}';`;
     const mapLine = `${
       /.*[.-].*/.test(originalFileName)
         ? `'${originalFileName}'`
         : originalFileName
-    }: ${exportName}`
-    return { importLine, mapLine }
-  })
+    }: ${exportName}`;
+    return { importLine, mapLine };
+  });
   return `${entries.map(({ importLine }) => importLine).join('\n')}
 export const map = {
 ${entries.map(({ mapLine }) => mapLine).join(',\n')}
 }
-`
+`;
 }
 
-module.exports = defaultIndexTemplate
+module.exports = defaultIndexTemplate;
 ```
 
 ### Use with CLI

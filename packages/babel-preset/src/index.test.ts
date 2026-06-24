@@ -1,20 +1,20 @@
-import { transform } from '@babel/core'
-import preset, { Options } from '.'
+import { transform } from '@babel/core';
+import preset, { Options } from '.';
 
 const defaultOptions = {
   namedExport: 'ReactComponent',
   state: { componentName: 'SvgComponent' },
-}
+};
 
 const testPreset = (code: string, options: Partial<Options>) => {
   const result = transform(code, {
     plugins: ['@babel/plugin-syntax-jsx'],
     presets: [[preset, { ...defaultOptions, ...options }]],
     configFile: false,
-  })
+  });
 
-  return result?.code
-}
+  return result?.code;
+};
 
 describe('preset', () => {
   it('handles svgProps', () => {
@@ -29,8 +29,8 @@ describe('preset', () => {
       "import * as React from "react";
       const SvgComponent = () => <svg foo="bar" x={y} />;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
 
   it('handles titleProp', () => {
     expect(
@@ -44,8 +44,8 @@ describe('preset', () => {
         titleId
       }) => <svg aria-labelledby={titleId}>{title ? <title id={titleId}>{title}</title> : null}</svg>;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
   it('handles titleProp and fallback on existing title', () => {
     // testing when existing title has string as chilren
     expect(
@@ -59,7 +59,7 @@ describe('preset', () => {
         titleId
       }) => <svg aria-labelledby={titleId}>{title === undefined ? <title id={titleId}>Hello</title> : title ? <title id={titleId}>{title}</title> : null}</svg>;
       export default SvgComponent;"
-    `)
+    `);
     // testing when existing title has JSXExpression as children
     expect(
       testPreset(`<svg><title>{"Hello"}</title></svg>`, {
@@ -72,8 +72,8 @@ describe('preset', () => {
         titleId
       }) => <svg aria-labelledby={titleId}>{title === undefined ? <title id={titleId}>{"Hello"}</title> : title ? <title id={titleId}>{title}</title> : null}</svg>;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
 
   it('handles descProp', () => {
     expect(
@@ -87,8 +87,8 @@ describe('preset', () => {
         descId
       }) => <svg aria-describedby={descId}>{desc ? <desc id={descId}>{desc}</desc> : null}</svg>;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
   it('handles descProp and fallback on existing desc', () => {
     // testing when existing desc has string as chilren
     expect(
@@ -102,7 +102,7 @@ describe('preset', () => {
         descId
       }) => <svg aria-describedby={descId}>{desc === undefined ? <desc id={descId}>Hello</desc> : desc ? <desc id={descId}>{desc}</desc> : null}</svg>;
       export default SvgComponent;"
-    `)
+    `);
     // testing when existing desc has JSXExpression as children
     expect(
       testPreset(`<svg><desc>{"Hello"}</desc></svg>`, {
@@ -115,8 +115,8 @@ describe('preset', () => {
         descId
       }) => <svg aria-describedby={descId}>{desc === undefined ? <desc id={descId}>{"Hello"}</desc> : desc ? <desc id={descId}>{desc}</desc> : null}</svg>;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
 
   it('handles descProp and titleProp', () => {
     expect(
@@ -133,8 +133,8 @@ describe('preset', () => {
         descId
       }) => <svg aria-labelledby={titleId} aria-describedby={descId}>{desc ? <desc id={descId}>{desc}</desc> : null}{title ? <title id={titleId}>{title}</title> : null}</svg>;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
 
   it('handles replaceAttrValues', () => {
     expect(
@@ -148,8 +148,8 @@ describe('preset', () => {
       "import * as React from "react";
       const SvgComponent = () => <svg a="black" b={props.white} />;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
 
   it('handles expandProps & icon & dimensions', () => {
     expect(
@@ -162,8 +162,8 @@ describe('preset', () => {
       "import * as React from "react";
       const SvgComponent = props => <svg a="#000" b="#fff" width="1em" height="1em" {...props} />;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
 
   it('handles custom icon size', () => {
     expect(
@@ -176,8 +176,8 @@ describe('preset', () => {
       "import * as React from "react";
       const SvgComponent = props => <svg a="#000" b="#fff" width={24} height={24} {...props} />;
       export default SvgComponent;"
-    `)
-  })
+    `);
+  });
 
   it('defaults to 24 on native', () => {
     expect(
@@ -192,6 +192,6 @@ describe('preset', () => {
       import Svg from "react-native-svg";
       const SvgComponent = props => <Svg a="#000" b="#fff" width={24} height={24} {...props} />;
       export default SvgComponent;"
-    `)
-  })
-})
+    `);
+  });
+});

@@ -1,19 +1,19 @@
-import { optimize } from 'svgo'
-import { getSvgoConfig } from './config'
-import type { Plugin } from '@svgr2/core'
+import { optimize } from 'svgo';
+import { getSvgoConfig } from './config';
+import type { Plugin } from '@svgr2/core';
 
 const svgoPlugin: Plugin = (code, config, state) => {
-  if (!config.svgo) return code
-  const svgoConfig = getSvgoConfig(config, state)
-  const result = optimize(code, { ...svgoConfig, path: state.filePath })
+  if (!config.svgo) return code;
+  const svgoConfig = getSvgoConfig(config, state);
+  const result = optimize(code, { ...svgoConfig, path: state.filePath });
 
   // @ts-ignore
   if (result.modernError) {
     // @ts-ignore
-    throw result.modernError
+    throw result.modernError;
   }
 
-  return result.data
-}
+  return result.data;
+};
 
-export default svgoPlugin
+export default svgoPlugin;

@@ -1,11 +1,11 @@
-import * as React from 'react'
-import styled, { up, css } from '@xstyled/styled-components'
+import * as React from 'react';
+import styled, { up, css } from '@xstyled/styled-components';
 import {
   useDisclosureState,
   DisclosureContent,
   Disclosure,
-} from 'reakit/Disclosure'
-import { IoChevronBack } from 'react-icons/io5'
+} from 'reakit/Disclosure';
+import { IoChevronBack } from 'react-icons/io5';
 
 const Marker = styled(IoChevronBack)`
   width: 18;
@@ -20,7 +20,7 @@ const Marker = styled(IoChevronBack)`
       transform: rotate(0);
     `,
   )}
-`
+`;
 
 const Button = styled.button`
   font-size: 15;
@@ -52,7 +52,7 @@ const Button = styled.button`
     background-color: light200;
     outline: none;
   }
-`
+`;
 
 const Content = styled.div`
   display: grid;
@@ -60,10 +60,10 @@ const Content = styled.div`
   padding: 2;
   border-bottom: 1;
   border-color: layout-border;
-`
+`;
 
 export function SettingsGroup({ title, children }) {
-  const disclosure = useDisclosureState({ visible: true })
+  const disclosure = useDisclosureState({ visible: true });
   return (
     <div>
       <Disclosure {...disclosure}>
@@ -77,5 +77,5 @@ export function SettingsGroup({ title, children }) {
         {children}
       </DisclosureContent>
     </div>
-  )
+  );
 }

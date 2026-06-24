@@ -1,17 +1,17 @@
-import { parse } from 'svg-parser'
-import hastToBabelAst from '@svgr2/hast-util-to-babel-ast'
-import { transformFromAstSync, createConfigItem } from '@babel/core'
+import { parse } from 'svg-parser';
+import hastToBabelAst from '@svgr2/hast-util-to-babel-ast';
+import { transformFromAstSync, createConfigItem } from '@babel/core';
 import svgrBabelPreset, {
   Options as SvgrPresetOptions,
-} from '@svgr2/babel-preset'
-import type { Plugin, Config } from '@svgr2/core'
+} from '@svgr2/babel-preset';
+import type { Plugin, Config } from '@svgr2/core';
 
 const getJsxRuntimeOptions = (config: Config): Partial<SvgrPresetOptions> => {
   if (config.jsxRuntimeImport) {
     return {
       importSource: config.jsxRuntimeImport.source,
       jsxRuntimeImport: config.jsxRuntimeImport,
-    }
+    };
   }
   switch (config.jsxRuntime) {
     case null:
@@ -21,25 +21,25 @@ const getJsxRuntimeOptions = (config: Config): Partial<SvgrPresetOptions> => {
         jsxRuntime: 'classic',
         importSource: 'react',
         jsxRuntimeImport: { namespace: 'React', source: 'react' },
-      }
+      };
     case 'classic-preact':
       return {
         jsxRuntime: 'classic',
         importSource: 'preact/compat',
         jsxRuntimeImport: { specifiers: ['h'], source: 'preact' },
-      }
+      };
     case 'automatic':
-      return { jsxRuntime: 'automatic' }
+      return { jsxRuntime: 'automatic' };
     default:
-      throw new Error(`Unsupported "jsxRuntime" "${config.jsxRuntime}"`)
+      throw new Error(`Unsupported "jsxRuntime" "${config.jsxRuntime}"`);
   }
-}
+};
 
 const jsxPlugin: Plugin = (code, config, state) => {
-  const filePath = state.filePath || 'unknown'
-  const hastTree = parse(code)
+  const filePath = state.filePath || 'unknown';
+  const hastTree = parse(code);
 
-  const babelTree = hastToBabelAst(hastTree)
+  const babelTree = hastToBabelAst(hastTree);
 
   const svgPresetOptions: SvgrPresetOptions = {
     ref: config.ref,
@@ -58,7 +58,7 @@ const jsxPlugin: Plugin = (code, config, state) => {
     namedExport: config.namedExport,
     ...getJsxRuntimeOptions(config),
     state,
-  }
+  };
 
   const result = transformFromAstSync(babelTree, code, {
     caller: {
@@ -77,13 +77,13 @@ const jsxPlugin: Plugin = (code, config, state) => {
     // @ts-ignore
     inputSourceMap: false,
     ...(config.jsx && config.jsx.babelConfig),
-  })
+  });
 
   if (!result?.code) {
-    throw new Error(`Unable to generate SVG file`)
+    throw new Error(`Unable to generate SVG file`);
   }
 
-  return result.code
-}
+  return result.code;
+};
 
-export default jsxPlugin
+export default jsxPlugin;

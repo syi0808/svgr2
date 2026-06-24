@@ -1,11 +1,11 @@
-import * as React from 'react'
-import styled from '@xstyled/styled-components'
-import { Form, FormSpy } from 'react-final-form'
-import { SettingsFieldBoolean } from './SettingsFieldBoolean'
-import { SettingsGroup } from './SettingsGroup'
-import { SettingsFieldString } from './SettingsFieldString'
-import { SettingsFieldEnum } from './SettingsFieldEnum'
-import { SettingsFieldInteger } from './SettingsFieldInteger'
+import * as React from 'react';
+import styled from '@xstyled/styled-components';
+import { Form, FormSpy } from 'react-final-form';
+import { SettingsFieldBoolean } from './SettingsFieldBoolean';
+import { SettingsGroup } from './SettingsGroup';
+import { SettingsFieldString } from './SettingsFieldString';
+import { SettingsFieldEnum } from './SettingsFieldEnum';
+import { SettingsFieldInteger } from './SettingsFieldInteger';
 
 const Container = styled.div`
   font-size: 14;
@@ -15,25 +15,26 @@ const Container = styled.div`
   overflow: auto;
   border-right: 1;
   border-color: layout-border;
-`
+`;
 
 const getGroupSettings = (group, settings) =>
-  settings.filter((setting) => setting.group === group)
+  settings.filter((setting) => setting.group === group);
 
 const settingComponents = {
   boolean: SettingsFieldBoolean,
   string: SettingsFieldString,
   enum: SettingsFieldEnum,
   integer: SettingsFieldInteger,
-}
+};
 
 const renderSetting = (setting) => {
-  const SettingComponent = settingComponents[setting.type]
-  if (!SettingComponent) throw new Error(`Unknown setting type ${setting.type}`)
-  return <SettingComponent key={setting.name} setting={setting} />
-}
+  const SettingComponent = settingComponents[setting.type];
+  if (!SettingComponent)
+    throw new Error(`Unknown setting type ${setting.type}`);
+  return <SettingComponent key={setting.name} setting={setting} />;
+};
 
-const noop = () => {}
+const noop = () => {};
 
 export const Settings = ({ settings, initialValues, onChange }) => {
   return (
@@ -58,5 +59,5 @@ export const Settings = ({ settings, initialValues, onChange }) => {
         </>
       )}
     </Form>
-  )
-}
+  );
+};

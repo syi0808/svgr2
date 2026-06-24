@@ -1,13 +1,13 @@
 const parseObject = (value) =>
   value.split(',').reduce((obj, assignment) => {
-    const [left, right] = assignment.split('=')
+    const [left, right] = assignment.split('=');
     return {
       ...obj,
       [left.trim()]: right?.trim(),
-    }
-  }, {})
+    };
+  }, {});
 
-const parseJson = (value) => value && JSON.parse(value)
+const parseJson = (value) => value && JSON.parse(value);
 
 const initialSvgoConfig = JSON.stringify(
   {
@@ -20,9 +20,9 @@ const initialSvgoConfig = JSON.stringify(
   },
   null,
   2,
-)
+);
 
-const initialPrettierConfig = JSON.stringify({ semi: false }, null, 2)
+const initialPrettierConfig = JSON.stringify({ semi: false }, null, 2);
 
 export const settings = [
   {
@@ -165,7 +165,7 @@ export const settings = [
     default: initialPrettierConfig,
     transform: parseJson,
   },
-]
+];
 
 export const getInitialState = () =>
   settings.reduce(
@@ -174,11 +174,11 @@ export const getInitialState = () =>
       [setting.name]: setting.default,
     }),
     {},
-  )
+  );
 
 export function stateToSettings(state) {
   return Object.entries(state).reduce((newState, [key, value]) => {
-    const { transform } = settings.find(({ name }) => name === key)
-    return { ...newState, [key]: transform ? transform(value) : value }
-  }, {})
+    const { transform } = settings.find(({ name }) => name === key);
+    return { ...newState, [key]: transform ? transform(value) : value };
+  }, {});
 }

@@ -1,14 +1,14 @@
-import { transform } from '@babel/core'
-import plugin, { Options } from '.'
+import { transform } from '@babel/core';
+import plugin, { Options } from '.';
 
 const testPlugin = (code: string, options: Options) => {
   const result = transform(code, {
     plugins: ['@babel/plugin-syntax-jsx', [plugin, options]],
     configFile: false,
-  })
+  });
 
-  return result?.code
-}
+  return result?.code;
+};
 
 describe('plugin', () => {
   it('should add simple attribute', () => {
@@ -17,8 +17,8 @@ describe('plugin', () => {
         elements: ['div'],
         attributes: [{ name: 'disabled' }],
       }),
-    ).toMatchInlineSnapshot(`"<div disabled />;"`)
-  })
+    ).toMatchInlineSnapshot(`"<div disabled />;"`);
+  });
 
   it('should add attribute with value', () => {
     expect(
@@ -26,21 +26,21 @@ describe('plugin', () => {
         elements: ['div'],
         attributes: [{ name: 'disabled', value: true }],
       }),
-    ).toMatchInlineSnapshot(`"<div disabled={true} />;"`)
+    ).toMatchInlineSnapshot(`"<div disabled={true} />;"`);
     expect(
       testPlugin('<div />', {
         elements: ['div'],
         attributes: [{ name: 'disabled', value: 'true' }],
       }),
-    ).toMatchInlineSnapshot(`"<div disabled="true" />;"`)
+    ).toMatchInlineSnapshot(`"<div disabled="true" />;"`);
 
     expect(
       testPlugin('<div />', {
         elements: ['div'],
         attributes: [{ name: 'disabled', value: 200 }],
       }),
-    ).toMatchInlineSnapshot(`"<div disabled={200} />;"`)
-  })
+    ).toMatchInlineSnapshot(`"<div disabled={200} />;"`);
+  });
 
   it('should add literal attribute', () => {
     expect(
@@ -48,15 +48,15 @@ describe('plugin', () => {
         elements: ['div'],
         attributes: [{ name: 'ref', value: 'ref', literal: true }],
       }),
-    ).toMatchInlineSnapshot(`"<div ref={ref} />;"`)
+    ).toMatchInlineSnapshot(`"<div ref={ref} />;"`);
 
     expect(
       testPlugin('<div />', {
         elements: ['div'],
         attributes: [{ name: 'ref', value: 'ref ? ref : null', literal: true }],
       }),
-    ).toMatchInlineSnapshot(`"<div ref={ref ? ref : null} />;"`)
-  })
+    ).toMatchInlineSnapshot(`"<div ref={ref ? ref : null} />;"`);
+  });
 
   it('should add spread attribute', () => {
     expect(
@@ -70,7 +70,7 @@ describe('plugin', () => {
           },
         ],
       }),
-    ).toMatchInlineSnapshot(`"<div {...props} foo><span /></div>;"`)
+    ).toMatchInlineSnapshot(`"<div {...props} foo><span /></div>;"`);
 
     expect(
       testPlugin('<div><span foo="bar" /></div>', {
@@ -83,8 +83,8 @@ describe('plugin', () => {
           },
         ],
       }),
-    ).toMatchInlineSnapshot(`"<div><span foo="bar" {...props} /></div>;"`)
-  })
+    ).toMatchInlineSnapshot(`"<div><span foo="bar" {...props} /></div>;"`);
+  });
 
   it('should replace attribute', () => {
     expect(
@@ -92,6 +92,6 @@ describe('plugin', () => {
         elements: ['div'],
         attributes: [{ name: 'disabled', value: false }],
       }),
-    ).toMatchInlineSnapshot(`"<div disabled={false} />;"`)
-  })
-})
+    ).toMatchInlineSnapshot(`"<div disabled={false} />;"`);
+  });
+});

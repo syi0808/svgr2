@@ -1,6 +1,6 @@
-import * as React from 'react'
-import styled, { keyframes } from '@xstyled/styled-components'
-import { graphql, StaticQuery } from 'gatsby'
+import * as React from 'react';
+import styled, { keyframes } from '@xstyled/styled-components';
+import { graphql, StaticQuery } from 'gatsby';
 
 const QUERY = graphql`
   query Loading {
@@ -12,12 +12,12 @@ const QUERY = graphql`
       }
     }
   }
-`
+`;
 
 const fadeIn = keyframes`
   0% { opacity: 1; }
   100% { opacity: 0.4; }
-`
+`;
 
 const Loader = styled.div`
   flex: 1;
@@ -25,7 +25,7 @@ const Loader = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   background-size: 30%;
-`
+`;
 
 export const Loading = () => {
   return (
@@ -37,5 +37,5 @@ export const Loading = () => {
         />
       )}
     />
-  )
-}
+  );
+};

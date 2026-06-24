@@ -1,58 +1,58 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { ConfigAPI } from '@babel/core'
+import { ConfigAPI } from '@babel/core';
 import addJSXAttribute, {
   Attribute,
-} from '@svgr2/babel-plugin-add-jsx-attribute'
-import removeJSXAttribute from '@svgr2/babel-plugin-remove-jsx-attribute'
-import removeJSXEmptyExpression from '@svgr2/babel-plugin-remove-jsx-empty-expression'
+} from '@svgr2/babel-plugin-add-jsx-attribute';
+import removeJSXAttribute from '@svgr2/babel-plugin-remove-jsx-attribute';
+import removeJSXEmptyExpression from '@svgr2/babel-plugin-remove-jsx-empty-expression';
 import replaceJSXAttributeValue, {
   Value,
-} from '@svgr2/babel-plugin-replace-jsx-attribute-value'
-import svgDynamicTitle from '@svgr2/babel-plugin-svg-dynamic-title'
-import svgEmDimensions from '@svgr2/babel-plugin-svg-em-dimensions'
-import transformReactNativeSVG from '@svgr2/babel-plugin-transform-react-native-svg'
+} from '@svgr2/babel-plugin-replace-jsx-attribute-value';
+import svgDynamicTitle from '@svgr2/babel-plugin-svg-dynamic-title';
+import svgEmDimensions from '@svgr2/babel-plugin-svg-em-dimensions';
+import transformReactNativeSVG from '@svgr2/babel-plugin-transform-react-native-svg';
 import transformSvgComponent, {
   Options as TransformOptions,
-} from '@svgr2/babel-plugin-transform-svg-component'
+} from '@svgr2/babel-plugin-transform-svg-component';
 
 export interface Options extends TransformOptions {
-  ref?: boolean
-  titleProp?: boolean
-  descProp?: boolean
-  expandProps?: boolean | 'start' | 'end'
-  dimensions?: boolean
-  icon?: boolean | string | number
-  native?: boolean
-  svgProps?: { [key: string]: string }
-  replaceAttrValues?: { [key: string]: string }
+  ref?: boolean;
+  titleProp?: boolean;
+  descProp?: boolean;
+  expandProps?: boolean | 'start' | 'end';
+  dimensions?: boolean;
+  icon?: boolean | string | number;
+  native?: boolean;
+  svgProps?: { [key: string]: string };
+  replaceAttrValues?: { [key: string]: string };
 }
 
 const getAttributeValue = (value: string) => {
   const literal =
-    typeof value === 'string' && value.startsWith('{') && value.endsWith('}')
-  return { value: literal ? value.slice(1, -1) : value, literal }
-}
+    typeof value === 'string' && value.startsWith('{') && value.endsWith('}');
+  return { value: literal ? value.slice(1, -1) : value, literal };
+};
 
 const propsToAttributes = (props: { [key: string]: string }): Attribute[] => {
   return Object.keys(props).map((name) => {
-    const { literal, value } = getAttributeValue(props[name])
-    return { name, literal, value }
-  })
-}
+    const { literal, value } = getAttributeValue(props[name]);
+    return { name, literal, value };
+  });
+};
 
 function replaceMapToValues(replaceMap: { [key: string]: string }): Value[] {
   return Object.keys(replaceMap).map((value) => {
-    const { literal, value: newValue } = getAttributeValue(replaceMap[value])
-    return { value, newValue, literal }
-  })
+    const { literal, value: newValue } = getAttributeValue(replaceMap[value]);
+    return { value, newValue, literal };
+  });
 }
 
 const plugin = (_: ConfigAPI, opts: Options) => {
-  let toRemoveAttributes = ['version']
-  let toAddAttributes: Attribute[] = []
+  let toRemoveAttributes = ['version'];
+  let toAddAttributes: Attribute[] = [];
 
   if (opts.svgProps) {
-    toAddAttributes = [...toAddAttributes, ...propsToAttributes(opts.svgProps)]
+    toAddAttributes = [...toAddAttributes, ...propsToAttributes(opts.svgProps)];
   }
 
   if (opts.ref) {
@@ -63,7 +63,7 @@ const plugin = (_: ConfigAPI, opts: Options) => {
         value: 'ref',
         literal: true,
       },
-    ]
+    ];
   }
 
   if (opts.titleProp) {
@@ -74,7 +74,7 @@ const plugin = (_: ConfigAPI, opts: Options) => {
         value: 'titleId',
         literal: true,
       },
-    ]
+    ];
   }
 
   if (opts.descProp) {
@@ -85,7 +85,7 @@ const plugin = (_: ConfigAPI, opts: Options) => {
         value: 'descId',
         literal: true,
       },
-    ]
+    ];
   }
 
   if (opts.expandProps) {
@@ -99,11 +99,11 @@ const plugin = (_: ConfigAPI, opts: Options) => {
             ? opts.expandProps
             : undefined,
       },
-    ]
+    ];
   }
 
   if (!opts.dimensions) {
-    toRemoveAttributes = [...toRemoveAttributes, 'width', 'height']
+    toRemoveAttributes = [...toRemoveAttributes, 'width', 'height'];
   }
 
   const plugins: any[] = [
@@ -115,8 +115,8 @@ const plugin = (_: ConfigAPI, opts: Options) => {
             opts.icon !== true
               ? { width: opts.icon, height: opts.icon }
               : opts.native
-              ? { width: 24, height: 24 }
-              : {},
+                ? { width: 24, height: 24 }
+                : {},
           ],
         ]
       : []),
@@ -129,28 +129,28 @@ const plugin = (_: ConfigAPI, opts: Options) => {
       { elements: ['svg', 'Svg'], attributes: toAddAttributes },
     ],
     removeJSXEmptyExpression,
-  ]
+  ];
 
   if (opts.replaceAttrValues) {
     plugins.push([
       replaceJSXAttributeValue,
       { values: replaceMapToValues(opts.replaceAttrValues) },
-    ])
+    ]);
   }
 
   if (opts.titleProp) {
-    plugins.push(svgDynamicTitle)
+    plugins.push(svgDynamicTitle);
   }
 
   if (opts.descProp) {
-    plugins.push([svgDynamicTitle, { tag: 'desc' }, 'desc'])
+    plugins.push([svgDynamicTitle, { tag: 'desc' }, 'desc']);
   }
 
   if (opts.native) {
-    plugins.push(transformReactNativeSVG)
+    plugins.push(transformReactNativeSVG);
   }
 
-  return { plugins }
-}
+  return { plugins };
+};
 
-export default plugin
+export default plugin;

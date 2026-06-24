@@ -1,4 +1,4 @@
-import type { Template } from './types'
+import type { Template } from './types';
 
 export const defaultTemplate: Template = (variables, { tpl }) => {
   return tpl`
@@ -11,5 +11,5 @@ const ${variables.componentName} = (${variables.props}) => (
 );
  
 ${variables.exports};
-`
-}
+`;
+};

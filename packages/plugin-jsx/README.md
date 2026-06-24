@@ -52,7 +52,7 @@ module.exports = {
       ],
     },
   },
-}
+};
 ```
 
 Several Babel plugins are available:

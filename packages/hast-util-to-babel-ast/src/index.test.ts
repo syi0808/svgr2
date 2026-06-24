@@ -1,15 +1,15 @@
-import { parse } from 'svg-parser'
-import generate from '@babel/generator'
-import hastToBabelAst from './index'
+import { parse } from 'svg-parser';
+import generate from '@babel/generator';
+import hastToBabelAst from './index';
 
 function transform(code: string) {
-  const hastTree = parse(code)
+  const hastTree = parse(code);
 
-  const babelTree = hastToBabelAst(hastTree)
+  const babelTree = hastToBabelAst(hastTree);
 
-  const { code: generatedCode } = generate(babelTree)
+  const { code: generatedCode } = generate(babelTree);
 
-  return generatedCode
+  return generatedCode;
 }
 
 describe('hast-util-to-babel-ast', () => {
@@ -28,35 +28,35 @@ describe('hast-util-to-babel-ast', () => {
         </g>
     </g>
 </svg>
-`
-    expect(transform(code)).toMatchSnapshot()
-  })
+`;
+    expect(transform(code)).toMatchSnapshot();
+  });
 
   it('transforms "aria-x"', () => {
-    const code = `<svg aria-hidden="true"></svg>`
+    const code = `<svg aria-hidden="true"></svg>`;
     expect(transform(code)).toMatchInlineSnapshot(
       `"<svg aria-hidden="true" />;"`,
-    )
-  })
+    );
+  });
 
   it('transforms "aria-xxxXxx"', () => {
-    const code = `<svg aria-labelledby="foo" aria-describedat="foo" aria-describedby="foo"></svg>`
+    const code = `<svg aria-labelledby="foo" aria-describedat="foo" aria-describedby="foo"></svg>`;
     expect(transform(code)).toMatchInlineSnapshot(
       `"<svg aria-labelledby="foo" aria-describedat="foo" aria-describedby="foo" />;"`,
-    )
-  })
+    );
+  });
 
   it('transformss "data-x"', () => {
-    const code = `<svg data-hidden="true"></svg>`
+    const code = `<svg data-hidden="true"></svg>`;
     expect(transform(code)).toMatchInlineSnapshot(
       `"<svg data-hidden="true" />;"`,
-    )
-  })
+    );
+  });
 
   it('preserves "mask-type"', () => {
-    const code = `<svg><mask mask-type="alpha" /></svg>`
-    expect(transform(code)).toBe('<svg><mask mask-type="alpha" /></svg>;')
-  })
+    const code = `<svg><mask mask-type="alpha" /></svg>`;
+    expect(transform(code)).toBe('<svg><mask mask-type="alpha" /></svg>;');
+  });
 
   it('should handle spaces and tab', () => {
     const code = `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -70,27 +70,27 @@ describe('hast-util-to-babel-ast', () => {
       s0.4-1,1-1h10.7C24.7,24,25.2,24.4,25.2,25z M12.3,11c0-0.6,0.4-1,1-1h7.3c0.6,0,1,0.4,1,1s-0.4,1-1,1h-7.3
       C12.8,12,12.3,11.6,12.3,11z M16,13c0.6,0,1,0.4,1,1s-0.4,1-1,1h-2.5c-0.6,0-1-0.4-1-1s0.4-1,1-1H16z"/>
     </svg>
-    `
+    `;
 
-    expect(transform(code)).toMatchSnapshot()
-  })
+    expect(transform(code)).toMatchSnapshot();
+  });
 
   it('string literals children of text nodes should have decoded XML entities', () => {
-    const code = `<svg><text>&lt;</text></svg>`
+    const code = `<svg><text>&lt;</text></svg>`;
     expect(transform(code)).toMatchInlineSnapshot(
       `"<svg><text>{"<"}</text></svg>;"`,
-    )
-  })
+    );
+  });
 
   it('string literals children of tspan nodes should have decoded XML entities', () => {
-    const code = `<svg><text><tspan>&lt;</tspan></text></svg>`
+    const code = `<svg><text><tspan>&lt;</tspan></text></svg>`;
     expect(transform(code)).toMatchInlineSnapshot(
       `"<svg><text><tspan>{"<"}</tspan></text></svg>;"`,
-    )
-  })
+    );
+  });
 
   it('properly converts style with variables', () => {
-    const code = `<svg><path style="--index: 1; font-size: 24px;"></path><path style="--index: 2"></path></svg>`
+    const code = `<svg><path style="--index: 1; font-size: 24px;"></path><path style="--index: 2"></path></svg>`;
     expect(transform(code)).toMatchInlineSnapshot(`
       "<svg><path style={{
           "--index": 1,
@@ -98,6 +98,6 @@ describe('hast-util-to-babel-ast', () => {
         }} /><path style={{
           "--index": 2
         }} /></svg>;"
-    `)
-  })
-})
+    `);
+  });
+});

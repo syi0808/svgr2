@@ -15,12 +15,12 @@ npm install --save-dev @svgr2/hast-util-to-babel-ast
 ## Usage
 
 ```js
-import { parse } from 'svg-parser'
-import hastToBabelAst from '@svgr2/hast-util-to-babel-ast'
+import { parse } from 'svg-parser';
+import hastToBabelAst from '@svgr2/hast-util-to-babel-ast';
 
-const hastTree = parse(`<svg></svg>`)
+const hastTree = parse(`<svg></svg>`);
 
-const babelTree = hastToBabelAst(hastTree)
+const babelTree = hastToBabelAst(hastTree);
 ```
 
 ## License

@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { Link } from 'gatsby'
+import * as React from 'react';
+import { Link } from 'gatsby';
 import {
   Button,
   Hero,
@@ -15,8 +15,8 @@ import {
   Feature,
   FeatureTitle,
   FeatureText,
-} from 'smooth-doc/components'
-import heroBackgroundURL from './images/hero-bg.png'
+} from 'smooth-doc/components';
+import heroBackgroundURL from './images/hero-bg.png';
 
 export const Home = () => (
   <>
@@ -82,4 +82,4 @@ export const Home = () => (
       </FeatureList>
     </FeatureSection>
   </>
-)
+);

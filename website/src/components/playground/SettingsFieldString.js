@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { TextareaControl } from './controls/TextareaControl'
-import { SmallLabel } from './SmallLabel'
+import * as React from 'react';
+import { TextareaControl } from './controls/TextareaControl';
+import { SmallLabel } from './SmallLabel';
 
 export function SettingsFieldString({ setting }) {
   return (
@@ -12,5 +12,5 @@ export function SettingsFieldString({ setting }) {
         name={setting.name}
       />
     </div>
-  )
+  );
 }

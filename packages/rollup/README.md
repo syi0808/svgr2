@@ -14,27 +14,27 @@ In your `rollup.config.js`:
 
 ```js
 {
-  plugins: [svgr()]
+  plugins: [svgr()];
 }
 ```
 
 In your code:
 
 ```js
-import Star from './star.svg'
+import Star from './star.svg';
 
 const App = () => (
   <div>
     <Star />
   </div>
-)
+);
 ```
 
 ### Passing options
 
 ```js
 {
-  plugins: [svgr({ native: true })]
+  plugins: [svgr({ native: true })];
 }
 ```
 
@@ -46,21 +46,21 @@ In your `rollup.config.js`:
 
 ```js
 {
-  plugins: [url(), svgr()]
+  plugins: [url(), svgr()];
 }
 ```
 
 In your code:
 
 ```js
-import starUrl, { ReactComponent as Star } from './star.svg'
+import starUrl, { ReactComponent as Star } from './star.svg';
 
 const App = () => (
   <div>
     <img src={starUrl} alt="star" />
     <Star />
   </div>
-)
+);
 ```
 
 The named export defaults to `ReactComponent`, but can be customized with the `namedExport` option.
@@ -75,7 +75,7 @@ By default, `@svgr2/rollup` applies a babel transformation with [optimized confi
 
 ```js
 {
-  plugins: [svgr({ babel: false })]
+  plugins: [svgr({ babel: false })];
 }
 ```
 

@@ -1,20 +1,20 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
-import * as React from 'react'
-import { useState, useEffect, lazy, useRef, Suspense } from 'react'
-import styled, { x, createGlobalStyle } from '@xstyled/styled-components'
+import * as React from 'react';
+import { useState, useEffect, lazy, useRef, Suspense } from 'react';
+import styled, { x, createGlobalStyle } from '@xstyled/styled-components';
 import {
   useDialogState,
   Dialog as ReakitDialog,
   DialogBackdrop as ReakitDialogBackdrop,
-} from 'reakit/Dialog'
-import { CarbonAd } from 'smooth-doc/src/components/CarbonAd'
-import { Settings } from './Settings'
-import { svgr } from './modules/svgr'
-import defaultSvg from './defaultSVG'
-import { DropArea } from './DropArea'
-import { Loading } from './Loading'
-import { settings, getInitialState, stateToSettings } from './config/settings'
-import { useQuery } from './Query'
+} from 'reakit/Dialog';
+import { CarbonAd } from 'smooth-doc/src/components/CarbonAd';
+import { Settings } from './Settings';
+import { svgr } from './modules/svgr';
+import defaultSvg from './defaultSVG';
+import { DropArea } from './DropArea';
+import { Loading } from './Loading';
+import { settings, getInitialState, stateToSettings } from './config/settings';
+import { useQuery } from './Query';
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -35,14 +35,14 @@ const GlobalStyle = createGlobalStyle`
       width: 5px !important;
     }
   }
-`
+`;
 
 const Container = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
   height: calc(100vh - 50px);
   background-color: background;
-`
+`;
 
 const Editors = styled.div`
   display: grid;
@@ -52,7 +52,7 @@ const Editors = styled.div`
     border-right: 1px solid;
     border-color: layout-border;
   }
-`
+`;
 
 const EditorContainer = styled.div`
   display: grid;
@@ -62,7 +62,7 @@ const EditorContainer = styled.div`
   &[data-loading] {
     opacity: 0.5;
   }
-`
+`;
 
 const FloatingAd = styled.div`
   position: absolute;
@@ -70,7 +70,7 @@ const FloatingAd = styled.div`
   right: 16;
   z-index: 500;
   width: 400;
-`
+`;
 
 const EditorTitleContainer = styled.div`
   padding: 0 2;
@@ -83,18 +83,18 @@ const EditorTitleContainer = styled.div`
   border-bottom: 1;
   border-color: layout-border;
   color: on-background-light;
-`
+`;
 
 const EditorTitle = styled.h3`
   display: flex;
   align-items: center;
   font-weight: bold;
-`
+`;
 
 const EditorTitleButton = styled.button`
   border-radius: 4;
   height: 20;
-`
+`;
 
 const InnerDialog = styled.div`
   background-color: background-light;
@@ -109,10 +109,13 @@ const InnerDialog = styled.div`
   padding: 5;
   outline: 0;
   z-index: 999;
-  box-shadow: 5px 5px rgba(50, 50, 50, 0.4), 10px 10px rgba(50, 50, 50, 0.3),
-    15px 15px rgba(50, 50, 50, 0.2), 20px 20px rgba(50, 50, 50, 0.1),
+  box-shadow:
+    5px 5px rgba(50, 50, 50, 0.4),
+    10px 10px rgba(50, 50, 50, 0.3),
+    15px 15px rgba(50, 50, 50, 0.2),
+    20px 20px rgba(50, 50, 50, 0.1),
     25px 25px rgba(50, 50, 50, 0.05);
-`
+`;
 
 const InnerBackdrop = styled.div`
   position: fixed;
@@ -123,7 +126,7 @@ const InnerBackdrop = styled.div`
   background-color: on-background;
   opacity: 0.4;
   z-index: 899;
-`
+`;
 
 const ThankBody = styled.div`
   text-align: center;
@@ -133,7 +136,7 @@ const ThankBody = styled.div`
     font-weight: 500;
     margin: 2;
   }
-`
+`;
 
 const Link = styled.a`
   display: inline-block;
@@ -144,13 +147,15 @@ const Link = styled.a`
     text-decoration: none;
     transform: translateY(-2px);
   }
-`
+`;
 
 const SponsorLink = styled.aBox`
   display: inline-block;
   font-weight: 500;
   color: white;
-  text-shadow: 0 0 1px rgba(0, 0, 0, 0.4), 0 0 3px rgba(0, 0, 0, 0.2);
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.4),
+    0 0 3px rgba(0, 0, 0, 0.2);
   min-width: 300;
   text-decoration: none !important;
   padding: 2;
@@ -161,18 +166,18 @@ const SponsorLink = styled.aBox`
     color: white;
     transform: scale(1.08);
   }
-`
+`;
 
 function trackLink(event) {
   if (window.ga) {
-    event.preventDefault()
-    const url = event.currentTarget.href
+    event.preventDefault();
+    const url = event.currentTarget.href;
     window.ga('send', 'event', 'outbound', 'click', url, {
       transport: 'beacon',
       hitCallback() {
-        document.location = url
+        document.location = url;
       },
-    })
+    });
   }
 }
 
@@ -233,78 +238,78 @@ function CopyFeedback(props) {
         </ThankBody>
       </ReakitDialog>
     </>
-  )
+  );
 }
 
-const Editor = lazy(() => import('./Editor'))
+const Editor = lazy(() => import('./Editor'));
 
 const ClientOnly = ({ children }) => {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
-    setVisible(true)
-  }, [])
-  return visible ? children : null
-}
+    setVisible(true);
+  }, []);
+  return visible ? children : null;
+};
 
-const Copy = 'Copy'
-const Copied = 'Copied!'
+const Copy = 'Copy';
+const Copied = 'Copied!';
 
 export function Playground() {
-  const [input, setInput] = useState(defaultSvg)
-  const [output, setOutput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [state, setState] = useQuery(getInitialState)
-  const dialog = useDialogState({ visible: false })
-  const dialogDisplayedRef = useRef(false)
+  const [input, setInput] = useState(defaultSvg);
+  const [output, setOutput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [state, setState] = useQuery(getInitialState);
+  const dialog = useDialogState({ visible: false });
+  const dialogDisplayedRef = useRef(false);
 
-  const transformIdRef = useRef(0)
+  const transformIdRef = useRef(0);
 
   useEffect(() => {
     async function transform() {
       if (input.trim() === '') {
-        setOutput('')
-        return
+        setOutput('');
+        return;
       }
 
-      setLoading(true)
+      setLoading(true);
 
       if (window.ga) {
         window.ga('send', {
           hitType: 'event',
           eventCategory: 'Playground',
           eventAction: 'transform',
-        })
+        });
       }
 
       try {
         /* eslint-disable-next-line no-plusplus */
-        const transformId = ++transformIdRef.current
-        const output = await svgr(input, stateToSettings(state))
+        const transformId = ++transformIdRef.current;
+        const output = await svgr(input, stateToSettings(state));
         if (transformId === transformIdRef.current) {
-          setOutput(output)
-          setLoading(false)
+          setOutput(output);
+          setLoading(false);
         }
       } catch (error) {
         // We do nothing and assume that provided code is not correct
       }
     }
 
-    transform()
-  }, [input, JSON.stringify(state)])
+    transform();
+  }, [input, JSON.stringify(state)]);
 
   const handleButtonClick = (event) => {
-    navigator.clipboard.writeText(output)
+    navigator.clipboard.writeText(output);
     !dialogDisplayedRef.current &&
       setTimeout(() => {
-        dialog.show()
-        dialogDisplayedRef.current = true
-      }, 50)
-    const button = event.target
-    button.innerText = Copied
+        dialog.show();
+        dialogDisplayedRef.current = true;
+      }, 50);
+    const button = event.target;
+    button.innerText = Copied;
     setTimeout(() => {
-      button.innerText = Copy
-    }, 2000)
-  }
+      button.innerText = Copy;
+    }, 2000);
+  };
 
   return (
     <>
@@ -334,13 +339,13 @@ export function Playground() {
               <EditorContainer
                 data-loading={loading ? '' : undefined}
                 onKeyDown={(event) => {
-                  if (dialogDisplayedRef.current) return
+                  if (dialogDisplayedRef.current) return;
                   // Detect copy
                   if ((event.metaKey || event.ctrlKey) && event.key === 'c') {
                     setTimeout(() => {
-                      dialog.show()
-                      dialogDisplayedRef.current = true
-                    }, 50)
+                      dialog.show();
+                      dialogDisplayedRef.current = true;
+                    }, 50);
                   }
                 }}
               >
@@ -361,5 +366,5 @@ export function Playground() {
         </Container>
       </ClientOnly>
     </>
-  )
+  );
 }

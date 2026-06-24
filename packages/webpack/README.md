@@ -24,13 +24,13 @@ In your `webpack.config.js`:
 In your code:
 
 ```js
-import Star from './star.svg'
+import Star from './star.svg';
 
 const App = () => (
   <div>
     <Star />
   </div>
-)
+);
 ```
 
 ### Passing options
@@ -65,14 +65,14 @@ In your `webpack.config.js`:
 In your code:
 
 ```js
-import starUrl, { ReactComponent as Star } from './star.svg'
+import starUrl, { ReactComponent as Star } from './star.svg';
 
 const App = () => (
   <div>
     <img src={starUrl} alt="star" />
     <Star />
   </div>
-)
+);
 ```
 
 The named export defaults to `ReactComponent`, but can be customized with the `namedExport` option.
@@ -109,7 +109,7 @@ By default, `@svgr2/webpack` includes a `babel-loader` with [an optimized config
 It is possible to detect the module that requires your SVG using [`Rule.issuer`](https://webpack.js.org/configuration/module/#ruleissuer) in Webpack 5. Using it you can specify two different configurations for JavaScript and the rest of your files.
 
 ```js
-;[
+[
   {
     test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
     issuer: /\.[jt]sx?$/,
@@ -119,7 +119,7 @@ It is possible to detect the module that requires your SVG using [`Rule.issuer`]
     test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
     loader: 'url-loader',
   },
-]
+];
 ```
 
 _[Rule.issuer](https://v4.webpack.js.org/configuration/module/#ruleissuer) in Webpack 4 has additional conditions which are not available in Webpack 5._

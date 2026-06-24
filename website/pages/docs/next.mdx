@@ -61,26 +61,26 @@ export default nextConfig;
 **Your code**
 
 ```js
-import Star from './star.svg'
+import Star from './star.svg';
 
 const Example = () => (
   <div>
     <Star />
   </div>
-)
+);
 ```
 
 Or, using the classic (URL) import:
 
 ```js
-import Image from 'next/image'
-import starUrl from './star.svg?url'
+import Image from 'next/image';
+import starUrl from './star.svg?url';
 
 const Example = () => (
   <div>
     <Image src={starUrl} />
   </div>
-)
+);
 ```
 
 Please refer to [SVGR webpack guide](/docs/webpack/) for advanced use cases.
@@ -95,14 +95,14 @@ Add a custom type decleration file (e.g. **svgr.d.ts**) to the root of your repo
 
 ```ts
 declare module '*.svg' {
-  import { FC, SVGProps } from 'react'
-  const content: FC<SVGProps<SVGElement>>
-  export default content
+  import { FC, SVGProps } from 'react';
+  const content: FC<SVGProps<SVGElement>>;
+  export default content;
 }
 
 declare module '*.svg?url' {
-  const content: any
-  export default content
+  const content: any;
+  export default content;
 }
 ```
 

@@ -16,16 +16,16 @@ Configure [Jest](https://jestjs.io/) to work properly with SVGR.
 Create a mock file `__mocks__/svg.js`:
 
 ```jsx
-export default 'SvgrURL'
-export const ReactComponent = 'div'
+export default 'SvgrURL';
+export const ReactComponent = 'div';
 ```
 
 The above mock would support the following import syntaxes:
 
 ```js
-import logoURL from '../assets/logo.svg'
+import logoURL from '../assets/logo.svg';
 // and
-import { ReactComponent as Logo } from '../assets/logo.svg'
+import { ReactComponent as Logo } from '../assets/logo.svg';
 ```
 
 ## 2. Configure Jest
@@ -47,7 +47,7 @@ module.exports = {
   moduleNameMapper: {
     '\\.svg$': '<rootDir>/__mocks__/svg.js',
   },
-}
+};
 ```
 
 Your snapshots will include all properties on the icon components, so they will be tested.

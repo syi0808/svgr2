@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import prettier from '.'
+import prettier from '.';
 
-const state = { componentName: 'Foo' }
+const state = { componentName: 'Foo' };
 
 describe('prettier', () => {
   it('should prettify code', () => {
@@ -12,9 +12,9 @@ describe('prettier', () => {
         runtimeConfig: true,
       },
       state,
-    )
-    expect(result).toBe('const foo = <div></div>\n')
-  })
+    );
+    expect(result).toBe('const foo = <div></div>\n');
+  });
 
   it('should support config.prettierConfig', () => {
     const result = prettier(
@@ -25,25 +25,25 @@ describe('prettier', () => {
         prettierConfig: { semi: true },
       },
       state,
-    )
-    expect(result).toBe('const foo = <div></div>;\n')
-  })
+    );
+    expect(result).toBe('const foo = <div></div>;\n');
+  });
 
   it('should use state.filePath to detect configuration', () => {
     const result = prettier(
       `const foo = <div></div>`,
       { prettier: true, runtimeConfig: true },
       { ...state, filePath: '/tmp' },
-    )
-    expect(result).toBe('const foo = <div></div>;\n')
-  })
+    );
+    expect(result).toBe('const foo = <div></div>;\n');
+  });
 
   it('should resolve the prettier config with the editorconfig option', () => {
-    jest.resetModules()
-    jest.doMock('prettier')
+    jest.resetModules();
+    jest.doMock('prettier');
     /* eslint-disable global-require */
-    const prettierPlugin = require('.').default
-    const { resolveConfig } = require('prettier')
+    const prettierPlugin = require('.').default;
+    const { resolveConfig } = require('prettier');
     /* eslint-enable global-require */
 
     prettierPlugin(
@@ -53,18 +53,18 @@ describe('prettier', () => {
         runtimeConfig: true,
       },
       {},
-    )
+    );
     expect(resolveConfig.sync).toHaveBeenCalledWith(expect.any(String), {
       editorconfig: true,
-    })
-  })
+    });
+  });
 
   it('should not load runtime configuration with `runtimeConfig: false`', () => {
-    jest.resetModules()
-    jest.doMock('prettier')
+    jest.resetModules();
+    jest.doMock('prettier');
     /* eslint-disable global-require */
-    const prettierPlugin = require('.').default
-    const { resolveConfig } = require('prettier')
+    const prettierPlugin = require('.').default;
+    const { resolveConfig } = require('prettier');
     /* eslint-enable global-require */
 
     prettierPlugin(
@@ -74,7 +74,7 @@ describe('prettier', () => {
         runtimeConfig: false,
       },
       {},
-    )
-    expect(resolveConfig.sync).not.toHaveBeenCalled()
-  })
-})
+    );
+    expect(resolveConfig.sync).not.toHaveBeenCalled();
+  });
+});

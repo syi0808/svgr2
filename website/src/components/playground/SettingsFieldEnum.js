@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { RadioControl } from './controls/RadioControl'
-import { SmallLabel } from './SmallLabel'
-import { CheckGroup } from './CheckGroup'
+import * as React from 'react';
+import { RadioControl } from './controls/RadioControl';
+import { SmallLabel } from './SmallLabel';
+import { CheckGroup } from './CheckGroup';
 
 export function SettingsFieldEnum({ setting }) {
   return (
@@ -18,5 +18,5 @@ export function SettingsFieldEnum({ setting }) {
         </CheckGroup>
       ))}
     </div>
-  )
+  );
 }

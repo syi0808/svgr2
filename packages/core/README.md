@@ -38,7 +38,11 @@ By default `@svgr2/core` doesn't include any plugin, if you want them, you have 
 
 ```js
 svgr(svgCode, {
-  plugins: ['@svgr2/plugin-svgo', '@svgr2/plugin-jsx', '@svgr2/plugin-prettier'],
+  plugins: [
+    '@svgr2/plugin-svgo',
+    '@svgr2/plugin-jsx',
+    '@svgr2/plugin-prettier',
+  ],
 }).then((jsCode) => {
   console.log(jsCode);
 });

@@ -66,11 +66,11 @@ const template = (
   opts,
   { imports, interfaces, componentName, props, jsx, exports },
 ) => {
-  const plugins = ['jsx']
+  const plugins = ['jsx'];
   if (opts.typescript) {
-    plugins.push('typescript')
+    plugins.push('typescript');
   }
-  const typeScriptTpl = template.smart({ plugins })
+  const typeScriptTpl = template.smart({ plugins });
   return typeScriptTpl.ast`${imports}
 
 ${interfaces}
@@ -79,10 +79,10 @@ function ${componentName}(${props}) {
   return ${jsx};
 }
 ${exports}
-  `
-}
+  `;
+};
 
-module.exports = template
+module.exports = template;
 ```
 
 **v6.x**
@@ -99,10 +99,10 @@ const ${variables.componentName} = (${variables.props}) => (
 );
  
 ${variables.exports};
-`
-}
+`;
+};
 
-module.exports = template
+module.exports = template;
 ```
 
 ## Programmatic usage
@@ -112,13 +112,13 @@ module.exports = template
 **v5.x**
 
 ```js
-import transform from '@svgr2/core'
+import transform from '@svgr2/core';
 ```
 
 **v6.x**
 
 ```js
-import { transform } from '@svgr2/core'
+import { transform } from '@svgr2/core';
 ```
 
 ## ES Modules

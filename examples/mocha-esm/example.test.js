@@ -1,7 +1,7 @@
-import { Icon } from './example.js'
+import { Icon } from './example.js';
 
 it('works', () => {
   if (Icon !== 'Icon') {
-    throw new Error('Invalid')
+    throw new Error('Invalid');
   }
-})
+});

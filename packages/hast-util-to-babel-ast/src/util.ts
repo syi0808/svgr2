@@ -3,15 +3,15 @@
  */
 export const isNumeric = (value: number | string): boolean => {
   // @ts-ignore
-  return !Number.isNaN(value - parseFloat(value))
-}
+  return !Number.isNaN(value - parseFloat(value));
+};
 
 /**
  * Convert a hyphenated string to camelCase.
  */
 export const hyphenToCamelCase = (string: string): string => {
-  return string.replace(/-(.)/g, (_, chr) => chr.toUpperCase())
-}
+  return string.replace(/-(.)/g, (_, chr) => chr.toUpperCase());
+};
 
 /**
  * Trim the specified substring off the string. If the string does not end
@@ -23,17 +23,17 @@ export const hyphenToCamelCase = (string: string): string => {
 export const trimEnd = (haystack: string, needle: string): string => {
   return haystack.endsWith(needle)
     ? haystack.slice(0, -needle.length)
-    : haystack
-}
+    : haystack;
+};
 
-const KEBAB_REGEX = /[A-Z\u00C0-\u00D6\u00D8-\u00DE]/g
+const KEBAB_REGEX = /[A-Z\u00C0-\u00D6\u00D8-\u00DE]/g;
 
 export const kebabCase = (str: string): string => {
-  return str.replace(KEBAB_REGEX, (match) => `-${match.toLowerCase()}`)
-}
+  return str.replace(KEBAB_REGEX, (match) => `-${match.toLowerCase()}`);
+};
 
-const SPACES_REGEXP = /[\t\r\n\u0085\u2028\u2029]+/g
+const SPACES_REGEXP = /[\t\r\n\u0085\u2028\u2029]+/g;
 
 export const replaceSpaces = (str: string): string => {
-  return str.replace(SPACES_REGEXP, ' ')
-}
+  return str.replace(SPACES_REGEXP, ' ');
+};

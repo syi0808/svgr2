@@ -1,4 +1,4 @@
-import styled from '@xstyled/styled-components'
+import styled from '@xstyled/styled-components';
 
 export const SmallLabel = styled.labelBox`
   text-transform: uppercase;
@@ -6,4 +6,4 @@ export const SmallLabel = styled.labelBox`
   font-weight: bold;
   display: block;
   margin: 2 0;
-`
+`;

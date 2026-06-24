@@ -34,19 +34,19 @@ module.exports = {
       },
     ],
   },
-}
+};
 ```
 
 **Your code**
 
 ```js
-import Star from './star.svg'
+import Star from './star.svg';
 
 const Example = () => (
   <div>
     <Star />
   </div>
-)
+);
 ```
 
 ## Options
@@ -66,7 +66,7 @@ module.exports = {
       },
     ],
   },
-}
+};
 ```
 
 [SVGR options reference](https://react-svgr.com/docs/options/) describes all options available.
@@ -94,14 +94,14 @@ module.exports = {
       },
     ],
   },
-}
+};
 ```
 
 **Your code**
 
 ```js
-import svg from './assets/file.svg?url'
-import Svg from './assets/file.svg'
+import svg from './assets/file.svg?url';
+import Svg from './assets/file.svg';
 
 const App = () => {
   return (
@@ -109,8 +109,8 @@ const App = () => {
       <img src={svg} width="200" height="200" />
       <Svg width="200" height="200" viewBox="0 0 3500 3500" />
     </div>
-  )
-}
+  );
+};
 ```
 
 ## Use SVG in CSS files
@@ -142,20 +142,20 @@ module.exports = {
       },
     ],
   },
-}
+};
 ```
 
 **Your code**
 
 ```js
-import starUrl, { ReactComponent as Star } from './star.svg'
+import starUrl, { ReactComponent as Star } from './star.svg';
 
 const App = () => (
   <div>
     <img src={starUrl} alt="star" />
     <Star />
   </div>
-)
+);
 ```
 
 The named export defaults to `ReactComponent` and can be customized with the `namedExport` option.

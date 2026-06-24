@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { NodePath, types as t } from '@babel/core'
+import { NodePath, types as t } from '@babel/core';
 
-const elements = ['svg', 'Svg']
+const elements = ['svg', 'Svg'];
 
-type tag = 'title' | 'desc'
+type tag = 'title' | 'desc';
 
 export interface Options {
-  tag: tag | null
+  tag: tag | null;
 }
 
 interface State {
-  opts: Options
+  opts: Options;
 }
 
 const createTagElement = (
@@ -18,19 +18,19 @@ const createTagElement = (
   children: t.JSXExpressionContainer[] = [],
   attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[] = [],
 ) => {
-  const eleName = t.jsxIdentifier(tag)
+  const eleName = t.jsxIdentifier(tag);
   return t.jsxElement(
     t.jsxOpeningElement(eleName, attributes),
     t.jsxClosingElement(eleName),
     children,
-  )
-}
+  );
+};
 
 const createTagIdAttribute = (tag: tag) =>
   t.jsxAttribute(
     t.jsxIdentifier('id'),
     t.jsxExpressionContainer(t.identifier(`${tag}Id`)),
-  )
+  );
 
 const addTagIdAttribute = (
   tag: tag,
@@ -38,44 +38,44 @@ const addTagIdAttribute = (
 ) => {
   const existingId = attributes.find(
     (attribute) => t.isJSXAttribute(attribute) && attribute.name.name === 'id',
-  ) as t.JSXAttribute | undefined
+  ) as t.JSXAttribute | undefined;
 
   if (!existingId) {
-    return [...attributes, createTagIdAttribute(tag)]
+    return [...attributes, createTagIdAttribute(tag)];
   }
   existingId.value = t.jsxExpressionContainer(
     t.isStringLiteral(existingId.value)
       ? t.logicalExpression('||', t.identifier(`${tag}Id`), existingId.value)
       : t.identifier(`${tag}Id`),
-  )
-  return attributes
-}
+  );
+  return attributes;
+};
 
 const plugin = () => ({
   visitor: {
     JSXElement(path: NodePath<t.JSXElement>, state: State) {
-      const tag = state.opts.tag || 'title'
-      if (!elements.length) return
+      const tag = state.opts.tag || 'title';
+      if (!elements.length) return;
 
-      const openingElement = path.get('openingElement')
-      const openingElementName = openingElement.get('name')
+      const openingElement = path.get('openingElement');
+      const openingElementName = openingElement.get('name');
       if (
         !elements.some((element) =>
           openingElementName.isJSXIdentifier({ name: element }),
         )
       ) {
-        return
+        return;
       }
 
       const getTagElement = (
         existingTitle?: t.JSXElement,
       ): t.JSXExpressionContainer => {
-        const tagExpression = t.identifier(tag)
+        const tagExpression = t.identifier(tag);
         if (existingTitle) {
           existingTitle.openingElement.attributes = addTagIdAttribute(
             tag,
             existingTitle.openingElement.attributes,
-          )
+          );
         }
         const conditionalTitle = t.conditionalExpression(
           tagExpression,
@@ -87,7 +87,7 @@ const plugin = () => ({
               : [createTagIdAttribute(tag)],
           ),
           t.nullLiteral(),
-        )
+        );
         if (existingTitle?.children?.length) {
           // If title already exists render as follows
           // `{title === undefined ? fallbackTitleElement : titleElement}`
@@ -101,35 +101,35 @@ const plugin = () => ({
               existingTitle,
               conditionalTitle,
             ),
-          )
+          );
         }
-        return t.jsxExpressionContainer(conditionalTitle)
-      }
+        return t.jsxExpressionContainer(conditionalTitle);
+      };
 
       // store the title element
-      let tagElement: t.JSXExpressionContainer | null = null
+      let tagElement: t.JSXExpressionContainer | null = null;
 
       const hasTitle = path.get('children').some((childPath) => {
-        if (childPath.node === tagElement) return false
-        if (!childPath.isJSXElement()) return false
-        const name = childPath.get('openingElement').get('name')
-        if (!name.isJSXIdentifier()) return false
-        if (name.node.name !== tag) return false
-        tagElement = getTagElement(childPath.node)
-        childPath.replaceWith(tagElement)
-        return true
-      })
+        if (childPath.node === tagElement) return false;
+        if (!childPath.isJSXElement()) return false;
+        const name = childPath.get('openingElement').get('name');
+        if (!name.isJSXIdentifier()) return false;
+        if (name.node.name !== tag) return false;
+        tagElement = getTagElement(childPath.node);
+        childPath.replaceWith(tagElement);
+        return true;
+      });
 
       // create a title element if not already create
-      tagElement = tagElement || getTagElement()
+      tagElement = tagElement || getTagElement();
       if (!hasTitle) {
         // path.unshiftContainer is not working well :(
         // path.unshiftContainer('children', titleElement)
-        path.node.children.unshift(tagElement)
-        path.replaceWith(path.node)
+        path.node.children.unshift(tagElement);
+        path.replaceWith(path.node);
       }
     },
   },
-})
+});
 
-export default plugin
+export default plugin;

@@ -28,7 +28,7 @@ Import `transform` from `@svgr2/core` to transform a file. It takes three argume
 - `state`: a state linked to the transformation
 
 ```js
-import { transform } from '@svgr2/core'
+import { transform } from '@svgr2/core';
 
 const svgCode = `
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -36,13 +36,13 @@ const svgCode = `
   <rect x="10" y="10" height="100" width="100"
     style="stroke:#ff0000; fill: #0000ff"/>
 </svg>
-`
+`;
 
 const jsCode = await transform(
   svgCode,
   { icon: true },
   { componentName: 'MyComponent' },
-)
+);
 ```
 
 ### Options
@@ -65,7 +65,7 @@ npm install @svgr2/plugin-jsx @svgr2/plugin-prettier
 ```
 
 ```js
-import { transform } from '@svgr2/core'
+import { transform } from '@svgr2/core';
 
 const svgCode = `
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -73,16 +73,20 @@ const svgCode = `
   <rect x="10" y="10" height="100" width="100"
     style="stroke:#ff0000; fill: #0000ff"/>
 </svg>
-`
+`;
 
 const jsCode = await transform(
   svgCode,
   {
-    plugins: ['@svgr2/plugin-svgo', '@svgr2/plugin-jsx', '@svgr2/plugin-prettier'],
+    plugins: [
+      '@svgr2/plugin-svgo',
+      '@svgr2/plugin-jsx',
+      '@svgr2/plugin-prettier',
+    ],
     icon: true,
   },
   { componentName: 'MyComponent' },
-)
+);
 ```
 
 ## Synchronous usage
@@ -90,7 +94,7 @@ const jsCode = await transform(
 SVGR provides two API, an asynchronous one and a synchronous one. It is recommended to use the asynchronous one as possible, but sometimes you may have to use the synchronous one. SVGR exposes `transform.sync` for synchronous usage.
 
 ```js
-import { transform } from '@svgr2/core'
+import { transform } from '@svgr2/core';
 
 const svgCode = `
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -98,13 +102,13 @@ const svgCode = `
   <rect x="10" y="10" height="100" width="100"
     style="stroke:#ff0000; fill: #0000ff"/>
 </svg>
-`
+`;
 
 const jsCode = transform.sync(
   svgCode,
   { icon: true },
   { componentName: 'MyComponent' },
-)
+);
 ```
 
 ## Note for tools creator

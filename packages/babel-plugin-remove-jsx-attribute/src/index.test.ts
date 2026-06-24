@@ -1,14 +1,14 @@
-import { transform } from '@babel/core'
-import plugin, { Options } from '.'
+import { transform } from '@babel/core';
+import plugin, { Options } from '.';
 
 const testPlugin = (code: string, options: Options) => {
   const result = transform(code, {
     plugins: ['@babel/plugin-syntax-jsx', [plugin, options]],
     configFile: false,
-  })
+  });
 
-  return result?.code
-}
+  return result?.code;
+};
 
 describe('plugin', () => {
   it('should remove attributes from an element', () => {
@@ -17,8 +17,8 @@ describe('plugin', () => {
         elements: ['span'],
         attributes: ['foo'],
       }),
-    ).toMatchInlineSnapshot(`"<div foo><span /></div>;"`)
-  })
+    ).toMatchInlineSnapshot(`"<div foo><span /></div>;"`);
+  });
 
   it('should not throw error when spread operator is used', () => {
     expect(
@@ -26,6 +26,6 @@ describe('plugin', () => {
         elements: ['span'],
         attributes: ['foo'],
       }),
-    ).toMatchInlineSnapshot(`"<div foo><span {...props} /></div>;"`)
-  })
-})
+    ).toMatchInlineSnapshot(`"<div foo><span {...props} /></div>;"`);
+  });
+});

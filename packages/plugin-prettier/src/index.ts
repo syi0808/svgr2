@@ -1,14 +1,14 @@
-import { format, resolveConfig } from 'prettier'
+import { format, resolveConfig } from 'prettier';
 // @ts-ignore
-import deepmerge from 'deepmerge'
-import type { Plugin } from '@svgr2/core'
+import deepmerge from 'deepmerge';
+import type { Plugin } from '@svgr2/core';
 
 const prettierPlugin: Plugin = (code, config, state) => {
-  if (!config.prettier) return code
-  const filePath = state.filePath || process.cwd()
+  if (!config.prettier) return code;
+  const filePath = state.filePath || process.cwd();
   const prettierRcConfig = config.runtimeConfig
     ? resolveConfig.sync(filePath, { editorconfig: true })
-    : {}
+    : {};
   return format(
     code,
     deepmerge.all([
@@ -16,7 +16,7 @@ const prettierPlugin: Plugin = (code, config, state) => {
       prettierRcConfig || {},
       config.prettierConfig || {},
     ]),
-  )
-}
+  );
+};
 
-export default prettierPlugin
+export default prettierPlugin;

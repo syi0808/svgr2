@@ -63,9 +63,13 @@ Using SVGR into Remix is possible by configuring `package.json` scripts.
 
 ```js
 module.exports = {
-  plugins: ['@svgr2/plugin-svgo', '@svgr2/plugin-jsx', '@svgr2/plugin-prettier'],
+  plugins: [
+    '@svgr2/plugin-svgo',
+    '@svgr2/plugin-jsx',
+    '@svgr2/plugin-prettier',
+  ],
   typescript: true,
-}
+};
 ```
 
 **svgo.config.js**
@@ -82,17 +86,17 @@ module.exports = {
       },
     },
   ],
-}
+};
 ```
 
 **Your code**
 
 ```js
-import Star from '~/icons/star.svg'
+import Star from '~/icons/star.svg';
 
 const Example = () => (
   <div>
     <Star />
   </div>
-)
+);
 ```
