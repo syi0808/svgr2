@@ -1,5 +1,5 @@
 {
-  "name": "@svgr/mocha-esm-example",
+  "name": "@svgr2/mocha-esm-example",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,5 +8,5 @@
   "devDependencies": {
     "mocha": "^10.2.0"
   },
-  "version": "8.0.0"
+  "version": "0.1.0"
 }

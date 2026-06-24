@@ -1,7 +1,7 @@
 {
-  "name": "@svgr/babel-preset",
+  "name": "@svgr2/babel-preset",
   "description": "SVGR preset that apply transformations from config",
-  "version": "8.1.0",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -11,8 +11,8 @@
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/gregberge/svgr/tree/main/packages/babel-preset",
-  "author": "Greg Bergé <berge.greg@gmail.com>",
+  "repository": "https://github.com/syi0808/svgr2/tree/main/packages/babel-preset",
+  "author": "Yein Sung <syi778800@gmail.com>",
   "publishConfig": {
     "access": "public"
   },
@@ -23,21 +23,16 @@
   "engines": {
     "node": ">=14"
   },
-  "homepage": "https://react-svgr.com",
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/gregberge"
-  },
   "license": "MIT",
   "dependencies": {
-    "@svgr/babel-plugin-add-jsx-attribute": "workspace:*",
-    "@svgr/babel-plugin-remove-jsx-attribute": "workspace:*",
-    "@svgr/babel-plugin-remove-jsx-empty-expression": "workspace:*",
-    "@svgr/babel-plugin-replace-jsx-attribute-value": "workspace:*",
-    "@svgr/babel-plugin-svg-dynamic-title": "workspace:*",
-    "@svgr/babel-plugin-svg-em-dimensions": "workspace:*",
-    "@svgr/babel-plugin-transform-react-native-svg": "workspace:*",
-    "@svgr/babel-plugin-transform-svg-component": "workspace:*"
+    "@svgr2/babel-plugin-add-jsx-attribute": "workspace:*",
+    "@svgr2/babel-plugin-remove-jsx-attribute": "workspace:*",
+    "@svgr2/babel-plugin-remove-jsx-empty-expression": "workspace:*",
+    "@svgr2/babel-plugin-replace-jsx-attribute-value": "workspace:*",
+    "@svgr2/babel-plugin-svg-dynamic-title": "workspace:*",
+    "@svgr2/babel-plugin-svg-em-dimensions": "workspace:*",
+    "@svgr2/babel-plugin-transform-react-native-svg": "workspace:*",
+    "@svgr2/babel-plugin-transform-svg-component": "workspace:*"
   },
   "peerDependencies": {
     "@babel/core": "^7.0.0-0"

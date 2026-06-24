@@ -1,7 +1,7 @@
 {
-  "name": "@svgr/plugin-svgo",
+  "name": "@svgr2/plugin-svgo",
   "description": "Optimize SVG",
-  "version": "8.1.0",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -11,8 +11,8 @@
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/gregberge/svgr/tree/main/packages/plugin-svgo",
-  "author": "Greg Bergé <berge.greg@gmail.com>",
+  "repository": "https://github.com/syi0808/svgr2/tree/main/packages/plugin-svgo",
+  "author": "Yein Sung <syi778800@gmail.com>",
   "publishConfig": {
     "access": "public"
   },
@@ -22,11 +22,6 @@
   "engines": {
     "node": ">=14"
   },
-  "homepage": "https://react-svgr.com",
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/gregberge"
-  },
   "license": "MIT",
   "scripts": {
     "reset": "rm -rf dist",
@@ -34,7 +29,7 @@
     "prepublishOnly": "pnpm run reset && pnpm run build"
   },
   "peerDependencies": {
-    "@svgr/core": "*"
+    "@svgr2/core": "*"
   },
   "dependencies": {
     "cosmiconfig": "^8.1.3",
@@ -42,6 +37,6 @@
     "svgo": "^3.0.2"
   },
   "devDependencies": {
-    "@svgr/core": "workspace:*"
+    "@svgr2/core": "workspace:*"
   }
 }

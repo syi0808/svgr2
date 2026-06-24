@@ -1,7 +1,7 @@
 {
-  "name": "@svgr/rollup",
+  "name": "@svgr2/rollup",
   "description": "SVGR Rollup plugin.",
-  "version": "8.1.0",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -11,8 +11,8 @@
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/gregberge/svgr/tree/main/packages/rollup",
-  "author": "Greg Bergé <berge.greg@gmail.com>",
+  "repository": "https://github.com/syi0808/svgr2/tree/main/packages/rollup",
+  "author": "Yein Sung <syi778800@gmail.com>",
   "publishConfig": {
     "access": "public"
   },
@@ -25,11 +25,6 @@
   ],
   "engines": {
     "node": ">=14"
-  },
-  "homepage": "https://react-svgr.com",
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/gregberge"
   },
   "license": "MIT",
   "scripts": {
@@ -44,9 +39,9 @@
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.21.0",
     "@rollup/pluginutils": "^5.0.2",
-    "@svgr/core": "workspace:*",
-    "@svgr/plugin-jsx": "workspace:*",
-    "@svgr/plugin-svgo": "workspace:*"
+    "@svgr2/core": "workspace:*",
+    "@svgr2/plugin-jsx": "workspace:*",
+    "@svgr2/plugin-svgo": "workspace:*"
   },
   "devDependencies": {
     "rollup": "^3.20.2",

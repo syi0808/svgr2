@@ -1,7 +1,7 @@
 {
-  "name": "@svgr/webpack",
+  "name": "@svgr2/webpack",
   "description": "SVGR webpack loader.",
-  "version": "8.1.0",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -11,8 +11,8 @@
     },
     "./package.json": "./package.json"
   },
-  "repository": "https://github.com/gregberge/svgr/tree/main/packages/webpack",
-  "author": "Greg Bergé <berge.greg@gmail.com>",
+  "repository": "https://github.com/syi0808/svgr2/tree/main/packages/webpack",
+  "author": "Yein Sung <syi778800@gmail.com>",
   "publishConfig": {
     "access": "public"
   },
@@ -26,11 +26,6 @@
   "engines": {
     "node": ">=14"
   },
-  "homepage": "https://react-svgr.com",
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/gregberge"
-  },
   "license": "MIT",
   "scripts": {
     "reset": "rm -rf dist",
@@ -43,9 +38,9 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.21.0",
-    "@svgr/core": "workspace:*",
-    "@svgr/plugin-jsx": "workspace:*",
-    "@svgr/plugin-svgo": "workspace:*"
+    "@svgr2/core": "workspace:*",
+    "@svgr2/plugin-jsx": "workspace:*",
+    "@svgr2/plugin-svgo": "workspace:*"
   },
   "devDependencies": {
     "babel-loader": "^9.1.2",
