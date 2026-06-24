@@ -28,9 +28,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "reset": "rm -rf dist",
-    "build": "rollup -c ../../build/rollup.config.mjs",
-    "prepublishOnly": "pnpm run reset && pnpm run build"
+    "build": "tsdown",
+    "test": "vitest"
   },
   "dependencies": {
     "@babel/core": "^7.21.3",
@@ -43,6 +42,8 @@
     "@svgr2/plugin-svgo": "workspace:*"
   },
   "devDependencies": {
+    "tsdown": "catalog:",
+    "vitest": "catalog:",
     "babel-loader": "^9.1.2",
     "memory-fs": "^0.5.0",
     "url-loader": "^4.1.1",

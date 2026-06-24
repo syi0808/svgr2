@@ -6,5 +6,10 @@ export default defineConfig({
   dts: {
     sourcemap: true,
   },
+  deps: {
+    dts: {
+      neverBundle: ['webpack'],
+    },
+  },
   clean: true,
 });

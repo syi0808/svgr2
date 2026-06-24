@@ -25,9 +25,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "reset": "rm -rf dist",
-    "build": "rollup -c ../../build/rollup.config.mjs",
-    "prepublishOnly": "pnpm run reset && pnpm run build"
+    "build": "tsdown",
+    "test": "vitest"
   },
   "peerDependencies": {
     "@svgr2/core": "*"
@@ -38,6 +37,8 @@
     "svgo": "^3.0.2"
   },
   "devDependencies": {
+    "tsdown": "catalog:",
+    "vitest": "catalog:",
     "@svgr2/core": "workspace:*"
   }
 }

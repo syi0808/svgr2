@@ -1,18 +1,18 @@
-import { callbackify } from 'util'
-import { transformAsync, createConfigItem } from '@babel/core'
-import { transform, Config, State } from '@svgr2/core'
-import { normalize } from 'path'
-import svgo from '@svgr2/plugin-svgo'
-import jsx from '@svgr2/plugin-jsx'
+import { callbackify } from 'util';
+import { transformAsync, createConfigItem } from '@babel/core';
+import { transform, Config, State } from '@svgr2/core';
+import { normalize } from 'path';
+import svgo from '@svgr2/plugin-svgo';
+import jsx from '@svgr2/plugin-jsx';
 // @ts-ignore
-import presetReact from '@babel/preset-react'
+import presetReact from '@babel/preset-react';
 // @ts-ignore
-import presetEnv from '@babel/preset-env'
+import presetEnv from '@babel/preset-env';
 // @ts-ignore
-import presetTS from '@babel/preset-typescript'
+import presetTS from '@babel/preset-typescript';
 // @ts-ignore
-import pluginTransformReactConstantElements from '@babel/plugin-transform-react-constant-elements'
-import type * as webpack from 'webpack'
+import pluginTransformReactConstantElements from '@babel/plugin-transform-react-constant-elements';
+import type { LoaderContext } from 'webpack';
 
 const babelOptions = {
   babelrc: false,
@@ -22,7 +22,7 @@ const babelOptions = {
     createConfigItem([presetEnv, { modules: false }], { type: 'preset' }),
   ],
   plugins: [createConfigItem(pluginTransformReactConstantElements)],
-}
+};
 
 const typeScriptBabelOptions = {
   ...babelOptions,
@@ -33,42 +33,42 @@ const typeScriptBabelOptions = {
       { type: 'preset' },
     ),
   ],
-}
+};
 
 interface LoaderOptions extends Config {
-  babel?: boolean
+  babel?: boolean;
 }
 
 const tranformSvg = callbackify(
   async (contents: string, options: LoaderOptions, state: Partial<State>) => {
-    const { babel = true, ...config } = options
-    const jsCode = await transform(contents, config, state)
-    if (!babel) return jsCode
+    const { babel = true, ...config } = options;
+    const jsCode = await transform(contents, config, state);
+    if (!babel) return jsCode;
     const result = await transformAsync(
       jsCode,
       options.typescript ? typeScriptBabelOptions : babelOptions,
-    )
+    );
     if (!result?.code) {
-      throw new Error(`Error while transforming using Babel`)
+      throw new Error(`Error while transforming using Babel`);
     }
-    return result.code
+    return result.code;
   },
-)
+);
 
 function svgrLoader(
-  this: webpack.LoaderContext<LoaderOptions>,
+  this: LoaderContext<LoaderOptions>,
   contents: string,
 ): void {
-  this.cacheable && this.cacheable()
-  const callback = this.async()
+  this.cacheable && this.cacheable();
+  const callback = this.async();
 
-  const options = this.getOptions()
+  const options = this.getOptions();
 
   const previousExport = (() => {
-    if (contents.startsWith('export ')) return contents
-    const exportMatches = contents.match(/^module.exports\s*=\s*(.*)/)
-    return exportMatches ? `export default ${exportMatches[1]}` : null
-  })()
+    if (contents.startsWith('export ')) return contents;
+    const exportMatches = contents.match(/^module.exports\s*=\s*(.*)/);
+    return exportMatches ? `export default ${exportMatches[1]}` : null;
+  })();
 
   const state = {
     caller: {
@@ -77,25 +77,25 @@ function svgrLoader(
       defaultPlugins: [svgo, jsx],
     },
     filePath: normalize(this.resourcePath),
-  }
+  };
 
   if (!previousExport) {
-    tranformSvg(contents, options, state, callback)
+    tranformSvg(contents, options, state, callback);
   } else {
     this.fs.readFile(this.resourcePath, (err, result) => {
       if (err) {
-        callback(err)
-        return
+        callback(err);
+        return;
       }
       tranformSvg(String(result), options, state, (err, content) => {
         if (err) {
-          callback(err)
-          return
+          callback(err);
+          return;
         }
-        callback(null, content)
-      })
-    })
+        callback(null, content);
+      });
+    });
   }
 }
 
-export default svgrLoader
+export default svgrLoader;

@@ -38,8 +38,11 @@
     "@babel/core": "^7.0.0-0"
   },
   "scripts": {
-    "reset": "rm -rf dist",
-    "build": "rollup -c ../../build/rollup.config.mjs",
-    "prepublishOnly": "pnpm run reset && pnpm run build"
+    "build": "tsdown",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:",
+    "vitest": "catalog:"
   }
 }

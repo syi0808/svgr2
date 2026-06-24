@@ -25,9 +25,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "reset": "rm -rf dist",
-    "build": "rollup -c ../../build/rollup.config.mjs",
-    "prepublishOnly": "pnpm run reset && pnpm run build"
+    "build": "tsdown",
+    "test": "vitest"
   },
   "dependencies": {
     "@babel/core": "^7.21.3",
@@ -36,6 +35,8 @@
     "svg-parser": "^2.0.4"
   },
   "devDependencies": {
+    "tsdown": "catalog:",
+    "vitest": "catalog:",
     "@svgr2/core": "workspace:*",
     "@types/svg-parser": "^2.0.3"
   },
