@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "singleQuote": true,
+  "trailingComma": "all",
+  "semi": true,
+  "printWidth": 80,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "__fixtures_build__/",
+    "__fixtures__/",
+    "CHANGELOG.md",
+    "package.json",
+    "lerna.json",
+    "dist/",
+    ".next/",
+    "/website/.cache/",
+    "/website/public/",
+    "pnpm-workspace.yaml",
+    "pnpm-lock.yaml"
+  ]
+}

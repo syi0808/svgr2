@@ -1,8 +1,0 @@
-node_modules/
-__fixtures__/
-__fixtures_build__/
-coverage/
-examples/
-svgr.now.sh/
-/website/
-dist/
