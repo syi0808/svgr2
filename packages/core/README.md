@@ -13,7 +13,7 @@ npm install @svgr/core
 ## Usage
 
 ```js
-import { transform } from '@svgr/core'
+import { transform } from '@svgr/core';
 
 const svgCode = `
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -21,13 +21,13 @@ const svgCode = `
   <rect x="10" y="10" height="100" width="100"
     style="stroke:#ff0000; fill: #0000ff"/>
 </svg>
-`
+`;
 
 transform(svgCode, { icon: true }, { componentName: 'MyComponent' }).then(
   (jsCode) => {
-    console.log(jsCode)
+    console.log(jsCode);
   },
-)
+);
 ```
 
 Use `svgr.sync(code, config, state)` if you would like to use sync version.
@@ -40,8 +40,8 @@ By default `@svgr/core` doesn't include any plugin, if you want them, you have t
 svgr(svgCode, {
   plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx', '@svgr/plugin-prettier'],
 }).then((jsCode) => {
-  console.log(jsCode)
-})
+  console.log(jsCode);
+});
 ```
 
 ## License

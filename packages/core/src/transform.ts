@@ -1,34 +1,34 @@
-import { expandState } from './state.js'
-import { loadConfig } from './config.js'
-import { resolvePlugin, getPlugins } from './plugins.js'
-import type { Config } from './config.js'
-import type { State } from './state.js'
+import { expandState } from './state.js';
+import { loadConfig } from './config.js';
+import { resolvePlugin, getPlugins } from './plugins.js';
+import type { Config } from './config.js';
+import type { State } from './state.js';
 
 const run = (code: string, config: Config, state: Partial<State>): string => {
-  const expandedState = expandState(state)
-  const plugins = getPlugins(config, state).map(resolvePlugin)
-  let nextCode = String(code).replace('\0', '')
+  const expandedState = expandState(state);
+  const plugins = getPlugins(config, state).map(resolvePlugin);
+  let nextCode = String(code).replace('\0', '');
   // eslint-disable-next-line no-restricted-syntax
   for (const plugin of plugins) {
-    nextCode = plugin(nextCode, config, expandedState)
+    nextCode = plugin(nextCode, config, expandedState);
   }
-  return nextCode
-}
+  return nextCode;
+};
 
 export const transform = async (
   code: string,
   config: Config = {},
   state: Partial<State> = {},
 ): Promise<string> => {
-  config = await loadConfig(config, state)
-  return run(code, config, state)
-}
+  config = await loadConfig(config, state);
+  return run(code, config, state);
+};
 
 transform.sync = (
   code: string,
   config: Config = {},
   state: Partial<State> = {},
 ): string => {
-  config = loadConfig.sync(config, state)
-  return run(code, config, state)
-}
+  config = loadConfig.sync(config, state);
+  return run(code, config, state);
+};

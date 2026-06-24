@@ -1,6 +1,6 @@
-import type { Config } from './config.js'
-import type { State } from './state.js'
-import { transform } from './transform.js'
+import type { Config } from './config.js';
+import type { State } from './state.js';
+import { transform } from './transform.js';
 
 function convertWithAllPlugins(
   code: string,
@@ -18,7 +18,7 @@ function convertWithAllPlugins(
       ...config,
     },
     state,
-  )
+  );
 }
 
 function convertSyncWithAllPlugins(
@@ -37,7 +37,7 @@ function convertSyncWithAllPlugins(
       ...config,
     },
     state,
-  )
+  );
 }
 
 const svgBaseCode = `
@@ -54,19 +54,19 @@ const svgBaseCode = `
         </g>
     </g>
 </svg>
-`
+`;
 
 describe('convert', () => {
   it('should convert', async () => {
-    const result = await convertWithAllPlugins(svgBaseCode)
-    expect(result).toMatchSnapshot()
-  })
+    const result = await convertWithAllPlugins(svgBaseCode);
+    expect(result).toMatchSnapshot();
+  });
 
   it('should work synchronously', async () => {
-    const syncResult = convertSyncWithAllPlugins(svgBaseCode)
-    const asyncResult = await convertWithAllPlugins(svgBaseCode)
-    expect(syncResult).toEqual(asyncResult)
-  })
+    const syncResult = convertSyncWithAllPlugins(svgBaseCode);
+    const asyncResult = await convertWithAllPlugins(svgBaseCode);
+    expect(syncResult).toEqual(asyncResult);
+  });
 
   it('should remove style tags', async () => {
     const result = await convertWithAllPlugins(
@@ -93,10 +93,10 @@ describe('convert', () => {
           </g>
       </svg>
     `,
-    )
+    );
 
-    expect(result).toMatchSnapshot()
-  })
+    expect(result).toMatchSnapshot();
+  });
 
   it('should not remove all style tags', async () => {
     const result = await convertWithAllPlugins(
@@ -123,10 +123,10 @@ describe('convert', () => {
           </g>
       </svg>
     `,
-    )
+    );
 
-    expect(result).toMatchSnapshot()
-  })
+    expect(result).toMatchSnapshot();
+  });
 
   it('should handle special SVG attributes', async () => {
     const result = await convertWithAllPlugins(
@@ -135,10 +135,10 @@ describe('convert', () => {
         <rect x="10" y="10" width="100" height="100" externalResourcesRequired="false" />
       </svg>
     `,
-    )
+    );
 
-    expect(result).toMatchSnapshot()
-  })
+    expect(result).toMatchSnapshot();
+  });
 
   it('should convert style attribute', async () => {
     const result = await convertWithAllPlugins(
@@ -270,10 +270,10 @@ describe('convert', () => {
        id="use4366" />
   </g>
 </svg>`,
-    )
+    );
 
-    expect(result).toMatchSnapshot()
-  })
+    expect(result).toMatchSnapshot();
+  });
 
   it('should remove null characters', async () => {
     const result = await convertWithAllPlugins(
@@ -290,11 +290,11 @@ describe('convert', () => {
 	C24.5,22.2,22.2,24.5,19.4,24.5z"/>
 </svg>
 \0`,
-    )
+    );
 
-    expect(result).toMatchSnapshot()
-    expect(result).not.toContain('\0')
-  })
+    expect(result).toMatchSnapshot();
+    expect(result).not.toContain('\0');
+  });
 
   describe('config', () => {
     const configs: (Config & { state?: Partial<State> })[] = [
@@ -326,33 +326,33 @@ describe('convert', () => {
         state: { caller: { previousExport: 'export default "logo.svg";' } },
       },
       { exportType: 'named' },
-    ]
+    ];
 
     test.each(configs)('accepts options %j', async ({ state, ...config }) => {
-      const result = await convertWithAllPlugins(svgBaseCode, config, state)
-      expect(result).toMatchSnapshot()
-    })
+      const result = await convertWithAllPlugins(svgBaseCode, config, state);
+      expect(result).toMatchSnapshot();
+    });
 
     it('titleProp: without title added', async () => {
       const svg = `
       <svg width="0" height="0" style="position:absolute">
     <path d="M0 0h24v24H0z" fill="none" />
 </svg>
-`
+`;
       expect(
         await convertWithAllPlugins(svg, { titleProp: true }),
-      ).toMatchSnapshot()
-    })
+      ).toMatchSnapshot();
+    });
 
     it('descProp: without desc added', async () => {
       const svg = `
       <svg width="0" height="0" style="position:absolute">
     <path d="M0 0h24v24H0z" fill="none" />
 </svg>
-`
+`;
       expect(
         await convertWithAllPlugins(svg, { descProp: true }),
-      ).toMatchSnapshot()
-    })
-  })
-})
+      ).toMatchSnapshot();
+    });
+  });
+});

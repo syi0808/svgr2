@@ -1,52 +1,52 @@
-import { cosmiconfig, cosmiconfigSync } from 'cosmiconfig'
-import type { Options as PrettierOptions } from 'prettier'
-import type { Config as SvgoConfig } from 'svgo'
-import type { Options as TransformOptions } from '@svgr2/babel-preset'
-import type { TransformOptions as BabelTransformOptions } from '@babel/core'
-import type { ConfigPlugin } from './plugins.js'
-import type { State } from './state.js'
+import { cosmiconfig, cosmiconfigSync } from 'cosmiconfig';
+import type { Options as PrettierOptions } from 'prettier';
+import type { Config as SvgoConfig } from 'svgo';
+import type { Options as TransformOptions } from '@svgr2/babel-preset';
+import type { TransformOptions as BabelTransformOptions } from '@babel/core';
+import type { ConfigPlugin } from './plugins.js';
+import type { State } from './state.js';
 
 export interface Config {
-  ref?: boolean
-  titleProp?: boolean
-  descProp?: boolean
-  expandProps?: boolean | 'start' | 'end'
-  dimensions?: boolean
-  icon?: boolean | string | number
-  native?: boolean
+  ref?: boolean;
+  titleProp?: boolean;
+  descProp?: boolean;
+  expandProps?: boolean | 'start' | 'end';
+  dimensions?: boolean;
+  icon?: boolean | string | number;
+  native?: boolean;
   svgProps?: {
-    [key: string]: string
-  }
+    [key: string]: string;
+  };
   replaceAttrValues?: {
-    [key: string]: string
-  }
-  runtimeConfig?: boolean
-  typescript?: boolean
-  prettier?: boolean
-  prettierConfig?: PrettierOptions
-  svgo?: boolean
-  svgoConfig?: SvgoConfig
-  configFile?: string
-  template?: TransformOptions['template']
-  memo?: boolean
-  exportType?: 'named' | 'default'
-  namedExport?: string
-  jsxRuntime?: 'classic' | 'classic-preact' | 'automatic'
+    [key: string]: string;
+  };
+  runtimeConfig?: boolean;
+  typescript?: boolean;
+  prettier?: boolean;
+  prettierConfig?: PrettierOptions;
+  svgo?: boolean;
+  svgoConfig?: SvgoConfig;
+  configFile?: string;
+  template?: TransformOptions['template'];
+  memo?: boolean;
+  exportType?: 'named' | 'default';
+  namedExport?: string;
+  jsxRuntime?: 'classic' | 'classic-preact' | 'automatic';
   jsxRuntimeImport?: {
-    source: string
-    namespace?: string
-    specifiers?: string[]
-    defaultSpecifier?: string
-  }
+    source: string;
+    namespace?: string;
+    specifiers?: string[];
+    defaultSpecifier?: string;
+  };
 
   // CLI only
-  index?: boolean
-  plugins?: ConfigPlugin[]
+  index?: boolean;
+  plugins?: ConfigPlugin[];
 
   // JSX
   jsx?: {
-    babelConfig?: BabelTransformOptions
-  }
+    babelConfig?: BabelTransformOptions;
+  };
 }
 
 export const DEFAULT_CONFIG: Config = {
@@ -70,46 +70,46 @@ export const DEFAULT_CONFIG: Config = {
   runtimeConfig: true,
   namedExport: 'ReactComponent',
   exportType: 'default',
-}
+};
 
-const explorer = cosmiconfig('svgr')
-const explorerSync = cosmiconfigSync('svgr')
+const explorer = cosmiconfig('svgr');
+const explorerSync = cosmiconfigSync('svgr');
 
 export const resolveConfig = async (
   searchFrom?: string,
   configFile?: string,
 ): Promise<Config | null> => {
   if (configFile == null) {
-    const result = await explorer.search(searchFrom)
-    return result ? result.config : null
+    const result = await explorer.search(searchFrom);
+    return result ? result.config : null;
   }
-  const result = await explorer.load(configFile)
-  return result ? result.config : null
-}
+  const result = await explorer.load(configFile);
+  return result ? result.config : null;
+};
 
 resolveConfig.sync = (
   searchFrom?: string,
   configFile?: string,
 ): Config | null => {
   if (configFile == null) {
-    const result = explorerSync.search(searchFrom)
-    return result ? result.config : null
+    const result = explorerSync.search(searchFrom);
+    return result ? result.config : null;
   }
-  const result = explorerSync.load(configFile)
-  return result ? result.config : null
-}
+  const result = explorerSync.load(configFile);
+  return result ? result.config : null;
+};
 
 export const resolveConfigFile = async (
   filePath: string,
 ): Promise<string | null> => {
-  const result = await explorer.search(filePath)
-  return result ? result.filepath : null
-}
+  const result = await explorer.search(filePath);
+  return result ? result.filepath : null;
+};
 
 resolveConfigFile.sync = (filePath: string): string | null => {
-  const result = explorerSync.search(filePath)
-  return result ? result.filepath : null
-}
+  const result = explorerSync.search(filePath);
+  return result ? result.filepath : null;
+};
 
 export const loadConfig = async (
   { configFile, ...baseConfig }: Config,
@@ -118,9 +118,9 @@ export const loadConfig = async (
   const rcConfig =
     state.filePath && baseConfig.runtimeConfig !== false
       ? await resolveConfig(state.filePath, configFile)
-      : {}
-  return { ...DEFAULT_CONFIG, ...baseConfig, ...rcConfig }
-}
+      : {};
+  return { ...DEFAULT_CONFIG, ...baseConfig, ...rcConfig };
+};
 
 loadConfig.sync = (
   { configFile, ...baseConfig }: Config,
@@ -129,6 +129,6 @@ loadConfig.sync = (
   const rcConfig =
     state.filePath && baseConfig.runtimeConfig !== false
       ? resolveConfig.sync(state.filePath, configFile)
-      : {}
-  return { ...DEFAULT_CONFIG, ...baseConfig, ...rcConfig }
-}
+      : {};
+  return { ...DEFAULT_CONFIG, ...baseConfig, ...rcConfig };
+};
