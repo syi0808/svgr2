@@ -1,9 +1,9 @@
-# @svgr/babel-plugin-svg-dynamic-title
+# @svgr2/babel-plugin-svg-dynamic-title
 
 ## Install
 
 ```
-npm install --save-dev @svgr/babel-plugin-svg-dynamic-title
+npm install --save-dev @svgr2/babel-plugin-svg-dynamic-title
 ```
 
 ## Usage
@@ -12,7 +12,7 @@ npm install --save-dev @svgr/babel-plugin-svg-dynamic-title
 
 ```json
 {
-  "plugins": ["@svgr/babel-plugin-svg-dynamic-title"]
+  "plugins": ["@svgr2/babel-plugin-svg-dynamic-title"]
 }
 ```
 

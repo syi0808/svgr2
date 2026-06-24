@@ -1,13 +1,13 @@
-# @svgr/webpack
+# @svgr2/webpack
 
 [![Build Status](https://img.shields.io/travis/gregberge/svgr.svg)](https://travis-ci.org/gregberge/svgr)
-[![Version](https://img.shields.io/npm/v/@svgr/webpack.svg)](https://www.npmjs.com/package/@svgr/webpack)
-[![MIT License](https://img.shields.io/npm/l/@svgr/webpack.svg)](https://github.com/gregberge/svgr/blob/master/LICENSE)
+[![Version](https://img.shields.io/npm/v/@svgr2/webpack.svg)](https://www.npmjs.com/package/@svgr2/webpack)
+[![MIT License](https://img.shields.io/npm/l/@svgr2/webpack.svg)](https://github.com/gregberge/svgr/blob/master/LICENSE)
 
 Webpack loader for SVGR.
 
 ```
-npm install @svgr/webpack --save-dev
+npm install @svgr2/webpack --save-dev
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ In your `webpack.config.js`:
 ```js
 {
   test: /\.svg$/,
-  use: ['@svgr/webpack'],
+  use: ['@svgr2/webpack'],
 }
 ```
 
@@ -40,7 +40,7 @@ const App = () => (
   test: /\.svg$/,
   use: [
     {
-      loader: '@svgr/webpack',
+      loader: '@svgr2/webpack',
       options: {
         native: true,
       },
@@ -58,7 +58,7 @@ In your `webpack.config.js`:
 ```js
 {
   test: /\.svg$/,
-  use: ['@svgr/webpack', 'url-loader'],
+  use: ['@svgr2/webpack', 'url-loader'],
 }
 ```
 
@@ -77,13 +77,13 @@ const App = () => (
 
 The named export defaults to `ReactComponent`, but can be customized with the `namedExport` option.
 
-Please note that by default, `@svgr/webpack` will try to export the React Component via default export if there is no other loader handling svg files with default export. When there is already any other loader using default export for svg files, `@svgr/webpack` will always export the React component via named export.
+Please note that by default, `@svgr2/webpack` will try to export the React Component via default export if there is no other loader handling svg files with default export. When there is already any other loader using default export for svg files, `@svgr2/webpack` will always export the React component via named export.
 
 If you prefer named export in any case, you may set the `exportType` option to `named`.
 
 ### Use your own Babel configuration
 
-By default, `@svgr/webpack` includes a `babel-loader` with [an optimized configuration](https://github.com/gregberge/svgr/blob/main/packages/webpack/src/index.ts). In some case you may want to apply a custom one (if you are using Preact for an example). You can turn off Babel transformation by specifying `babel: false` in options.
+By default, `@svgr2/webpack` includes a `babel-loader` with [an optimized configuration](https://github.com/gregberge/svgr/blob/main/packages/webpack/src/index.ts). In some case you may want to apply a custom one (if you are using Preact for an example). You can turn off Babel transformation by specifying `babel: false` in options.
 
 ```js
 // Example using preact
@@ -97,7 +97,7 @@ By default, `@svgr/webpack` includes a `babel-loader` with [an optimized configu
       },
     },
     {
-      loader: '@svgr/webpack',
+      loader: '@svgr2/webpack',
       options: { babel: false },
     }
   ],
@@ -113,7 +113,7 @@ It is possible to detect the module that requires your SVG using [`Rule.issuer`]
   {
     test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
     issuer: /\.[jt]sx?$/,
-    use: ['babel-loader', '@svgr/webpack', 'url-loader'],
+    use: ['babel-loader', '@svgr2/webpack', 'url-loader'],
   },
   {
     test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,

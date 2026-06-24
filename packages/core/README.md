@@ -1,4 +1,4 @@
-# @svgr/core
+# @svgr2/core
 
 [![Build Status][build-badge]][build]
 [![version][version-badge]][package]
@@ -7,7 +7,7 @@
 Node API of SVGR.
 
 ```
-npm install @svgr/core
+npm install @svgr2/core
 ```
 
 ## Usage
@@ -34,11 +34,11 @@ Use `svgr.sync(code, config, state)` if you would like to use sync version.
 
 ### Plugins
 
-By default `@svgr/core` doesn't include any plugin, if you want them, you have to install them and include them in config.
+By default `@svgr2/core` doesn't include any plugin, if you want them, you have to install them and include them in config.
 
 ```js
 svgr(svgCode, {
-  plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx', '@svgr/plugin-prettier'],
+  plugins: ['@svgr2/plugin-svgo', '@svgr2/plugin-jsx', '@svgr2/plugin-prettier'],
 }).then((jsCode) => {
   console.log(jsCode);
 });
@@ -50,7 +50,7 @@ MIT
 
 [build-badge]: https://img.shields.io/travis/smooth-code/svgr.svg?style=flat-square
 [build]: https://travis-ci.org/smooth-code/svgr
-[version-badge]: https://img.shields.io/npm/v/@svgr/core.svg?style=flat-square
-[package]: https://www.npmjs.com/package/@svgr/core
-[license-badge]: https://img.shields.io/npm/l/@svgr/core.svg?style=flat-square
+[version-badge]: https://img.shields.io/npm/v/@svgr2/core.svg?style=flat-square
+[package]: https://www.npmjs.com/package/@svgr2/core
+[license-badge]: https://img.shields.io/npm/l/@svgr2/core.svg?style=flat-square
 [license]: https://github.com/smooth-code/svgr/blob/master/LICENSE

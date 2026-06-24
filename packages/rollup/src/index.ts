@@ -58,7 +58,7 @@ const plugin: PluginImpl<Options> = (options = {}) => {
       const jsCode = await transform(load, options, {
         filePath: id,
         caller: {
-          name: '@svgr/rollup',
+          name: '@svgr2/rollup',
           previousExport,
           defaultPlugins: [svgo, jsx],
         },

@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [8.0.0](https://github.com/gregberge/svgr/compare/v7.0.0...v8.0.0) (2023-05-09)
 
-**Note:** Version bump only for package @svgr/babel-plugin-remove-jsx-empty-expression
+**Note:** Version bump only for package @svgr2/babel-plugin-remove-jsx-empty-expression
 
 
 
@@ -13,7 +13,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [7.0.0](https://github.com/gregberge/svgr/compare/v6.5.1...v7.0.0) (2023-03-24)
 
-**Note:** Version bump only for package @svgr/babel-plugin-remove-jsx-empty-expression
+**Note:** Version bump only for package @svgr2/babel-plugin-remove-jsx-empty-expression
 
 
 
@@ -21,7 +21,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [6.5.0](https://github.com/gregberge/svgr/compare/v6.4.0...v6.5.0) (2022-10-14)
 
-**Note:** Version bump only for package @svgr/babel-plugin-remove-jsx-empty-expression
+**Note:** Version bump only for package @svgr2/babel-plugin-remove-jsx-empty-expression
 
 
 
@@ -62,7 +62,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [4.2.0](https://github.com/gregberge/svgr/tree/master/packages/babel-plugin-remove-jsx-empty-expression/compare/v4.1.0...v4.2.0) (2019-04-11)
 
-**Note:** Version bump only for package @svgr/babel-plugin-remove-jsx-empty-expression
+**Note:** Version bump only for package @svgr2/babel-plugin-remove-jsx-empty-expression
 
 
 
@@ -79,4 +79,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### BREAKING CHANGES
 
 * **v4:** - `template` option must now returns a Babel AST
-- `@svgr/core` does not include svgo & prettier by default
+- `@svgr2/core` does not include svgo & prettier by default

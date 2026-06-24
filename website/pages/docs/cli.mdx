@@ -13,15 +13,15 @@ Use SVGR from command line to transform a single file or a whole directory.
 
 ## Install
 
-Depending you usage, you can install `@svgr/cli` locally in your project:
+Depending you usage, you can install `@svgr2/cli` locally in your project:
 
 ```sh
-npm install --save-dev @svgr/cli
+npm install --save-dev @svgr2/cli
 # or use yarn
-yarn add --dev @svgr/cli
+yarn add --dev @svgr2/cli
 ```
 
-or use it on the fly using `npx @svgr/cli`.
+or use it on the fly using `npx @svgr2/cli`.
 
 ## Options
 
@@ -34,15 +34,15 @@ All [SVGR options](https://react-svgr.com/docs/options/) are available from comm
 Transforms a single file by specifying file as the single argument.
 
 ```sh
-npx @svgr/cli -- icons/clock-icon.svg
+npx @svgr2/cli -- icons/clock-icon.svg
 ```
 
 ### From standard input
 
-`@svgr/cli` supports standard input, just redirect file contents using `<` operator.
+`@svgr2/cli` supports standard input, just redirect file contents using `<` operator.
 
 ```sh
-npx @svgr/cli < icons/clock-icon.svg
+npx @svgr2/cli < icons/clock-icon.svg
 ```
 
 ### Output the result in another file
@@ -50,7 +50,7 @@ npx @svgr/cli < icons/clock-icon.svg
 You can easily create another file using `>` operator.
 
 ```sh
-npx @svgr/cli -- icons/clock-icon.svg > dist/ClockIcon.js
+npx @svgr2/cli -- icons/clock-icon.svg > dist/ClockIcon.js
 ```
 
 ## Transform a whole directory
@@ -58,8 +58,8 @@ npx @svgr/cli -- icons/clock-icon.svg > dist/ClockIcon.js
 Transforms a whole directory using `--out-dir` option. All SVG presents in this directory tree are transformed into React components.
 
 ```sh
-# Usage: npx @svgr/cli [--out-dir dir] [--ignore-existing] [src-dir]
-$ npx @svgr/cli --out-dir dist -- icons
+# Usage: npx @svgr2/cli [--out-dir dir] [--ignore-existing] [src-dir]
+$ npx @svgr2/cli --out-dir dist -- icons
 icons/web/clock-icon.svg -> dist/web/ClockIcon.js
 icons/web/wifi-icon.svg -> dist/web/WifiIcon.js
 icons/spinner/cog-icon.svg -> dist/spinner/CogIcon.js
@@ -71,7 +71,7 @@ icons/spinner/spinner-icon.svg -> dist/spinner/SpinnerIcon.js
 Even if it is not recommended, you may be tempted to modify generated files. If you do so, you should use the `--ignore-existing` option to avoid replacing existing files.
 
 ```sh
-npx @svgr/cli --out-dir dist --ignore-existing -- icons
+npx @svgr2/cli --out-dir dist --ignore-existing -- icons
 ```
 
 ### Use a different filename case
@@ -79,7 +79,7 @@ npx @svgr/cli --out-dir dist --ignore-existing -- icons
 By default, filenames uses "PascalCase", you can specify a different case for generated files using `--filename-case` option.
 
 ```sh
-npx @svgr/cli --out-dir dist --filename-case kebab -- icons
+npx @svgr2/cli --out-dir dist --filename-case kebab -- icons
 ```
 
 ### Disable index generation
@@ -87,7 +87,7 @@ npx @svgr/cli --out-dir dist --filename-case kebab -- icons
 By default an index is generated, giving you opportunity to import all your components from the directory. If you does not want auto-generated index, turn it off using `--no-index` option.
 
 ```sh
-npx @svgr/cli --out-dir dist --no-index -- icons
+npx @svgr2/cli --out-dir dist --no-index -- icons
 ```
 
 ### Use a custom index template
@@ -111,5 +111,5 @@ module.exports = defaultIndexTemplate
 ```
 
 ```sh
-npx @svgr/cli  --out-dir dist --index-template index-template.js -- icons
+npx @svgr2/cli  --out-dir dist --index-template index-template.js -- icons
 ```

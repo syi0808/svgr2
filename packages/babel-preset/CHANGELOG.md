@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [8.1.0](https://github.com/gregberge/svgr/compare/v8.0.1...v8.1.0) (2023-08-15)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 
 
@@ -13,7 +13,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [8.0.0](https://github.com/gregberge/svgr/compare/v7.0.0...v8.0.0) (2023-05-09)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 
 
@@ -21,7 +21,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [7.0.0](https://github.com/gregberge/svgr/compare/v6.5.1...v7.0.0) (2023-03-24)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 
 
@@ -64,11 +64,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [6.2.0](https://github.com/gregberge/svgr/compare/v6.1.2...v6.2.0) (2022-01-10)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 # [6.1.0](https://github.com/gregberge/svgr/compare/v6.0.0...v6.1.0) (2021-12-01)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 # [5.5.0](https://github.com/gregberge/svgr/tree/master/packages/babel-preset/compare/v5.4.0...v5.5.0) (2020-11-15)
 
@@ -78,19 +78,19 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [5.4.0](https://github.com/gregberge/svgr/tree/master/packages/babel-preset/compare/v5.3.1...v5.4.0) (2020-04-27)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 ## [5.3.1](https://github.com/gregberge/svgr/tree/master/packages/babel-preset/compare/v5.3.0...v5.3.1) (2020-04-05)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 # [5.3.0](https://github.com/gregberge/svgr/tree/master/packages/babel-preset/compare/v5.2.0...v5.3.0) (2020-03-22)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 # [5.2.0](https://github.com/gregberge/svgr/tree/master/packages/babel-preset/compare/v5.1.0...v5.2.0) (2020-02-23)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 ## [5.0.1](https://github.com/gregberge/svgr/tree/master/packages/babel-preset/compare/v5.0.0...v5.0.1) (2019-12-29)
 
@@ -128,15 +128,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [4.1.0](https://github.com/gregberge/svgr/compare/v4.0.4...v4.1.0) (2018-11-24)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 ## [4.0.3](https://github.com/gregberge/svgr/compare/v4.0.2...v4.0.3) (2018-11-13)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 ## [4.0.1](https://github.com/gregberge/svgr/compare/v4.0.0...v4.0.1) (2018-11-08)
 
-**Note:** Version bump only for package @svgr/babel-preset
+**Note:** Version bump only for package @svgr2/babel-preset
 
 # [4.0.0](https://github.com/gregberge/svgr/compare/v3.1.0...v4.0.0) (2018-11-04)
 
@@ -149,4 +149,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - **v4:** - `template` option must now returns a Babel AST
 
-* `@svgr/core` does not include svgo & prettier by default
+* `@svgr2/core` does not include svgo & prettier by default

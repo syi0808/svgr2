@@ -37,7 +37,7 @@ export const convert = (
   return transform.sync(code, config, {
     ...state,
     caller: {
-      name: '@svgr/cli',
+      name: '@svgr2/cli',
       defaultPlugins: [svgo, jsx, prettier],
     },
   })

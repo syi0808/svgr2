@@ -1,9 +1,9 @@
-# @svgr/babel-plugin-remove-jsx-attribute
+# @svgr2/babel-plugin-remove-jsx-attribute
 
 ## Install
 
 ```
-npm install --save-dev @svgr/babel-plugin-remove-jsx-attribute
+npm install --save-dev @svgr2/babel-plugin-remove-jsx-attribute
 ```
 
 ## Usage
@@ -14,7 +14,7 @@ npm install --save-dev @svgr/babel-plugin-remove-jsx-attribute
 {
   "plugins": [
     [
-      "@svgr/babel-plugin-remove-jsx-attribute",
+      "@svgr2/babel-plugin-remove-jsx-attribute",
       {
         "elements": ["svg"],
         "attributes": ["width", "height"]

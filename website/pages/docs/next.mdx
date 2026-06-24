@@ -14,14 +14,14 @@ Configure your [Next.js](https://nextjs.org/) project to import SVG as React com
 ## Install
 
 ```bash
-npm install --save-dev @svgr/webpack
+npm install --save-dev @svgr2/webpack
 # or use yarn
-yarn add --dev @svgr/webpack
+yarn add --dev @svgr2/webpack
 ```
 
 ## Usage
 
-Using SVGR in Next.js is possible with `@svgr/webpack`.
+Using SVGR in Next.js is possible with `@svgr2/webpack`.
 
 **next.config.js**
 
@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
       test: /\.svg$/,
       use: [
         {
-          loader: "@svgr/webpack",
+          loader: "@svgr2/webpack",
           options: {
             icon: true,
           },
@@ -46,7 +46,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     rules: {
       "*.svg": {
-        loaders: ["@svgr/webpack"],
+        loaders: ["@svgr2/webpack"],
         as: "*.js",
       },
     },

@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [8.1.0](https://github.com/gregberge/svgr/compare/v8.0.1...v8.1.0) (2023-08-15)
 
-**Note:** Version bump only for package @svgr/webpack-example
+**Note:** Version bump only for package @svgr2/webpack-example
 
 
 
@@ -13,7 +13,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [8.0.1](https://github.com/gregberge/svgr/compare/v8.0.0...v8.0.1) (2023-05-09)
 
-**Note:** Version bump only for package @svgr/webpack-example
+**Note:** Version bump only for package @svgr2/webpack-example
 
 
 
@@ -21,7 +21,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [8.0.0](https://github.com/gregberge/svgr/compare/v7.0.0...v8.0.0) (2023-05-09)
 
-**Note:** Version bump only for package @svgr/webpack-example
+**Note:** Version bump only for package @svgr2/webpack-example
 
 
 
@@ -29,4 +29,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [7.0.0](https://github.com/gregberge/svgr/compare/v6.5.1...v7.0.0) (2023-03-24)
 
-**Note:** Version bump only for package @svgr/webpack-example
+**Note:** Version bump only for package @svgr2/webpack-example

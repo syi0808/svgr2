@@ -72,7 +72,7 @@ function svgrLoader(
 
   const state = {
     caller: {
-      name: '@svgr/webpack',
+      name: '@svgr2/webpack',
       previousExport,
       defaultPlugins: [svgo, jsx],
     },

@@ -1,9 +1,9 @@
-# @svgr/babel-preset
+# @svgr2/babel-preset
 
 ## Install
 
 ```
-npm install --save-dev @svgr/babel-preset
+npm install --save-dev @svgr2/babel-preset
 ```
 
 ## Usage
@@ -12,7 +12,7 @@ npm install --save-dev @svgr/babel-preset
 
 ```json
 {
-  "presets": [["@svgr/babel-preset", { "svgProps": { "width": 200 } }]]
+  "presets": [["@svgr2/babel-preset", { "svgProps": { "width": 200 } }]]
 }
 ```
 

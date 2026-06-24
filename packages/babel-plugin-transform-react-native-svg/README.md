@@ -1,9 +1,9 @@
-# @svgr/babel-plugin-transform-react-native-svg
+# @svgr2/babel-plugin-transform-react-native-svg
 
 ## Install
 
 ```
-npm install --save-dev @svgr/babel-plugin-transform-react-native-svg
+npm install --save-dev @svgr2/babel-plugin-transform-react-native-svg
 ```
 
 ## Usage
@@ -12,7 +12,7 @@ npm install --save-dev @svgr/babel-plugin-transform-react-native-svg
 
 ```json
 {
-  "plugins": ["@svgr/babel-plugin-transform-react-native-svg"]
+  "plugins": ["@svgr2/babel-plugin-transform-react-native-svg"]
 }
 ```
 

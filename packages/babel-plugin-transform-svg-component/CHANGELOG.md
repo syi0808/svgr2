@@ -27,11 +27,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [6.5.1](https://github.com/gregberge/svgr/compare/v6.5.0...v6.5.1) (2022-10-27)
 
-**Note:** Version bump only for package @svgr/babel-plugin-transform-svg-component
+**Note:** Version bump only for package @svgr2/babel-plugin-transform-svg-component
 
 # [6.5.0](https://github.com/gregberge/svgr/compare/v6.4.0...v6.5.0) (2022-10-14)
 
-**Note:** Version bump only for package @svgr/babel-plugin-transform-svg-component
+**Note:** Version bump only for package @svgr2/babel-plugin-transform-svg-component
 
 ## [6.3.1](https://github.com/gregberge/svgr/compare/v6.3.0...v6.3.1) (2022-07-22)
 
@@ -91,7 +91,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [5.2.0](https://github.com/gregberge/svgr/tree/master/packages/babel-plugin-transform-svg-component/compare/v5.1.0...v5.2.0) (2020-02-23)
 
-**Note:** Version bump only for package @svgr/babel-plugin-transform-svg-component
+**Note:** Version bump only for package @svgr2/babel-plugin-transform-svg-component
 
 ## [5.0.1](https://github.com/gregberge/svgr/tree/master/packages/babel-plugin-transform-svg-component/compare/v5.0.0...v5.0.1) (2019-12-29)
 
@@ -107,7 +107,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [4.1.0](https://github.com/gregberge/svgr/compare/v4.0.4...v4.1.0) (2018-11-24)
 
-**Note:** Version bump only for package @svgr/babel-plugin-transform-svg-component
+**Note:** Version bump only for package @svgr2/babel-plugin-transform-svg-component
 
 ## [4.0.1](https://github.com/gregberge/svgr/compare/v4.0.0...v4.0.1) (2018-11-08)
 
@@ -126,4 +126,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - **v4:** - `template` option must now returns a Babel AST
 
-* `@svgr/core` does not include svgo & prettier by default
+* `@svgr2/core` does not include svgo & prettier by default

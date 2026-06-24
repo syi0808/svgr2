@@ -1,9 +1,9 @@
-# @svgr/babel-plugin-add-jsx-attribute
+# @svgr2/babel-plugin-add-jsx-attribute
 
 ## Install
 
 ```
-npm install --save-dev @svgr/babel-plugin-add-jsx-attribute
+npm install --save-dev @svgr2/babel-plugin-add-jsx-attribute
 ```
 
 ## Usage
@@ -14,7 +14,7 @@ npm install --save-dev @svgr/babel-plugin-add-jsx-attribute
 {
   "plugins": [
     [
-      "@svgr/babel-plugin-add-jsx-attribute",
+      "@svgr2/babel-plugin-add-jsx-attribute",
       {
         "elements": ["svg"],
         "attributes": [

@@ -1,9 +1,9 @@
-# @svgr/babel-plugin-remove-jsx-empty-expression
+# @svgr2/babel-plugin-remove-jsx-empty-expression
 
 ## Install
 
 ```
-npm install --save-dev @svgr/babel-plugin-remove-jsx-empty-expression
+npm install --save-dev @svgr2/babel-plugin-remove-jsx-empty-expression
 ```
 
 ## Usage
@@ -12,7 +12,7 @@ npm install --save-dev @svgr/babel-plugin-remove-jsx-empty-expression
 
 ```json
 {
-  "plugins": ["@svgr/babel-plugin-remove-jsx-empty-expression"]
+  "plugins": ["@svgr2/babel-plugin-remove-jsx-empty-expression"]
 }
 ```
 

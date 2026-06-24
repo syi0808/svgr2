@@ -3,10 +3,10 @@
 </h1>
 <p align="center" style="font-size: 1.2rem;">Transform SVGs into React components 🦁</p>
 
-[![License](https://img.shields.io/npm/l/@svgr/core.svg)](https://github.com/gregberge/svgr/blob/master/LICENSE)
+[![License](https://img.shields.io/npm/l/@svgr2/core.svg)](https://github.com/gregberge/svgr/blob/master/LICENSE)
 [![Donate](https://opencollective.com/svgr/backers/badge.svg)](https://opencollective.com/svgr/donate)
-[![npm package](https://img.shields.io/npm/v/@svgr/core/latest.svg)](https://www.npmjs.com/package/@svgr/core)
-[![npm downloads](https://img.shields.io/npm/dm/@svgr/core.svg)](https://www.npmjs.com/package/@svgr/core)
+[![npm package](https://img.shields.io/npm/v/@svgr2/core/latest.svg)](https://www.npmjs.com/package/@svgr2/core)
+[![npm downloads](https://img.shields.io/npm/dm/@svgr2/core.svg)](https://www.npmjs.com/package/@svgr2/core)
 [![CI](https://github.com/gregberge/svgr/actions/workflows/ci.yml/badge.svg)](https://github.com/gregberge/svgr/actions/workflows/ci.yml)
 [![Code Coverage](https://img.shields.io/codecov/c/github/gregberge/svgr.svg)](https://codecov.io/github/gregberge/svgr)
 
@@ -71,7 +71,7 @@ Quicklinks to some of the most-visited pages:
 **Run SVGR**
 
 ```sh
-npx @svgr/cli --icon --replace-attr-values "#063855=currentColor" -- icon.svg
+npx @svgr2/cli --icon --replace-attr-values "#063855=currentColor" -- icon.svg
 ```
 
 **Get an optimized React component**

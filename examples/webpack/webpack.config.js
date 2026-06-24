@@ -6,11 +6,11 @@ module.exports = {
     rules: [
       {
         test: /url\.svg$/,
-        use: ['@svgr/webpack', 'url-loader'],
+        use: ['@svgr2/webpack', 'url-loader'],
       },
       {
         test: /simple\.svg$/,
-        use: '@svgr/webpack',
+        use: '@svgr2/webpack',
       },
     ],
   },

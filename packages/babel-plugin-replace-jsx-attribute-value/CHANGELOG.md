@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [8.0.0](https://github.com/gregberge/svgr/compare/v7.0.0...v8.0.0) (2023-05-09)
 
-**Note:** Version bump only for package @svgr/babel-plugin-replace-jsx-attribute-value
+**Note:** Version bump only for package @svgr2/babel-plugin-replace-jsx-attribute-value
 
 
 
@@ -13,7 +13,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [7.0.0](https://github.com/gregberge/svgr/compare/v6.5.1...v7.0.0) (2023-03-24)
 
-**Note:** Version bump only for package @svgr/babel-plugin-replace-jsx-attribute-value
+**Note:** Version bump only for package @svgr2/babel-plugin-replace-jsx-attribute-value
 
 
 
@@ -21,11 +21,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [6.5.1](https://github.com/gregberge/svgr/compare/v6.5.0...v6.5.1) (2022-10-27)
 
-**Note:** Version bump only for package @svgr/babel-plugin-replace-jsx-attribute-value
+**Note:** Version bump only for package @svgr2/babel-plugin-replace-jsx-attribute-value
 
 # [6.5.0](https://github.com/gregberge/svgr/compare/v6.4.0...v6.5.0) (2022-10-14)
 
-**Note:** Version bump only for package @svgr/babel-plugin-replace-jsx-attribute-value
+**Note:** Version bump only for package @svgr2/babel-plugin-replace-jsx-attribute-value
 
 ## [6.3.1](https://github.com/gregberge/svgr/compare/v6.3.0...v6.3.1) (2022-07-22)
 
@@ -47,7 +47,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [4.2.0](https://github.com/gregberge/svgr/tree/master/packages/babel-plugin-replace-jsx-attribute-value/compare/v4.1.0...v4.2.0) (2019-04-11)
 
-**Note:** Version bump only for package @svgr/babel-plugin-replace-jsx-attribute-value
+**Note:** Version bump only for package @svgr2/babel-plugin-replace-jsx-attribute-value
 
 # [4.0.0](https://github.com/gregberge/svgr/compare/v3.1.0...v4.0.0) (2018-11-04)
 
@@ -60,4 +60,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - **v4:** - `template` option must now returns a Babel AST
 
-* `@svgr/core` does not include svgo & prettier by default
+* `@svgr2/core` does not include svgo & prettier by default

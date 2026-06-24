@@ -1,4 +1,4 @@
-# @svgr/cli
+# @svgr2/cli
 
 [![Build Status][build-badge]][build]
 [![version][version-badge]][package]
@@ -7,7 +7,7 @@
 Command Line Interface for SVGR.
 
 ```
-npm install @svgr/cli --save-dev
+npm install @svgr2/cli --save-dev
 ```
 
 ## Usage
@@ -55,7 +55,7 @@ MIT
 
 [build-badge]: https://img.shields.io/travis/smooth-code/svgr.svg?style=flat-square
 [build]: https://travis-ci.org/smooth-code/svgr
-[version-badge]: https://img.shields.io/npm/v/@svgr/core.svg?style=flat-square
-[package]: https://www.npmjs.com/package/@svgr/core
-[license-badge]: https://img.shields.io/npm/l/@svgr/core.svg?style=flat-square
+[version-badge]: https://img.shields.io/npm/v/@svgr2/core.svg?style=flat-square
+[package]: https://www.npmjs.com/package/@svgr2/core
+[license-badge]: https://img.shields.io/npm/l/@svgr2/core.svg?style=flat-square
 [license]: https://github.com/smooth-code/svgr/blob/master/LICENSE

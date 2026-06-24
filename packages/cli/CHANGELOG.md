@@ -21,7 +21,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [8.0.1](https://github.com/gregberge/svgr/compare/v8.0.0...v8.0.1) (2023-05-09)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 
 
@@ -70,7 +70,7 @@ component path (`path`) and the original SVG path (`originalPath`)
 
 # [6.5.0](https://github.com/gregberge/svgr/compare/v6.4.0...v6.5.0) (2022-10-14)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 # [6.4.0](https://github.com/gregberge/svgr/compare/v6.3.1...v6.4.0) (2022-10-01)
 
@@ -80,7 +80,7 @@ component path (`path`) and the original SVG path (`originalPath`)
 
 ## [6.3.1](https://github.com/gregberge/svgr/compare/v6.3.0...v6.3.1) (2022-07-22)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 # [6.3.0](https://github.com/gregberge/svgr/compare/v6.2.1...v6.3.0) (2022-07-18)
 
@@ -103,15 +103,15 @@ component path (`path`) and the original SVG path (`originalPath`)
 
 ## [6.1.2](https://github.com/gregberge/svgr/compare/v6.1.1...v6.1.2) (2021-12-12)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 ## [6.1.1](https://github.com/gregberge/svgr/compare/v6.1.0...v6.1.1) (2021-12-04)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 # [6.1.0](https://github.com/gregberge/svgr/compare/v6.0.0...v6.1.0) (2021-12-01)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 # [5.5.0](https://github.com/gregberge/svgr/tree/master/packages/cli/compare/v5.4.0...v5.5.0) (2020-11-15)
 
@@ -153,7 +153,7 @@ component path (`path`) and the original SVG path (`originalPath`)
 
 # [5.2.0](https://github.com/gregberge/svgr/tree/master/packages/cli/compare/v5.1.0...v5.2.0) (2020-02-23)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 # [5.1.0](https://github.com/gregberge/svgr/tree/master/packages/cli/compare/v5.0.1...v5.1.0) (2020-01-20)
 
@@ -176,11 +176,11 @@ component path (`path`) and the original SVG path (`originalPath`)
 
 ## [4.3.2](https://github.com/gregberge/svgr/tree/master/packages/cli/compare/v4.3.1...v4.3.2) (2019-07-15)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 ## [4.3.1](https://github.com/gregberge/svgr/tree/master/packages/cli/compare/v4.3.0...v4.3.1) (2019-07-01)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 # [4.3.0](https://github.com/gregberge/svgr/tree/master/packages/cli/compare/v4.2.0...v4.3.0) (2019-05-28)
 
@@ -197,19 +197,19 @@ component path (`path`) and the original SVG path (`originalPath`)
 
 # [4.1.0](https://github.com/gregberge/svgr/compare/v4.0.4...v4.1.0) (2018-11-24)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 ## [4.0.3](https://github.com/gregberge/svgr/compare/v4.0.2...v4.0.3) (2018-11-13)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 ## [4.0.2](https://github.com/gregberge/svgr/compare/v4.0.1...v4.0.2) (2018-11-08)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 ## [4.0.1](https://github.com/gregberge/svgr/compare/v4.0.0...v4.0.1) (2018-11-08)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 # [4.0.0](https://github.com/gregberge/svgr/compare/v3.1.0...v4.0.0) (2018-11-04)
 
@@ -225,7 +225,7 @@ component path (`path`) and the original SVG path (`originalPath`)
 
 - **v4:** - `template` option must now returns a Babel AST
 
-* `@svgr/core` does not include svgo & prettier by default
+* `@svgr2/core` does not include svgo & prettier by default
 
 # [3.1.0](https://github.com/gregberge/svgr/compare/v3.0.0...v3.1.0) (2018-10-05)
 
@@ -288,13 +288,13 @@ component path (`path`) and the original SVG path (`originalPath`)
 
 # [2.2.0](https://github.com/gregberge/svgr/compare/v2.1.1...v2.2.0) (2018-08-13)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 <a name="2.1.1"></a>
 
 ## [2.1.1](https://github.com/gregberge/svgr/compare/v2.1.0...v2.1.1) (2018-07-11)
 
-**Note:** Version bump only for package @svgr/cli
+**Note:** Version bump only for package @svgr2/cli
 
 <a name="2.1.0"></a>
 

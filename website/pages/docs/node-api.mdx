@@ -14,14 +14,14 @@ Use SVGR in Node.js to complex transformations or tools.
 ## Install
 
 ```bash
-npm install --save-dev @svgr/core
+npm install --save-dev @svgr2/core
 # or use yarn
-yarn add --dev @svgr/core
+yarn add --dev @svgr2/core
 ```
 
 ## Usage
 
-Import `transform` from `@svgr/core` to transform a file. It takes three arguments:
+Import `transform` from `@svgr2/core` to transform a file. It takes three arguments:
 
 - `source`: the SVG source code to transform
 - `options`: the options used to transform the SVG
@@ -58,10 +58,10 @@ const jsCode = await transform(
 
 ## Use SVGO and Prettier
 
-By default `@svgr/core` doesn't include `svgo` and `prettier` plugins. If you need these, you have to install it and to specify it in options.
+By default `@svgr2/core` doesn't include `svgo` and `prettier` plugins. If you need these, you have to install it and to specify it in options.
 
 ```bash
-npm install @svgr/plugin-jsx @svgr/plugin-prettier
+npm install @svgr2/plugin-jsx @svgr2/plugin-prettier
 ```
 
 ```js
@@ -78,7 +78,7 @@ const svgCode = `
 const jsCode = await transform(
   svgCode,
   {
-    plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx', '@svgr/plugin-prettier'],
+    plugins: ['@svgr2/plugin-svgo', '@svgr2/plugin-jsx', '@svgr2/plugin-prettier'],
     icon: true,
   },
   { componentName: 'MyComponent' },

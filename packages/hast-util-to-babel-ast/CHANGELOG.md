@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [8.0.0](https://github.com/gregberge/svgr/compare/v7.0.0...v8.0.0) (2023-05-09)
 
-**Note:** Version bump only for package @svgr/hast-util-to-babel-ast
+**Note:** Version bump only for package @svgr2/hast-util-to-babel-ast
 
 
 
@@ -13,7 +13,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [7.0.0](https://github.com/gregberge/svgr/compare/v6.5.1...v7.0.0) (2023-03-24)
 
-**Note:** Version bump only for package @svgr/hast-util-to-babel-ast
+**Note:** Version bump only for package @svgr2/hast-util-to-babel-ast
 
 
 
@@ -21,15 +21,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [6.5.1](https://github.com/gregberge/svgr/compare/v6.5.0...v6.5.1) (2022-10-27)
 
-**Note:** Version bump only for package @svgr/hast-util-to-babel-ast
+**Note:** Version bump only for package @svgr2/hast-util-to-babel-ast
 
 # [6.5.0](https://github.com/gregberge/svgr/compare/v6.4.0...v6.5.0) (2022-10-14)
 
-**Note:** Version bump only for package @svgr/hast-util-to-babel-ast
+**Note:** Version bump only for package @svgr2/hast-util-to-babel-ast
 
 # [6.4.0](https://github.com/gregberge/svgr/compare/v6.3.1...v6.4.0) (2022-10-01)
 
-**Note:** Version bump only for package @svgr/hast-util-to-babel-ast
+**Note:** Version bump only for package @svgr2/hast-util-to-babel-ast
 
 ## [6.3.1](https://github.com/gregberge/svgr/compare/v6.3.0...v6.3.1) (2022-07-22)
 
@@ -51,11 +51,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [5.5.0](https://github.com/gregberge/svgr/tree/master/packages/hast-util-to-babel-ast/compare/v5.4.0...v5.5.0) (2020-11-15)
 
-**Note:** Version bump only for package @svgr/hast-util-to-babel-ast
+**Note:** Version bump only for package @svgr2/hast-util-to-babel-ast
 
 # [5.4.0](https://github.com/gregberge/svgr/tree/master/packages/hast-util-to-babel-ast/compare/v5.3.1...v5.4.0) (2020-04-27)
 
-**Note:** Version bump only for package @svgr/hast-util-to-babel-ast
+**Note:** Version bump only for package @svgr2/hast-util-to-babel-ast
 
 ## [5.0.1](https://github.com/gregberge/svgr/tree/master/packages/hast-util-to-babel-ast/compare/v5.0.0...v5.0.1) (2019-12-29)
 
@@ -71,7 +71,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [4.3.1](https://github.com/gregberge/svgr/tree/master/packages/hast-util-to-babel-ast/compare/v4.3.0...v4.3.1) (2019-07-01)
 
-**Note:** Version bump only for package @svgr/hast-util-to-babel-ast
+**Note:** Version bump only for package @svgr2/hast-util-to-babel-ast
 
 # [4.2.0](https://github.com/gregberge/svgr/tree/master/packages/hast-util-to-babel-ast/compare/v4.1.0...v4.2.0) (2019-04-11)
 
@@ -81,7 +81,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [4.1.0](https://github.com/gregberge/svgr/compare/v4.0.4...v4.1.0) (2018-11-24)
 
-**Note:** Version bump only for package @svgr/hast-util-to-babel-ast
+**Note:** Version bump only for package @svgr2/hast-util-to-babel-ast
 
 ## [4.0.3](https://github.com/gregberge/svgr/compare/v4.0.2...v4.0.3) (2018-11-13)
 
@@ -112,4 +112,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - **v4:** - `template` option must now returns a Babel AST
 
-* `@svgr/core` does not include svgo & prettier by default
+* `@svgr2/core` does not include svgo & prettier by default

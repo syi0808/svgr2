@@ -14,7 +14,7 @@ Configure your [Remix](https://remix.run/) project to import SVG as React compon
 ## Install
 
 ```bash
-npm install --save-dev @svgr/cli @svgr/plugin-svgo @svgr/plugin-jsx @svgr/plugin-prettier npm-watch npm-run-all
+npm install --save-dev @svgr2/cli @svgr2/plugin-svgo @svgr2/plugin-jsx @svgr2/plugin-prettier npm-watch npm-run-all
 ```
 
 ## Usage
@@ -31,7 +31,7 @@ Using SVGR into Remix is possible by configuring `package.json` scripts.
 
     // task to convert icons to components
     // you may change the input and output directories
-    "icons": "npx @svgr/cli --out-dir app/components/icons -- app/icons",
+    "icons": "npx @svgr2/cli --out-dir app/components/icons -- app/icons",
 
     // watch task
     "icons:watch": "npm-watch icons",
@@ -63,7 +63,7 @@ Using SVGR into Remix is possible by configuring `package.json` scripts.
 
 ```js
 module.exports = {
-  plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx', '@svgr/plugin-prettier'],
+  plugins: ['@svgr2/plugin-svgo', '@svgr2/plugin-jsx', '@svgr2/plugin-prettier'],
   typescript: true,
 }
 ```

@@ -38,6 +38,6 @@ describe('#resolvePlugin', () => {
   });
 
   it('should load plugin', () => {
-    expect(resolvePlugin('@svgr/plugin-jsx')).toBe(jsx);
+    expect(resolvePlugin('@svgr2/plugin-jsx')).toBe(jsx);
   });
 });

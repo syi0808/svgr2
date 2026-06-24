@@ -11,9 +11,9 @@ function convertWithAllPlugins(
     code,
     {
       plugins: [
-        '@svgr/plugin-svgo',
-        '@svgr/plugin-jsx',
-        '@svgr/plugin-prettier',
+        '@svgr2/plugin-svgo',
+        '@svgr2/plugin-jsx',
+        '@svgr2/plugin-prettier',
       ],
       ...config,
     },
@@ -30,9 +30,9 @@ function convertSyncWithAllPlugins(
     code,
     {
       plugins: [
-        '@svgr/plugin-svgo',
-        '@svgr/plugin-jsx',
-        '@svgr/plugin-prettier',
+        '@svgr2/plugin-svgo',
+        '@svgr2/plugin-jsx',
+        '@svgr2/plugin-prettier',
       ],
       ...config,
     },

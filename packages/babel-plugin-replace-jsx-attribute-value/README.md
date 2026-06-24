@@ -1,9 +1,9 @@
-# @svgr/babel-plugin-replace-jsx-attribute-value
+# @svgr2/babel-plugin-replace-jsx-attribute-value
 
 ## Install
 
 ```
-npm install --save-dev @svgr/babel-plugin-replace-jsx-attribute-value
+npm install --save-dev @svgr2/babel-plugin-replace-jsx-attribute-value
 ```
 
 ## Usage
@@ -14,7 +14,7 @@ npm install --save-dev @svgr/babel-plugin-replace-jsx-attribute-value
 {
   "plugins": [
     [
-      "@svgr/babel-plugin-replace-jsx-attribute-value",
+      "@svgr2/babel-plugin-replace-jsx-attribute-value",
       {
         "values": [
           { "value": "#000", "newValue": "#fff" },

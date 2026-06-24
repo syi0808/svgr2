@@ -1,9 +1,9 @@
-# @svgr/babel-plugin-transform-svg-component
+# @svgr2/babel-plugin-transform-svg-component
 
 ## Install
 
 ```
-npm install --save-dev @svgr/babel-plugin-transform-svg-component
+npm install --save-dev @svgr2/babel-plugin-transform-svg-component
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install --save-dev @svgr/babel-plugin-transform-svg-component
 ```json
 {
   "plugins": [
-    ["@svgr/babel-plugin-transform-svg-component", { "titleProp": true }]
+    ["@svgr2/babel-plugin-transform-svg-component", { "titleProp": true }]
   ]
 }
 ```

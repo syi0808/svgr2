@@ -23,7 +23,7 @@ Please provide a minimal repository on GitHub.
 
 Issues without a reproduction link are likely to stall.
 
-## Run `npx envinfo --system --binaries --npmPackages @svgr/core,@svgr/cli,@svgr/webpack,@svgr/rollup --markdown --clipboard`
+## Run `npx envinfo --system --binaries --npmPackages @svgr2/core,@svgr2/cli,@svgr2/webpack,@svgr2/rollup --markdown --clipboard`
 
 Paste the results here:
 
