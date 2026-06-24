@@ -1,10 +1,10 @@
 import { cosmiconfig, cosmiconfigSync } from 'cosmiconfig'
 import type { Options as PrettierOptions } from 'prettier'
 import type { Config as SvgoConfig } from 'svgo'
-import type { Options as TransformOptions } from '@svgr/babel-preset'
+import type { Options as TransformOptions } from '@svgr2/babel-preset'
 import type { TransformOptions as BabelTransformOptions } from '@babel/core'
-import type { ConfigPlugin } from './plugins'
-import type { State } from './state'
+import type { ConfigPlugin } from './plugins.js'
+import type { State } from './state.js'
 
 export interface Config {
   ref?: boolean

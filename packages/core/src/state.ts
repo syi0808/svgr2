@@ -1,7 +1,6 @@
 import { parse as parsePath } from 'path'
-// @ts-ignore
 import camelCase from 'camelcase'
-import type { ConfigPlugin } from './plugins'
+import type { ConfigPlugin } from './plugins.js'
 
 export interface State {
   filePath?: string

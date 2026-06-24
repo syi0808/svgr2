@@ -1,4 +1,6 @@
-import { transform, Config, State } from '.'
+import type { Config } from './config.js'
+import type { State } from './state.js'
+import { transform } from './transform.js'
 
 function convertWithAllPlugins(
   code: string,

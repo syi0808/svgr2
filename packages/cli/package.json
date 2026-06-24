@@ -39,7 +39,6 @@
     "snake-case": "^3.0.4"
   },
   "devDependencies": {
-    "@types/glob": "^0.1.0",
     "del": "^6.1.1"
   }
 }

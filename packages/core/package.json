@@ -25,13 +25,12 @@
     "api"
   ],
   "engines": {
-    "node": ">=14"
+    "node": ">=24"
   },
   "license": "MIT",
   "scripts": {
-    "reset": "rm -rf dist",
-    "build": "rollup -c ../../build/rollup.config.mjs",
-    "prepublishOnly": "npm run reset && npm run build"
+    "build": "tsdown",
+    "test": "vitest"
   },
   "dependencies": {
     "@babel/core": "^7.21.3",
@@ -41,6 +40,8 @@
     "snake-case": "^3.0.4"
   },
   "devDependencies": {
-    "svgo": "^3.0.2"
+    "svgo": "^3.0.2",
+    "tsdown": "catalog:",
+    "vitest": "catalog:"
   }
 }

@@ -1,5 +1,5 @@
 import * as path from 'path'
-import { resolveConfig, resolveConfigFile, loadConfig } from './config'
+import { resolveConfig, resolveConfigFile, loadConfig } from './config.js'
 
 const getMethod = (method: any, mode: string) =>
   mode === 'sync' ? method.sync : method

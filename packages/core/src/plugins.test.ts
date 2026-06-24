@@ -1,6 +1,7 @@
 import jsx from '@svgr/plugin-jsx'
-import { getPlugins, resolvePlugin } from './plugins'
-import { State, Config } from '.'
+import { getPlugins, resolvePlugin } from './plugins.js'
+import type { State } from './state.js'
+import type { Config } from './config.js'
 
 describe('#getPlugins', () => {
   const state: Partial<State> = {
