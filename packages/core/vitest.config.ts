@@ -1,7 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { mergeConfig } from 'vitest/config';
+import globalConfig from '../../vitest.config.js';
 
-export default defineConfig({
-  test: {
-    globals: true,
-  },
-});
+export default mergeConfig(globalConfig, {});
