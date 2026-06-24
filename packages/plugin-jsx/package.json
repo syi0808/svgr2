@@ -1,5 +1,6 @@
 {
   "name": "@svgr2/plugin-jsx",
+  "type": "module",
   "description": "Transform SVG into JSX",
   "version": "0.1.0",
   "main": "./dist/index.js",

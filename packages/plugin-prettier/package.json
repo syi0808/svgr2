@@ -1,5 +1,6 @@
 {
   "name": "@svgr2/plugin-prettier",
+  "type": "module",
   "description": "Format code using Prettier",
   "version": "0.1.0",
   "main": "./dist/index.js",

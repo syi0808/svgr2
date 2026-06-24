@@ -1,5 +1,6 @@
 {
   "name": "@svgr2/cli",
+  "type": "module",
   "description": "SVGR command line.",
   "version": "0.1.0",
   "repository": "https://github.com/syi0808/svgr2/tree/main/packages/cli",

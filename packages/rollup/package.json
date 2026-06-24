@@ -1,5 +1,6 @@
 {
   "name": "@svgr2/rollup",
+  "type": "module",
   "description": "SVGR Rollup plugin.",
   "version": "0.1.0",
   "main": "./dist/index.js",

@@ -1,5 +1,6 @@
 {
   "name": "@svgr2/plugin-svgo",
+  "type": "module",
   "description": "Optimize SVG",
   "version": "0.1.0",
   "main": "./dist/index.js",
