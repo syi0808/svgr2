@@ -15,7 +15,7 @@
     "cli"
   ],
   "engines": {
-    "node": ">=14"
+    "node": ">=22"
   },
   "license": "MIT",
   "bin": {
@@ -29,7 +29,7 @@
     "@svgr2/core": "workspace:*",
     "@svgr2/plugin-jsx-oxc": "workspace:*",
     "@svgr2/plugin-svgo": "workspace:*",
-    "change-case": "^5.4.4",
+    "change-case": "catalog:",
     "commander": "^15.0.0",
     "tinyglobby": "^0.2.17",
     "tinyrainbow": "^3.1.0"

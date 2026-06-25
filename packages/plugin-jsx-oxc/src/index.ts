@@ -1,4 +1,7 @@
-import { transform, type TransformOptions } from '@svgr2/oxc-transform-svg-jsx-napi';
+import {
+  transform,
+  type TransformOptions,
+} from '@svgr2/oxc-transform-svg-jsx-napi';
 import type { Plugin, Config } from '@svgr2/core';
 
 const getJsxRuntimeOptions = (config: Config): Partial<TransformOptions> => {

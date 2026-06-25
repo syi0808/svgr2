@@ -9,3 +9,6 @@ catalog:
   'vitest': ^4.1.9
   '@types/node': ^26.0.0
   'tsdown': ^0.22.3
+  'cosmiconfig': ^9.0.2
+  'svgo': ^4.0.1
+  'change-case': ^5.4.4

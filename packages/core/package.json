@@ -32,7 +32,7 @@
     "api"
   ],
   "engines": {
-    "node": ">=24"
+    "node": ">=22"
   },
   "license": "MIT",
   "scripts": {
@@ -40,12 +40,11 @@
     "test": "vitest"
   },
   "dependencies": {
-    "camelcase": "^9.0.0",
-    "snake-case": "^4.0.0",
-    "cosmiconfig": "^9.0.2"
+    "change-case": "catalog:",
+    "cosmiconfig": "catalog:"
   },
   "devDependencies": {
-    "svgo": "^4.0.1",
+    "svgo": "catalog:",
     "tsdown": "catalog:",
     "vitest": "catalog:"
   }
