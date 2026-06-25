@@ -1,15 +1,11 @@
-/* eslint-disable no-console */
-import { promises as fs } from 'fs';
-import { red } from 'chalk';
+import fs from 'node:fs/promises';
+import c from 'tinyrainbow';
 import { transform, Config, State } from '@svgr2/core';
 import svgo from '@svgr2/plugin-svgo';
 import jsx from '@svgr2/plugin-jsx';
-import prettier from '@svgr2/plugin-prettier';
-// @ts-ignore
-import camelCase from 'camelcase';
-// @ts-ignore
-import dashify from 'dashify';
-import { snakeCase } from 'snake-case';
+import { camelCase, snakeCase, kebabCase, pascalCase } from 'change-case';
+
+const { red } = c;
 
 export function transformFilename(
   filename: string,
@@ -17,11 +13,11 @@ export function transformFilename(
 ): string {
   switch (filenameCase) {
     case 'kebab':
-      return dashify(filename.replace(/_/g, '-'), { condense: true });
+      return kebabCase(filename);
     case 'camel':
       return camelCase(filename);
     case 'pascal':
-      return camelCase(filename, { pascalCase: true });
+      return pascalCase(filename);
     case 'snake':
       return snakeCase(filename);
     default:
@@ -29,47 +25,47 @@ export function transformFilename(
   }
 }
 
-export const convert = (
+export function convert(
   code: string,
   config: Config,
   state: Partial<State>,
-): string => {
+): string {
   return transform.sync(code, config, {
     ...state,
     caller: {
       name: '@svgr2/cli',
-      defaultPlugins: [svgo, jsx, prettier],
+      defaultPlugins: [svgo, jsx],
     },
   });
-};
+}
 
-export const convertFile = async (
+export async function convertFile(
   filePath: string,
   config: Config = {},
-): Promise<string> => {
+): Promise<string> {
   const code = await fs.readFile(filePath, 'utf-8');
   return convert(code, config, { filePath });
-};
+}
 
-export const exitError = (error: string): never => {
+export function exitError(error: string): never {
   console.error(red(error));
   process.exit(1);
-};
+}
 
-export const politeWrite = (data: string, silent?: boolean): void => {
+export function politeWrite(data: string, silent?: boolean): void {
   if (!silent) {
     process.stdout.write(data);
   }
-};
+}
 
-export const formatExportName = (name: string): string => {
+export function formatExportName(name: string): string {
   if (/[-]/g.test(name) && /^\d/.test(name)) {
-    return `Svg${camelCase(name, { pascalCase: true })}`;
+    return `Svg${pascalCase(name)}`;
   }
 
   if (/^\d/.test(name)) {
     return `Svg${name}`;
   }
 
-  return camelCase(name, { pascalCase: true });
-};
+  return pascalCase(name);
+}

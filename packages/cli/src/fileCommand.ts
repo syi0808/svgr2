@@ -1,5 +1,4 @@
-/* eslint-disable no-underscore-dangle */
-import { promises as fs } from 'fs';
+import fs from 'node:fs/promises';
 import { convert, convertFile, exitError } from './util';
 import type { SvgrCommand } from './index';
 

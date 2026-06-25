@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 import { program, Command } from 'commander';
-import * as path from 'path';
-import { glob } from 'glob';
-import { readFileSync, promises as fsPromises } from 'fs';
+import path from 'node:path';
+import { globSync } from 'tinyglobby';
+import fsPromises from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { loadConfig, Config } from '@svgr2/core';
 import { fileCommand } from './fileCommand';
 import { dirCommand } from './dirCommand';
@@ -22,7 +22,7 @@ const noUndefinedKeys = <T extends Record<string, any>>(obj: T): T => {
 
 const parseObject = (arg: string, accumulation = {}) => {
   const [name, value] = arg.split('=');
-  return { ...accumulation, [name]: value };
+  return { ...accumulation, [name!]: value };
 };
 
 const parseObjectList = (arg: string, accumulation = {}) => {
@@ -178,7 +178,7 @@ program.parse(process.argv);
 async function run() {
   const errors: string[] = [];
   const filenames = program.args.reduce((globbed, input) => {
-    let files = glob.sync(input);
+    let files = globSync(input);
     if (!files.length) files = [input];
     return [...globbed, ...files];
   }, [] as string[]);
@@ -187,7 +187,7 @@ async function run() {
     filenames.map(async (filename) => {
       try {
         await fsPromises.stat(filename);
-      } catch (error) {
+      } catch {
         errors.push(`${filename} does not exist`);
       }
     }),
@@ -199,9 +199,9 @@ async function run() {
   }
 
   const programOpts = noUndefinedKeys(program.opts<Options>());
+
   if (programOpts.dimensions) delete programOpts.dimensions;
-  if (programOpts.svgo) delete programOpts.svgo;
-  if (programOpts.prettier) delete programOpts.prettier;
+
   const opts = (await loadConfig(programOpts, {
     filePath: process.cwd(),
   })) as Options;

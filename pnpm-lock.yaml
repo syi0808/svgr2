@@ -66,6 +66,37 @@ importers:
         specifier: workspace:*
         version: link:../packages/plugin-svgo
 
+  packages/cli:
+    dependencies:
+      '@svgr2/core':
+        specifier: workspace:*
+        version: link:../core
+      '@svgr2/plugin-jsx-oxc':
+        specifier: workspace:*
+        version: link:../plugin-jsx-oxc
+      '@svgr2/plugin-svgo':
+        specifier: workspace:*
+        version: link:../plugin-svgo
+      change-case:
+        specifier: ^5.4.4
+        version: 5.4.4
+      commander:
+        specifier: ^15.0.0
+        version: 15.0.0
+      tinyglobby:
+        specifier: ^0.2.17
+        version: 0.2.17
+      tinyrainbow:
+        specifier: ^3.1.0
+        version: 3.1.0
+    devDependencies:
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.22.3(typescript@6.0.3)
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.9(@types/node@26.0.0)(vite@8.1.0(@types/node@26.0.0)(terser@5.48.0))
+
   packages/core:
     dependencies:
       camelcase:
@@ -1386,6 +1417,9 @@ packages:
     resolution: {integrity: sha512-NUPRluOfOiTKBKvWPtSD4PhFvWCqOi0BGStNWs57X9js7XGTprSmFoz5F0tWhR4WPjNeR9jXqdC7/UpSJTnlRg==}
     engines: {node: '>=18'}
 
+  change-case@5.4.4:
+    resolution: {integrity: sha512-HRQyTk2/YPEkt9TnUPbOpr64Uw3KOicFWPVBb+xiHvd6eBx/qPr9xqfBFDT8P2vWsvvz4jbEkfDe71W3VyNu2w==}
+
   chardet@2.2.0:
     resolution: {integrity: sha512-rddelWYNPRrXq6PtNEN2S3f6t9ILzvqaN5pVgi4kqt9jHQaXIial9PznB5iSPVlQSLNaaH22ItWz3EJtQ10+OA==}
 
@@ -1408,6 +1442,10 @@ packages:
   commander@11.1.0:
     resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
     engines: {node: '>=16'}
+
+  commander@15.0.0:
+    resolution: {integrity: sha512-z67u4ZhzCL/Tydu1lJARtEZYWbWaN7oYLHbsuzocr6y4N6WZAagG3RQ4FW61V1/0+jImpj293XfrcYnd1qxtPg==}
+    engines: {node: '>=22.12.0'}
 
   commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
@@ -3104,6 +3142,8 @@ snapshots:
 
   chai@6.2.2: {}
 
+  change-case@5.4.4: {}
+
   chardet@2.2.0: {}
 
   chownr@3.0.0: {}
@@ -3117,6 +3157,8 @@ snapshots:
   colorette@2.0.20: {}
 
   commander@11.1.0: {}
+
+  commander@15.0.0: {}
 
   commander@2.20.3:
     optional: true

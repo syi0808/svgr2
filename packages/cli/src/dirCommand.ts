@@ -1,9 +1,7 @@
-/* eslint-disable no-underscore-dangle, no-console */
-import { promises as fs } from 'fs';
-import * as path from 'path';
-import { grey, white } from 'chalk';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import c from 'tinyrainbow';
 import { loadConfig, Config } from '@svgr2/core';
-import { format, resolveConfig } from 'prettier';
 import {
   convertFile,
   transformFilename,
@@ -12,11 +10,13 @@ import {
 } from './util';
 import type { Options, SvgrCommand } from './index';
 
+const { gray, white } = c;
+
 const exists = async (filepath: string) => {
   try {
     await fs.access(filepath);
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 };
@@ -61,7 +61,7 @@ const resolveExtension = (
 export const dirCommand: SvgrCommand = async (
   opts,
   _,
-  filenames,
+  filenames: string[],
 ): Promise<void> => {
   const {
     ext: extOpt,
@@ -85,7 +85,7 @@ export const dirCommand: SvgrCommand = async (
     const logOutput = `${src} -> ${cwdRelative}\n`;
 
     if (ignoreExisting && (await exists(dest))) {
-      politeWrite(grey(logOutput), silent);
+      politeWrite(gray(logOutput), silent);
       return { transformed: false, dest };
     }
 
@@ -104,18 +104,7 @@ export const dirCommand: SvgrCommand = async (
     const filepath = path.join(dest, `index.${ext}`);
     const indexTemplate = opts.indexTemplate || defaultIndexTemplate;
     const fileContent = indexTemplate(files);
-    const prettyContent = await (async () => {
-      if (!opts.prettier) return fileContent;
-      const prettierRcConfig = opts.runtimeConfig
-        ? await resolveConfig(filepath, { editorconfig: true })
-        : {};
-      return format(fileContent, {
-        filepath,
-        ...prettierRcConfig,
-        ...opts.prettierConfig,
-      });
-    })();
-    await fs.writeFile(filepath, prettyContent);
+    await fs.writeFile(filepath, fileContent);
   };
 
   async function handle(filename: string, root: string) {
