@@ -58,10 +58,10 @@ export async function createTransformer(
   };
 }
 
-export async function createTransformerSync(
+export function createTransformerSync(
   config: Config = {},
   state: Partial<State> = {},
-): Promise<Transformer> {
+): Transformer {
   config = loadConfigSync(config, state);
 
   return {

@@ -1,6 +1,6 @@
 import type { Config } from './config';
 import type { State } from './state';
-import { transform } from './transform';
+import { transform, createTransformerSync } from './transform';
 
 function convertWithAllPlugins(
   code: string,
@@ -10,11 +10,7 @@ function convertWithAllPlugins(
   return transform(
     code,
     {
-      plugins: [
-        '@svgr2/plugin-svgo',
-        '@svgr2/plugin-jsx',
-        '@svgr2/plugin-prettier',
-      ],
+      plugins: ['@svgr2/plugin-svgo', '@svgr2/plugin-jsx-oxc'],
       ...config,
     },
     state,
@@ -29,15 +25,25 @@ function convertSyncWithAllPlugins(
   return transform.sync(
     code,
     {
-      plugins: [
-        '@svgr2/plugin-svgo',
-        '@svgr2/plugin-jsx',
-        '@svgr2/plugin-prettier',
-      ],
+      plugins: ['@svgr2/plugin-svgo', '@svgr2/plugin-jsx-oxc'],
       ...config,
     },
     state,
   );
+}
+
+function transformerConvertSyncWithAllPlugins(
+  code: string,
+  config?: Config,
+  state?: Partial<State>,
+) {
+  return createTransformerSync(
+    {
+      plugins: ['@svgr2/plugin-svgo', '@svgr2/plugin-jsx-oxc'],
+      ...config,
+    },
+    state,
+  ).transform(code);
 }
 
 const svgBaseCode = `
@@ -66,6 +72,12 @@ describe('convert', () => {
     const syncResult = convertSyncWithAllPlugins(svgBaseCode);
     const asyncResult = await convertWithAllPlugins(svgBaseCode);
     expect(syncResult).toEqual(asyncResult);
+  });
+
+  it('should equal result when use transformer', async () => {
+    const syncResult = convertSyncWithAllPlugins(svgBaseCode);
+    const transformerResult = transformerConvertSyncWithAllPlugins(svgBaseCode);
+    expect(syncResult).toEqual(transformerResult);
   });
 
   it('should remove style tags', async () => {
