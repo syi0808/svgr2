@@ -9,10 +9,10 @@ export type ConfigPlugin = string | Plugin;
 
 const DEFAULT_PLUGINS: Plugin[] = [];
 
-export const getPlugins = (
+export function getPlugins(
   config: Config,
   state: Partial<State>,
-): ConfigPlugin[] => {
+): ConfigPlugin[] {
   if (config.plugins) {
     return config.plugins;
   }
@@ -22,9 +22,9 @@ export const getPlugins = (
   }
 
   return DEFAULT_PLUGINS;
-};
+}
 
-export const resolvePlugin = (plugin: ConfigPlugin): Plugin => {
+export function resolvePlugin(plugin: ConfigPlugin): Plugin {
   if (typeof plugin === 'function') {
     return plugin;
   }
@@ -34,24 +34,27 @@ export const resolvePlugin = (plugin: ConfigPlugin): Plugin => {
   }
 
   throw new Error(`Invalid plugin "${plugin}"`);
-};
+}
 
 const pluginCache: Record<string, Plugin> = {};
 
 const resolveModule = (m: any) => (m ? m.default || m : null);
 
-export const loadPlugin = (moduleName: string): Plugin => {
+export function loadPlugin(moduleName: string): Plugin {
   if (pluginCache[moduleName]) {
     return pluginCache[moduleName];
   }
 
   try {
-    // eslint-disable-next-line
     const plugin = resolveModule(require(moduleName));
+
     if (!plugin) {
       throw new Error(`Invalid plugin "${moduleName}"`);
     }
+
     pluginCache[moduleName] = plugin;
+
+    // @ts-expect-error cause record can not caught cache exist
     return pluginCache[moduleName];
   } catch (error) {
     console.log(error);
@@ -59,4 +62,4 @@ export const loadPlugin = (moduleName: string): Plugin => {
       `Module "${moduleName}" missing. Maybe \`npm install ${moduleName}\` could help!`,
     );
   }
-};
+}

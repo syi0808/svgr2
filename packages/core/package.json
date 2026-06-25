@@ -40,15 +40,12 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@babel/core": "^7.21.3",
-    "@svgr2/babel-preset": "workspace:*",
-    "camelcase": "^6.2.0",
-    "cosmiconfig": "^8.3.6",
-    "snake-case": "^3.0.4"
+    "camelcase": "^9.0.0",
+    "snake-case": "^4.0.0",
+    "cosmiconfig": "^9.0.2"
   },
   "devDependencies": {
-    "@types/prettier": "^3.0.0",
-    "svgo": "^3.0.2",
+    "svgo": "^4.0.1",
     "tsdown": "catalog:",
     "vitest": "catalog:"
   }

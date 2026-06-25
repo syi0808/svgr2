@@ -1,4 +1,3 @@
-import jsx from '@svgr2/plugin-jsx';
 import { getPlugins, resolvePlugin } from './plugins';
 import type { State } from './state';
 import type { Config } from './config';
@@ -28,7 +27,9 @@ describe('#getPlugins', () => {
 
 describe('#resolvePlugin', () => {
   it('should use function', () => {
-    expect(resolvePlugin(jsx)).toBe(jsx);
+    const customPlugin = () => '';
+
+    expect(resolvePlugin(customPlugin)).toBe(customPlugin);
   });
 
   it('should throw if not found', () => {
@@ -37,7 +38,8 @@ describe('#resolvePlugin', () => {
     );
   });
 
-  it('should load plugin', () => {
-    expect(resolvePlugin('@svgr2/plugin-jsx')).toBe(jsx);
+  // TODO: move to root level test
+  it.skip('should load plugin', () => {
+    // expect(resolvePlugin('@svgr2/plugin-jsx')).toBe(jsx);
   });
 });

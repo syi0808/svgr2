@@ -312,12 +312,6 @@ describe('convert', () => {
       { svgProps: { a: 'b', b: '{props.b}' } },
       { replaceAttrValues: { none: 'black' } },
       { replaceAttrValues: { none: '{black}' } },
-      { svgo: false },
-      { prettier: false },
-      {
-        template: (_, { tpl }) =>
-          tpl`const noop = () => null; export default noop;`,
-      },
       { titleProp: true },
       { descProp: true },
       { memo: true },

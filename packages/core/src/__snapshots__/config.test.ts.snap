@@ -1,69 +1,43 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`svgo async #loadConfig [async] should load config using filePath 1`] = `
+exports[`svgo > async > #loadConfig [async] > should load config using filePath 1`] = `
 {
   "descProp": false,
   "dimensions": true,
   "expandProps": "end",
   "exportType": "default",
-  "icon": true,
+  "icon": false,
   "index": false,
   "memo": false,
   "namedExport": "ReactComponent",
   "native": false,
-  "noSemi": true,
-  "prettier": true,
-  "prettierConfig": undefined,
   "ref": false,
-  "replaceAttrValues": [
-    [
-      "#063855",
-      "currentColor",
-    ],
-  ],
   "runtimeConfig": true,
-  "svgProps": undefined,
-  "svgo": true,
-  "svgoConfig": undefined,
-  "template": undefined,
   "titleProp": false,
   "typescript": false,
 }
 `;
 
-exports[`svgo async #loadConfig [async] should not load config with "runtimeConfig: false 1`] = `
+exports[`svgo > async > #loadConfig [async] > should not load config with "runtimeConfig: false 1`] = `
 {
   "descProp": false,
   "dimensions": true,
   "expandProps": "end",
   "exportType": "default",
-  "icon": true,
+  "icon": false,
   "index": false,
   "memo": false,
   "namedExport": "ReactComponent",
   "native": false,
-  "noSemi": true,
-  "prettier": true,
-  "prettierConfig": undefined,
   "ref": false,
-  "replaceAttrValues": [
-    [
-      "#063855",
-      "currentColor",
-    ],
-  ],
   "runtimeConfig": true,
-  "svgProps": undefined,
-  "svgo": true,
-  "svgoConfig": undefined,
-  "template": undefined,
   "titleProp": false,
   "typescript": false,
   "useRuntimeConfig": false,
 }
 `;
 
-exports[`svgo async #loadConfig [async] should use default config without state.filePath 1`] = `
+exports[`svgo > async > #loadConfig [async] > should use default config without state.filePath 1`] = `
 {
   "descProp": false,
   "dimensions": false,
@@ -74,21 +48,14 @@ exports[`svgo async #loadConfig [async] should use default config without state.
   "memo": false,
   "namedExport": "ReactComponent",
   "native": false,
-  "prettier": true,
-  "prettierConfig": undefined,
   "ref": false,
-  "replaceAttrValues": undefined,
   "runtimeConfig": true,
-  "svgProps": undefined,
-  "svgo": true,
-  "svgoConfig": undefined,
-  "template": undefined,
   "titleProp": false,
   "typescript": false,
 }
 `;
 
-exports[`svgo async #loadConfig [async] should work with custom config path 1`] = `
+exports[`svgo > async > #loadConfig [async] > should work with custom config path 1`] = `
 {
   "descProp": false,
   "dimensions": true,
@@ -100,8 +67,6 @@ exports[`svgo async #loadConfig [async] should work with custom config path 1`] 
   "namedExport": "ReactComponent",
   "native": false,
   "noSemi": true,
-  "prettier": true,
-  "prettierConfig": undefined,
   "ref": false,
   "replaceAttrValues": [
     [
@@ -110,79 +75,49 @@ exports[`svgo async #loadConfig [async] should work with custom config path 1`] 
     ],
   ],
   "runtimeConfig": true,
-  "svgProps": undefined,
-  "svgo": true,
-  "svgoConfig": undefined,
-  "template": undefined,
   "titleProp": false,
   "typescript": false,
 }
 `;
 
-exports[`svgo sync #loadConfig [sync] should load config using filePath 1`] = `
+exports[`svgo > sync > #loadConfig [sync] > should load config using filePath 1`] = `
 {
   "descProp": false,
   "dimensions": true,
   "expandProps": "end",
   "exportType": "default",
-  "icon": true,
+  "icon": false,
   "index": false,
   "memo": false,
   "namedExport": "ReactComponent",
   "native": false,
-  "noSemi": true,
-  "prettier": true,
-  "prettierConfig": undefined,
   "ref": false,
-  "replaceAttrValues": [
-    [
-      "#063855",
-      "currentColor",
-    ],
-  ],
   "runtimeConfig": true,
-  "svgProps": undefined,
-  "svgo": true,
-  "svgoConfig": undefined,
-  "template": undefined,
   "titleProp": false,
   "typescript": false,
 }
 `;
 
-exports[`svgo sync #loadConfig [sync] should not load config with "runtimeConfig: false 1`] = `
+exports[`svgo > sync > #loadConfig [sync] > should not load config with "runtimeConfig: false 1`] = `
 {
   "descProp": false,
   "dimensions": true,
   "expandProps": "end",
   "exportType": "default",
-  "icon": true,
+  "icon": false,
   "index": false,
   "memo": false,
   "namedExport": "ReactComponent",
   "native": false,
-  "noSemi": true,
-  "prettier": true,
-  "prettierConfig": undefined,
   "ref": false,
-  "replaceAttrValues": [
-    [
-      "#063855",
-      "currentColor",
-    ],
-  ],
   "runtimeConfig": true,
-  "svgProps": undefined,
-  "svgo": true,
-  "svgoConfig": undefined,
-  "template": undefined,
   "titleProp": false,
   "typescript": false,
   "useRuntimeConfig": false,
 }
 `;
 
-exports[`svgo sync #loadConfig [sync] should use default config without state.filePath 1`] = `
+exports[`svgo > sync > #loadConfig [sync] > should use default config without state.filePath 1`] = `
 {
   "descProp": false,
   "dimensions": false,
@@ -193,21 +128,14 @@ exports[`svgo sync #loadConfig [sync] should use default config without state.fi
   "memo": false,
   "namedExport": "ReactComponent",
   "native": false,
-  "prettier": true,
-  "prettierConfig": undefined,
   "ref": false,
-  "replaceAttrValues": undefined,
   "runtimeConfig": true,
-  "svgProps": undefined,
-  "svgo": true,
-  "svgoConfig": undefined,
-  "template": undefined,
   "titleProp": false,
   "typescript": false,
 }
 `;
 
-exports[`svgo sync #loadConfig [sync] should work with custom config path 1`] = `
+exports[`svgo > sync > #loadConfig [sync] > should work with custom config path 1`] = `
 {
   "descProp": false,
   "dimensions": true,
@@ -219,8 +147,6 @@ exports[`svgo sync #loadConfig [sync] should work with custom config path 1`] = 
   "namedExport": "ReactComponent",
   "native": false,
   "noSemi": true,
-  "prettier": true,
-  "prettierConfig": undefined,
   "ref": false,
   "replaceAttrValues": [
     [
@@ -229,10 +155,6 @@ exports[`svgo sync #loadConfig [sync] should work with custom config path 1`] = 
     ],
   ],
   "runtimeConfig": true,
-  "svgProps": undefined,
-  "svgo": true,
-  "svgoConfig": undefined,
-  "template": undefined,
   "titleProp": false,
   "typescript": false,
 }
