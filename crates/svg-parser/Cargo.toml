@@ -1,0 +1,6 @@
+[package]
+name = "svg_parser"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+description = "ported from https://github.com/Rich-Harris/svg-parser"
