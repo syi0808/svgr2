@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import c from 'tinyrainbow';
 import { transform, Config, State } from '@svgr2/core';
 import svgo from '@svgr2/plugin-svgo';
-import jsx from '@svgr2/plugin-jsx';
+import jsx from '@svgr2/plugin-jsx-oxc';
 import { camelCase, snakeCase, kebabCase, pascalCase } from 'change-case';
 
 const { red } = c;
