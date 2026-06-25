@@ -1,4 +1,4 @@
-import jsx from './index.js';
+import jsx from './index';
 
 const svgBaseCode = `
 <?xml version="1.0" encoding="UTF-8"?>
@@ -21,9 +21,9 @@ describe('plugin', () => {
     const result = jsx(svgBaseCode, {}, { componentName: 'SvgComponent' });
     expect(result).toMatchInlineSnapshot(`
       "import * as React from "react";
-      const SvgComponent = () => <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"><title>{"Dismiss"}</title><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
-      export default SvgComponent;"
-    `);
+const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" {...props}><title>{"Dismiss"}</title><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
+export default SvgComponent;
+"`);
   });
 
   it('supports "automatic" runtime', () => {
@@ -33,9 +33,9 @@ describe('plugin', () => {
       { componentName: 'SvgComponent' },
     );
     expect(result).toMatchInlineSnapshot(`
-      "const SvgComponent = () => <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"><title>{"Dismiss"}</title><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
-      export default SvgComponent;"
-    `);
+"const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" {...props}><title>{"Dismiss"}</title><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
+export default SvgComponent;
+"`);
   });
 
   it('supports "preact" preset', () => {
@@ -46,9 +46,10 @@ describe('plugin', () => {
     );
     expect(result).toMatchInlineSnapshot(`
       "import { h } from "preact";
-      const SvgComponent = () => <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"><title>{"Dismiss"}</title><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
-      export default SvgComponent;"
-    `);
+      const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" {...props}><title>{"Dismiss"}</title><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
+      export default SvgComponent;
+      "
+`);
   });
 
   // TODO: remove or port to oxc version
@@ -72,7 +73,7 @@ describe('plugin', () => {
     );
     expect(result).toMatchInlineSnapshot(`
       "import * as React from "react";
-      const SvgComponent = () => <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
+      const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" {...props}><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
       export default SvgComponent;"
     `);
   });

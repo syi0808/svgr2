@@ -37,12 +37,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@oxc-project/types": "^0.137.0",
-    "@svgr2/hast-util-to-babel-ast": "workspace:*",
-    "esrap": "^2.2.12",
-    "oxc-parser": "^0.137.0",
-    "oxc-walker": "^1.0.0",
-    "svg-parser": "^2.0.4"
+    "@svgr2/oxc-transform-svg-jsx-napi": "workspace:*"
   },
   "devDependencies": {
     "@svgr2/core": "workspace:*",
