@@ -15,7 +15,7 @@ const svgCode = `
 `;
 
 describe('transform-jsx', () => {
-  bench("svgr", async () => {
+  bench('svgr', async () => {
     await transform(
       svgCode,
       {
@@ -24,10 +24,10 @@ describe('transform-jsx', () => {
         icon: true,
       },
       { componentName: 'MyComponent' },
-    )
+    );
   });
 
-  bench("svgr2", async () => {
+  bench('svgr2', async () => {
     await svgr2Transform(
       svgCode,
       {
@@ -35,6 +35,6 @@ describe('transform-jsx', () => {
         icon: true,
       },
       { componentName: 'MyComponent' },
-    )
+    );
   });
 });

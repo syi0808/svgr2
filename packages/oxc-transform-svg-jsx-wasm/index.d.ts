@@ -31,4 +31,7 @@ export interface TransformOptions {
   importSource?: string;
 }
 
-export function transform(source: string, options?: TransformOptions | string): string;
+export function transform(
+  source: string,
+  options?: TransformOptions | string,
+): string;
