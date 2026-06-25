@@ -15,6 +15,7 @@ describe('transform-jsx', () => {
       svgCode,
       {
         plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
+        svgo: true,
         icon: true,
       },
       { componentName: 'MyComponent' },
