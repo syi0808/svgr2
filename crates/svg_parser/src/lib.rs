@@ -1,5 +1,7 @@
 use std::fmt;
 
+use memchr::{memchr, memchr3, memmem};
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Span {
     pub start: usize,
@@ -306,9 +308,8 @@ where
     fn parse_text(&mut self) -> Result<(), ParseError<S::Error>> {
         let start = self.pos;
 
-        while !self.eof() && self.current() != Some(b'<') {
-            self.pos += 1;
-        }
+        self.pos = memchr(b'<', &self.bytes[self.pos..])
+            .map_or(self.bytes.len(), |offset| self.pos + offset);
 
         if self.pos > start {
             let value = self.slice(start, self.pos);
@@ -556,24 +557,22 @@ where
 
         let value_start = self.pos;
 
-        while let Some(byte) = self.current() {
-            if byte == quote_byte {
-                let value_end = self.pos;
+        if let Some(end_rel) = find_byte(&self.bytes[self.pos..], quote_byte) {
+            let value_end = self.pos + end_rel;
 
-                self.pos += 1;
+            self.pos = value_end + 1;
 
-                return Ok(ParsedAttributeValue {
-                    value: self.slice(value_start, value_end),
-                    span: Span {
-                        start: value_start,
-                        end: value_end,
-                    },
-                    quote,
-                });
-            }
-
-            self.pos += 1;
+            return Ok(ParsedAttributeValue {
+                value: self.slice(value_start, value_end),
+                span: Span {
+                    start: value_start,
+                    end: value_end,
+                },
+                quote,
+            });
         }
+
+        self.pos = self.bytes.len();
 
         Err(ParseError::UnclosedQuote {
             quote,
@@ -712,17 +711,28 @@ where
         let value_start = self.pos;
         let mut quote: Option<u8> = None;
 
-        while let Some(byte) = self.current() {
-            match (quote, byte) {
-                (Some(open), current) if current == open => {
-                    quote = None;
-                }
+        while !self.eof() {
+            if let Some(open) = quote {
+                let Some(end_rel) = memchr(open, &self.bytes[self.pos..]) else {
+                    self.pos = self.bytes.len();
+                    break;
+                };
 
-                (None, b'"' | b'\'') => {
-                    quote = Some(byte);
-                }
+                self.pos += end_rel + 1;
+                quote = None;
 
-                (None, b'>') => {
+                continue;
+            }
+
+            let Some(next_rel) = memchr3(b'>', b'"', b'\'', &self.bytes[self.pos..]) else {
+                self.pos = self.bytes.len();
+                break;
+            };
+
+            self.pos += next_rel;
+
+            match self.current() {
+                Some(b'>') => {
                     let value_end = self.pos;
 
                     self.pos += 1;
@@ -740,10 +750,13 @@ where
                     return Ok(());
                 }
 
-                _ => {}
-            }
+                Some(open @ (b'"' | b'\'')) => {
+                    self.pos += 1;
+                    quote = Some(open);
+                }
 
-            self.pos += 1;
+                _ => unreachable!(),
+            }
         }
 
         Err(ParseError::UnexpectedEof {
@@ -802,14 +815,28 @@ pub fn is_whitespace(byte: u8) -> bool {
     matches!(byte, b' ' | b'\t' | b'\r' | b'\n')
 }
 
+#[inline]
 fn find_bytes(haystack: &[u8], needle: &[u8]) -> Option<usize> {
-    if needle.is_empty() {
-        return Some(0);
+    memmem::find(haystack, needle)
+}
+
+#[inline]
+fn find_byte(haystack: &[u8], needle: u8) -> Option<usize> {
+    const SHORT_SCAN_LIMIT: usize = 32;
+
+    let prefix_len = haystack.len().min(SHORT_SCAN_LIMIT);
+
+    for (index, byte) in haystack[..prefix_len].iter().copied().enumerate() {
+        if byte == needle {
+            return Some(index);
+        }
     }
 
-    haystack
-        .windows(needle.len())
-        .position(|window| window == needle)
+    if prefix_len == haystack.len() {
+        return None;
+    }
+
+    memchr(needle, &haystack[prefix_len..]).map(|index| prefix_len + index)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -1197,5 +1224,46 @@ mod tests {
         };
 
         assert_eq!(cdata.value, "hello <world>");
+    }
+
+    #[test]
+    fn parses_comment_doctype_and_processing_instruction() {
+        let doc = parse(
+            r#"<?xml version="1.0"?><!DOCTYPE svg "literal > marker"><svg><!--hello--></svg>"#,
+        )
+        .unwrap();
+
+        let SvgNode::ProcessingInstruction(instruction) = &doc.children[0] else {
+            panic!("expected processing instruction");
+        };
+        assert_eq!(instruction.value, r#"xml version="1.0""#);
+
+        let SvgNode::Doctype(doctype) = &doc.children[1] else {
+            panic!("expected doctype");
+        };
+        assert_eq!(doctype.value, r#"svg "literal > marker""#);
+
+        let SvgNode::Element(svg) = &doc.children[2] else {
+            panic!("expected svg");
+        };
+
+        let SvgNode::Comment(comment) = &svg.children[0] else {
+            panic!("expected comment");
+        };
+        assert_eq!(comment.value, "hello");
+    }
+
+    #[test]
+    fn reports_unclosed_quoted_attribute_at_eof() {
+        let source = r#"<svg title="missing"#;
+        let err = parse(source).unwrap_err();
+
+        assert!(matches!(
+            err,
+            ParseError::UnclosedQuote {
+                quote: QuoteKind::Double,
+                span: Span { end, .. },
+            } if end == source.len()
+        ));
     }
 }
