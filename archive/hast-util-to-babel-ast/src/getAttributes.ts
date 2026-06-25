@@ -1,8 +1,8 @@
 import * as t from '@babel/types';
 import type { ElementNode } from 'svg-parser';
-import { isNumeric, kebabCase, replaceSpaces } from './util';
-import { stringToObjectStyle } from './stringToObjectStyle';
-import { ATTRIBUTE_MAPPING, ELEMENT_ATTRIBUTE_MAPPING } from './mappings';
+import { isNumeric, kebabCase, replaceSpaces } from './util.js';
+import { stringToObjectStyle } from './stringToObjectStyle.js';
+import { ATTRIBUTE_MAPPING, ELEMENT_ATTRIBUTE_MAPPING } from './mappings.js';
 
 const convertAriaAttribute = (kebabKey: string) => {
   const [aria, ...parts] = kebabKey.split('-');

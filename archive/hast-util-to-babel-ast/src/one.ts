@@ -1,5 +1,5 @@
 import type { Node, RootNode, ElementNode } from 'svg-parser';
-import type { Helpers } from './helpers';
+import type { Helpers } from './helpers.js';
 import type * as t from '@babel/types';
 
 export const one = (

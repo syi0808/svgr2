@@ -1,10 +1,10 @@
 import * as t from '@babel/types';
 import { decodeXML } from 'entities';
-import { all } from './all';
-import { getAttributes } from './getAttributes';
-import { ELEMENT_TAG_NAME_MAPPING } from './mappings';
+import { all } from './all.js';
+import { getAttributes } from './getAttributes.js';
+import { ELEMENT_TAG_NAME_MAPPING } from './mappings.js';
 import type { RootNode, ElementNode, TextNode } from 'svg-parser';
-import type { Helpers } from './helpers';
+import type { Helpers } from './helpers.js';
 
 export const root = (h: Helpers, node: RootNode): t.Program =>
   // @ts-ignore

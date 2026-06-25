@@ -1,6 +1,6 @@
 import { parse } from 'svg-parser';
 import generate from '@babel/generator';
-import hastToBabelAst from './index';
+import hastToBabelAst from './index.js';
 
 function transform(code: string) {
   const hastTree = parse(code);

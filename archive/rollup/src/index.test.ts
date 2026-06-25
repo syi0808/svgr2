@@ -3,7 +3,7 @@ import { rollup, RollupBuild } from 'rollup';
 import image from 'rollup-plugin-image';
 // @ts-ignore
 import url from 'rollup-plugin-url';
-import svgr from './index';
+import svgr from './index.js';
 
 const compile = (plugins = [svgr()]) =>
   rollup({

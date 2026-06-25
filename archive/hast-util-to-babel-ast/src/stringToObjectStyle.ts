@@ -1,6 +1,6 @@
 // Inspired by https://github.com/reactjs/react-magic/blob/master/src/htmltojsx.js
 import * as t from '@babel/types';
-import { hyphenToCamelCase, isNumeric, trimEnd } from './util';
+import { hyphenToCamelCase, isNumeric, trimEnd } from './util.js';
 
 const PX_REGEX = /^\d+px$/;
 const MS_REGEX = /^-ms-/;

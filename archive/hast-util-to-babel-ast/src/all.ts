@@ -1,7 +1,7 @@
-import { one } from './one';
+import { one } from './one.js';
 import type * as t from '@babel/types';
 import type { RootNode, ElementNode } from 'svg-parser';
-import type { Helpers } from './helpers';
+import type { Helpers } from './helpers.js';
 
 /* Transform the children of `parent`. */
 export const all = (

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import prettier from '.';
+import prettier from './index.js';
 
 const state = { componentName: 'Foo' };
 
