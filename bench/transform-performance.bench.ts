@@ -4,7 +4,10 @@ import { describe, bench } from 'vitest';
 import { transform } from '@svgr/core';
 
 // New Svgr2
-import { transform as svgr2Transform } from '@svgr2/core';
+import {
+  transform as svgr2Transform,
+  createTransformerSync,
+} from '@svgr2/core';
 
 const svgCode = `
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -13,6 +16,14 @@ const svgCode = `
     style="stroke:#ff0000; fill: #0000ff"/>
 </svg>
 `;
+
+const svgr2Transformer = createTransformerSync(
+  {
+    plugins: ['@svgr2/plugin-svgo', '@svgr2/plugin-jsx-oxc'],
+    icon: true,
+  },
+  { componentName: 'MyComponent' },
+);
 
 describe('transform-jsx', () => {
   bench('svgr', async () => {
@@ -36,5 +47,9 @@ describe('transform-jsx', () => {
       },
       { componentName: 'MyComponent' },
     );
+  });
+
+  bench('svgr2 with transformer', () => {
+    svgr2Transformer.transform(svgCode);
   });
 });
