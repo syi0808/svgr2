@@ -42,3 +42,29 @@ export function transformSync(
   config = loadConfigSync(config, state);
   return run(code, config, state);
 }
+
+type Transformer = {
+  transform: (code: string) => string;
+};
+
+export async function createTransformer(
+  config: Config = {},
+  state: Partial<State> = {},
+): Promise<Transformer> {
+  config = await loadConfig(config, state);
+
+  return {
+    transform: (code: string) => run(code, config, state),
+  };
+}
+
+export async function createTransformerSync(
+  config: Config = {},
+  state: Partial<State> = {},
+): Promise<Transformer> {
+  config = loadConfigSync(config, state);
+
+  return {
+    transform: (code: string) => run(code, config, state),
+  };
+}
