@@ -1,0 +1,56 @@
+{
+  "name": "@svgr2/plugin-jsx-oxc",
+  "type": "module",
+  "description": "Transform SVG into JSX with Oxc",
+  "version": "0.1.0",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/syi0808/svgr2/tree/main/packages/plugin-jsx",
+  "author": "Yein Sung <syi778800@gmail.com>",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "svgr-plugin"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@oxc-project/types": "^0.137.0",
+    "@svgr2/hast-util-to-babel-ast": "workspace:*",
+    "esrap": "^2.2.12",
+    "oxc-parser": "^0.137.0",
+    "oxc-walker": "^1.0.0",
+    "svg-parser": "^2.0.4"
+  },
+  "devDependencies": {
+    "@svgr2/core": "workspace:*",
+    "@types/svg-parser": "^2.0.6",
+    "tsdown": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@svgr2/core": "*"
+  }
+}
