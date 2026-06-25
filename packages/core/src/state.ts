@@ -1,6 +1,6 @@
 import { parse as parsePath } from 'path';
-import camelCase from 'camelcase';
 import type { ConfigPlugin } from './plugins';
+import { pascalCase } from 'change-case';
 
 export interface State {
   filePath?: string;
@@ -16,11 +16,8 @@ const VALID_CHAR_REGEX = /[^a-zA-Z0-9 _-]/g;
 
 function getComponentName(filePath?: string): string {
   if (!filePath) return 'SvgComponent';
-  const pascalCaseFileName = camelCase(
+  const pascalCaseFileName = pascalCase(
     parsePath(filePath).name.replace(VALID_CHAR_REGEX, ''),
-    {
-      pascalCase: true,
-    },
   );
   return `Svg${pascalCaseFileName}`;
 }
