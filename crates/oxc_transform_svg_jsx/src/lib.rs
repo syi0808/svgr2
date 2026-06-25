@@ -397,6 +397,7 @@ impl<'src, 'a> SvgSink<'src> for OxcJsxSink<'a> {
     }
 }
 
+// FIXME: it should ast based wrapping
 fn wrap_component<'a>(
     allocator: &'a Allocator,
     jsx: &Expression<'a>,
@@ -625,6 +626,7 @@ pub(crate) fn attr_name<'a>(name: &'a JSXAttributeName<'a>) -> Option<&'a str> {
     }
 }
 
+// FIXME: it should ast based write
 fn write_imports(
     code: &mut String,
     options: &TransformOptions,
