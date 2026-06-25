@@ -12,8 +12,10 @@ use svg_parser::{
 };
 use thiserror::Error;
 
+mod json_options;
 mod passes;
 
+pub use json_options::transform_json;
 use passes::{collect_native_components, run_jsx_passes};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -31,6 +33,8 @@ pub enum TransformError {
     InvalidExpression { expr: String },
     #[error("invalid generated JavaScript: {errors}\n{code}")]
     InvalidGeneratedCode { errors: String, code: String },
+    #[error("invalid transform options: {0}")]
+    InvalidOptions(String),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1133,5 +1137,30 @@ mod tests {
         assert!(result.contains("import type { SVGProps, Ref } from \"react\";"));
         assert!(result.contains("SVGProps<SVGSVGElement> & SVGRProps"));
         assert!(result.contains("ref: Ref<SVGSVGElement>"));
+    }
+
+    #[test]
+    fn supports_json_options_for_wrappers() {
+        let result = transform_json(
+            r##"<svg width="10" height="10" fill="#fff" />"##,
+            Some(
+                r##"{
+                  "componentName": "Icon",
+                  "jsxRuntime": "classic-preact",
+                  "dimensions": false,
+                  "svgProps": { "role": "img" },
+                  "replaceAttrValues": { "#fff": "{props.color}" },
+                  "expandProps": "start"
+                }"##,
+            ),
+        )
+        .unwrap()
+        .code;
+
+        assert!(result.contains("import { h } from \"preact\";"));
+        assert!(result.contains("const Icon = (props) =>"));
+        assert!(result.contains("<svg {...props} fill={props.color} role=\"img\" />"));
+        assert!(!result.contains("width="));
+        assert!(!result.contains("height="));
     }
 }

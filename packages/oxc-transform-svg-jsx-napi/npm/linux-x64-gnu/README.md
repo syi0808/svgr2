@@ -1,0 +1,3 @@
+# `@svgr2/oxc-transform-svg-jsx-napi-linux-x64-gnu`
+
+This is the **x86_64-unknown-linux-gnu** binary for `@svgr2/oxc-transform-svg-jsx-napi`

@@ -1,0 +1,40 @@
+{
+  "name": "@svgr2/oxc-transform-svg-jsx-wasm",
+  "type": "module",
+  "description": "WebAssembly wrapper for oxc_transform_svg_jsx",
+  "version": "0.1.0",
+  "main": "./index.js",
+  "module": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "pkg"
+  ],
+  "repository": "https://github.com/syi0808/svgr2/tree/main/packages/oxc-transform-svg-jsx-wasm",
+  "author": "Yein Sung <syi778800@gmail.com>",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "svgr",
+    "oxc",
+    "wasm"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "wasm-pack build . --target bundler --out-dir pkg --release",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "wasm-pack": "^0.15.0"
+  }
+}

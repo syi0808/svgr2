@@ -7,3 +7,7 @@ src/__fixtures__/dist/
 coverage/
 .turbo
 target
+packages/oxc-transform-svg-jsx-napi/*.node
+packages/oxc-transform-svg-jsx-napi/npm/*/*.node
+packages/oxc-transform-svg-jsx-napi/binding.d.ts
+packages/oxc-transform-svg-jsx-wasm/pkg/

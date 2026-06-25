@@ -1,0 +1,32 @@
+{
+  "name": "@svgr2/oxc-transform-svg-jsx-napi-linux-x64-gnu",
+  "version": "0.1.0",
+  "cpu": [
+    "x64"
+  ],
+  "main": "oxc_transform_svg_jsx_napi.linux-x64-gnu.node",
+  "files": [
+    "oxc_transform_svg_jsx_napi.linux-x64-gnu.node"
+  ],
+  "description": "N-API wrapper for oxc_transform_svg_jsx",
+  "keywords": [
+    "svgr",
+    "oxc",
+    "napi"
+  ],
+  "author": "Yein Sung <syi778800@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "repository": "https://github.com/syi0808/svgr2/tree/main/packages/oxc-transform-svg-jsx-napi",
+  "publishConfig": {
+    "access": "public"
+  },
+  "os": [
+    "linux"
+  ],
+  "libc": [
+    "glibc"
+  ]
+}

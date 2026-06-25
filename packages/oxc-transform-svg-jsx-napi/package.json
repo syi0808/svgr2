@@ -1,0 +1,68 @@
+{
+  "name": "@svgr2/oxc-transform-svg-jsx-napi",
+  "type": "commonjs",
+  "description": "N-API wrapper for oxc_transform_svg_jsx",
+  "version": "0.1.0",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.js",
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "binding.js",
+    "*.node"
+  ],
+  "repository": "https://github.com/syi0808/svgr2/tree/main/packages/oxc-transform-svg-jsx-napi",
+  "author": "Yein Sung <syi778800@gmail.com>",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "svgr",
+    "oxc",
+    "napi"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "napi build --release --platform --js binding.js --dts binding.d.ts",
+    "build:debug": "napi build --js binding.js --dts binding.d.ts",
+    "create:npm-dirs": "napi create-npm-dirs",
+    "prepublish:napi": "napi pre-publish",
+    "test": "node --test"
+  },
+  "napi": {
+    "binaryName": "oxc_transform_svg_jsx_napi",
+    "targets": [
+      "x86_64-apple-darwin",
+      "aarch64-apple-darwin",
+      "x86_64-pc-windows-msvc",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu",
+      "x86_64-unknown-linux-musl",
+      "aarch64-unknown-linux-musl"
+    ]
+  },
+  "optionalDependencies": {
+    "@svgr2/oxc-transform-svg-jsx-napi-darwin-arm64": "0.1.0",
+    "@svgr2/oxc-transform-svg-jsx-napi-darwin-x64": "0.1.0",
+    "@svgr2/oxc-transform-svg-jsx-napi-linux-arm64-gnu": "0.1.0",
+    "@svgr2/oxc-transform-svg-jsx-napi-linux-arm64-musl": "0.1.0",
+    "@svgr2/oxc-transform-svg-jsx-napi-linux-x64-gnu": "0.1.0",
+    "@svgr2/oxc-transform-svg-jsx-napi-linux-x64-musl": "0.1.0",
+    "@svgr2/oxc-transform-svg-jsx-napi-win32-x64-msvc": "0.1.0"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^3.7.2"
+  }
+}
