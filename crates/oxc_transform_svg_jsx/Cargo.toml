@@ -11,6 +11,7 @@ oxc_ast = "0.133.0"
 oxc_codegen = "0.133.0"
 oxc_parser = "0.133.0"
 oxc_span = "0.133.0"
+oxc_syntax = "0.133.0"
 svg_parser = { path = "../svg_parser" }
 serde = { workspace = true }
 serde_json = { workspace = true }

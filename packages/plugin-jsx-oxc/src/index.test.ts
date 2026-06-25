@@ -52,6 +52,25 @@ export default SvgComponent;
 `);
   });
 
+  it('uses state componentName', () => {
+    const result = jsx('<svg />', {}, { componentName: 'Icon' });
+    expect(result).toContain('const Icon =');
+    expect(result).toContain('export default Icon;');
+  });
+
+  it('uses state previousExport', () => {
+    const result = jsx(
+      '<svg />',
+      { namedExport: 'Component' },
+      {
+        componentName: 'Icon',
+        caller: { previousExport: 'export default "logo.svg";' },
+      },
+    );
+    expect(result).toContain('export { Icon as Component };');
+    expect(result).toContain('export default "logo.svg";');
+  });
+
   // TODO: remove or port to oxc version
   it.skip('accepts jsx config', () => {
     const dropTitle = () => ({

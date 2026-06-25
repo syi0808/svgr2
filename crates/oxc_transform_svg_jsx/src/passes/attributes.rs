@@ -10,7 +10,8 @@ pub(super) enum AttributeValueSpec {
     None,
     String(String),
     Number(f64),
-    Expression(String),
+    Identifier(String),
+    UserExpression(String),
 }
 
 #[derive(Debug, Clone)]
@@ -49,7 +50,7 @@ pub(super) fn option_value_to_jsx_attr_value<'a>(
 
 fn option_value(raw: &str) -> AttributeValueSpec {
     if raw.starts_with('{') && raw.ends_with('}') && raw.len() >= 2 {
-        AttributeValueSpec::Expression(raw[1..raw.len() - 1].to_string())
+        AttributeValueSpec::UserExpression(raw[1..raw.len() - 1].to_string())
     } else {
         AttributeValueSpec::String(raw.into())
     }
@@ -72,7 +73,11 @@ pub(super) fn attribute_value_to_jsx<'a>(
             let expr = ast.expression_numeric_literal(span, value, None, NumberBase::Decimal);
             ast.jsx_attribute_value_expression_container(span, expression_to_jsx(expr))
         }
-        AttributeValueSpec::Expression(value) => {
+        AttributeValueSpec::Identifier(value) => {
+            let expr = ast.expression_identifier(span, ast.str(value.as_str()));
+            ast.jsx_attribute_value_expression_container(span, expression_to_jsx(expr))
+        }
+        AttributeValueSpec::UserExpression(value) => {
             let expr = parse_expression(allocator, value.as_str(), false)?;
             ast.jsx_attribute_value_expression_container(span, expression_to_jsx(expr))
         }
@@ -122,7 +127,7 @@ fn create_attribute_item<'a>(
 ) -> Result<JSXAttributeItem<'a>, TransformError> {
     let ast = AstBuilder::new(allocator);
     if spec.spread {
-        let expr = parse_expression(allocator, spec.name.as_str(), false)?;
+        let expr = ast.expression_identifier(span, ast.str(spec.name.as_str()));
         return Ok(ast.jsx_attribute_item_spread_attribute(span, expr));
     }
     let value = match spec.value {

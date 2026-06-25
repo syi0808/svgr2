@@ -27,8 +27,7 @@
   },
   "dependencies": {
     "@svgr2/core": "workspace:*",
-    "@svgr2/plugin-jsx": "workspace:*",
-    "@svgr2/plugin-prettier": "workspace:*",
+    "@svgr2/plugin-jsx-oxc": "workspace:*",
     "@svgr2/plugin-svgo": "workspace:*",
     "camelcase": "^6.2.0",
     "chalk": "^4.1.2",

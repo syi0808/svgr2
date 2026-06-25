@@ -42,21 +42,21 @@ pub(crate) fn run_jsx_passes<'a>(
     if options.r#ref {
         to_add.push(attr_spec(
             "ref",
-            AttributeValueSpec::Expression("ref".into()),
+            AttributeValueSpec::Identifier("ref".into()),
             ExpandProps::End,
         ));
     }
     if options.title_prop {
         to_add.push(attr_spec(
             "aria-labelledby",
-            AttributeValueSpec::Expression("titleId".into()),
+            AttributeValueSpec::Identifier("titleId".into()),
             ExpandProps::End,
         ));
     }
     if options.desc_prop {
         to_add.push(attr_spec(
             "aria-describedby",
-            AttributeValueSpec::Expression("descId".into()),
+            AttributeValueSpec::Identifier("descId".into()),
             ExpandProps::End,
         ));
     }

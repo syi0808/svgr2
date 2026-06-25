@@ -1,14 +1,11 @@
-use oxc_allocator::Allocator;
-use oxc_ast::AstBuilder;
+use oxc_allocator::{Allocator, Box as ArenaBox, CloneIn};
 use oxc_ast::ast::*;
+use oxc_ast::{AstBuilder, NONE};
 use oxc_span::SPAN;
 
-use crate::{
-    ExpandProps, TransformError, attr_name, codegen_jsx_element, element_name, js_string,
-    parse_jsx_expression,
-};
+use crate::{ExpandProps, TransformError, attr_name, element_name, expression_to_jsx};
 
-use super::attributes::{AttributeValueSpec, attr_spec, attribute_value_to_jsx, upsert_attribute};
+use super::attributes::{AttributeValueSpec, attr_spec, upsert_attribute};
 
 pub(super) fn apply<'a>(
     allocator: &'a Allocator,
@@ -30,39 +27,104 @@ pub(super) fn apply<'a>(
                 if matches!(element_name(&element.opening_element.name), Some(name) if name == tag)
         )
     }) else {
-        let expression = format!("{tag} ? <{tag} id={{{tag}Id}}>{{{tag}}}</{tag}> : null");
         svg.children.insert(
             0,
             AstBuilder::new(allocator).jsx_child_expression_container(
                 SPAN,
-                parse_jsx_expression(allocator, &expression)?,
+                expression_to_jsx(dynamic_tag_expression(allocator, tag, None)),
             ),
         );
         return Ok(());
     };
 
-    let existing_has_children = match &mut svg.children[index] {
+    let fallback = match &mut svg.children[index] {
         JSXChild::Element(element) => {
             ensure_dynamic_tag_id(allocator, element, tag)?;
-            !element.children.is_empty()
+            if element.children.is_empty() {
+                None
+            } else {
+                Some(element.clone_in(allocator))
+            }
         }
-        _ => false,
+        _ => None,
     };
 
-    let expression = if existing_has_children {
-        let fallback = match &svg.children[index] {
-            JSXChild::Element(element) => codegen_jsx_element(allocator, element, false),
-            _ => unreachable!(),
-        };
-        format!(
-            "{tag} === undefined ? {fallback} : {tag} ? <{tag} id={{{tag}Id}}>{{{tag}}}</{tag}> : null"
+    svg.children[index] = AstBuilder::new(allocator).jsx_child_expression_container(
+        SPAN,
+        expression_to_jsx(dynamic_tag_expression(allocator, tag, fallback)),
+    );
+    Ok(())
+}
+
+fn dynamic_tag_expression<'a>(
+    allocator: &'a Allocator,
+    tag: &str,
+    fallback: Option<ArenaBox<'a, JSXElement<'a>>>,
+) -> Expression<'a> {
+    let ast = AstBuilder::new(allocator);
+    let tag_expr = ast.expression_identifier(SPAN, ast.str(tag));
+    let conditional = ast.expression_conditional(
+        SPAN,
+        tag_expr,
+        Expression::JSXElement(create_dynamic_tag_element(allocator, tag)),
+        ast.expression_null_literal(SPAN),
+    );
+    if let Some(fallback) = fallback {
+        let ast = AstBuilder::new(allocator);
+        ast.expression_conditional(
+            SPAN,
+            ast.expression_binary(
+                SPAN,
+                ast.expression_identifier(SPAN, ast.str(tag)),
+                BinaryOperator::StrictEquality,
+                ast.expression_identifier(SPAN, ast.str("undefined")),
+            ),
+            Expression::JSXElement(fallback),
+            conditional,
         )
     } else {
-        format!("{tag} ? <{tag} id={{{tag}Id}}>{{{tag}}}</{tag}> : null")
-    };
-    svg.children[index] = AstBuilder::new(allocator)
-        .jsx_child_expression_container(SPAN, parse_jsx_expression(allocator, &expression)?);
-    Ok(())
+        conditional
+    }
+}
+
+fn create_dynamic_tag_element<'a>(
+    allocator: &'a Allocator,
+    tag: &str,
+) -> ArenaBox<'a, JSXElement<'a>> {
+    let ast = AstBuilder::new(allocator);
+    let mut attributes = ast.vec();
+    attributes.push(create_tag_id_attribute(allocator, tag));
+    let mut children = ast.vec();
+    children.push(ast.jsx_child_expression_container(
+        SPAN,
+        expression_to_jsx(ast.expression_identifier(SPAN, ast.str(tag))),
+    ));
+    let tag_name = ast.str(tag);
+    ast.alloc_jsx_element(
+        SPAN,
+        ast.alloc_jsx_opening_element(
+            SPAN,
+            ast.jsx_element_name_identifier(SPAN, tag_name),
+            NONE,
+            attributes,
+        ),
+        children,
+        Some(ast.alloc_jsx_closing_element(SPAN, ast.jsx_element_name_identifier(SPAN, tag_name))),
+    )
+}
+
+fn create_tag_id_attribute<'a>(allocator: &'a Allocator, tag: &str) -> JSXAttributeItem<'a> {
+    let ast = AstBuilder::new(allocator);
+    ast.jsx_attribute_item_attribute(
+        SPAN,
+        ast.jsx_attribute_name_identifier(SPAN, ast.str("id")),
+        Some(ast.jsx_attribute_value_expression_container(
+            SPAN,
+            expression_to_jsx(
+                ast.expression_identifier(SPAN, ast.str(format!("{tag}Id").as_str())),
+            ),
+        )),
+    )
 }
 
 fn ensure_element_has_closing<'a>(allocator: &'a Allocator, element: &mut JSXElement<'a>) {
@@ -91,17 +153,19 @@ fn ensure_dynamic_tag_id<'a>(
         if attr_name(&attribute.name) != Some("id") {
             continue;
         }
+        let ast = AstBuilder::new(allocator);
         let expr = match &attribute.value {
-            Some(JSXAttributeValue::StringLiteral(lit)) => {
-                format!("{tag}Id || {}", js_string(lit.value.as_str()))
-            }
-            _ => format!("{tag}Id"),
+            Some(JSXAttributeValue::StringLiteral(lit)) => ast.expression_logical(
+                attribute.span,
+                ast.expression_identifier(attribute.span, ast.str(format!("{tag}Id").as_str())),
+                LogicalOperator::Or,
+                ast.expression_string_literal(attribute.span, ast.str(lit.value.as_str()), None),
+            ),
+            _ => ast.expression_identifier(attribute.span, ast.str(format!("{tag}Id").as_str())),
         };
-        attribute.value = Some(attribute_value_to_jsx(
-            allocator,
-            AttributeValueSpec::Expression(expr),
-            attribute.span,
-        )?);
+        attribute.value = Some(
+            ast.jsx_attribute_value_expression_container(attribute.span, expression_to_jsx(expr)),
+        );
         return Ok(());
     }
     upsert_attribute(
@@ -109,7 +173,7 @@ fn ensure_dynamic_tag_id<'a>(
         &mut element.opening_element,
         attr_spec(
             "id",
-            AttributeValueSpec::Expression(format!("{tag}Id")),
+            AttributeValueSpec::Identifier(format!("{tag}Id")),
             ExpandProps::End,
         ),
     )

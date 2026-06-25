@@ -1,11 +1,13 @@
 use std::collections::BTreeSet;
 
-use oxc_allocator::{Allocator, CloneIn, TakeIn, Vec as ArenaVec};
+use oxc_allocator::{Allocator, TakeIn, Vec as ArenaVec};
 use oxc_ast::ast::*;
 use oxc_ast::{AstBuilder, NONE};
 use oxc_codegen::{Codegen, CodegenOptions};
 use oxc_parser::Parser;
 use oxc_span::{SPAN, SourceType, Span};
+use oxc_syntax::identifier::is_identifier_name;
+use oxc_syntax::keyword::is_reserved_keyword;
 use svg_parser::{
     Attribute, CData, Comment, EndElement, FinishStartElement, ParseError, ProcessingInstruction,
     Span as SvgSpan, StartElement, SvgSink, Text, parse_with_sink,
@@ -145,10 +147,10 @@ pub fn build_program<'a>(
     source: &'a str,
     options: &TransformOptions,
 ) -> Result<Program<'a>, TransformError> {
+    validate_options(options)?;
     let mut jsx = parse_svg_to_jsx(allocator, source)?;
     run_jsx_passes(allocator, &mut jsx, options)?;
-    let final_code = wrap_component(allocator, &jsx, options)?;
-    parse_program(allocator, &final_code, options.typescript)
+    build_component_program(allocator, jsx, options)
 }
 
 fn parse_svg_to_jsx<'a>(
@@ -397,65 +399,346 @@ impl<'src, 'a> SvgSink<'src> for OxcJsxSink<'a> {
     }
 }
 
-// FIXME: it should ast based wrapping
-fn wrap_component<'a>(
+fn build_component_program<'a>(
     allocator: &'a Allocator,
-    jsx: &Expression<'a>,
+    jsx: Expression<'a>,
     options: &TransformOptions,
-) -> Result<String, TransformError> {
-    let jsx_code = codegen_expression(allocator, jsx, options.typescript);
-    let jsx_code = trim_expression_statement(&jsx_code);
+) -> Result<Program<'a>, TransformError> {
+    let ast = AstBuilder::new(allocator);
     let native_components = if options.native {
-        collect_native_components(jsx)
+        collect_native_components(&jsx)
     } else {
         BTreeSet::new()
     };
 
-    let mut code = String::new();
-    write_imports(&mut code, options, &native_components)?;
+    let mut body = ast.vec();
+    append_imports(allocator, &mut body, options, &native_components)?;
     if options.typescript && (options.title_prop || options.desc_prop) {
-        code.push_str(&svgr_props_interface(options));
+        body.push(svgr_props_interface_statement(allocator, options));
     }
-    let params = component_params(options);
-    code.push_str("const ");
-    code.push_str(&options.component_name);
-    code.push_str(" = ");
-    code.push_str(&params);
-    code.push_str(" => ");
-    code.push_str(jsx_code);
-    code.push_str(";\n");
+    body.push(component_statement(
+        allocator,
+        options.component_name.as_str(),
+        jsx,
+        options,
+    ));
 
-    let mut export_identifier = options.component_name.clone();
+    let mut export_identifier = options.component_name.as_str();
     if options.r#ref {
-        code.push_str("const ForwardRef = forwardRef(");
-        code.push_str(&export_identifier);
-        code.push_str(");\n");
-        export_identifier = "ForwardRef".into();
+        // Wrapper binding collision handling was considered, but is intentionally not implemented
+        // yet; keep the legacy ForwardRef/Memo names for now.
+        body.push(call_wrapper_statement(
+            allocator,
+            "ForwardRef",
+            "forwardRef",
+            export_identifier,
+        ));
+        export_identifier = "ForwardRef";
     }
     if options.memo {
-        code.push_str("const Memo = memo(");
-        code.push_str(&export_identifier);
-        code.push_str(");\n");
-        export_identifier = "Memo".into();
+        body.push(call_wrapper_statement(
+            allocator,
+            "Memo",
+            "memo",
+            export_identifier,
+        ));
+        export_identifier = "Memo";
     }
 
     if options.previous_export.is_some() || options.export_type == ExportType::Named {
-        code.push_str("export { ");
-        code.push_str(&export_identifier);
-        code.push_str(" as ");
-        code.push_str(&options.named_export);
-        code.push_str(" };\n");
+        body.push(export_named_statement(
+            allocator,
+            export_identifier,
+            options.named_export.as_str(),
+        ));
         if let Some(previous_export) = &options.previous_export {
-            code.push_str(previous_export.trim());
-            code.push('\n');
+            let previous_body = parse_previous_export(allocator, previous_export, options)?;
+            for statement in previous_body {
+                body.push(statement);
+            }
         }
     } else {
-        code.push_str("export default ");
-        code.push_str(&export_identifier);
-        code.push_str(";\n");
+        body.push(export_default_statement(allocator, export_identifier));
     }
 
-    Ok(code)
+    Ok(ast.program(
+        SPAN,
+        source_type(options.typescript),
+        "",
+        ast.vec(),
+        None,
+        ast.vec(),
+        body,
+    ))
+}
+
+fn append_imports<'a>(
+    allocator: &'a Allocator,
+    body: &mut ArenaVec<'a, Statement<'a>>,
+    options: &TransformOptions,
+    native_components: &BTreeSet<String>,
+) -> Result<(), TransformError> {
+    let ast = AstBuilder::new(allocator);
+    if options.jsx_runtime != JsxRuntime::Automatic {
+        let import = options
+            .jsx_runtime_import
+            .clone()
+            .unwrap_or_else(default_jsx_runtime_import);
+        let mut specifiers = ast.vec();
+        if let Some(namespace) = import.namespace {
+            specifiers.push(import_namespace_specifier(allocator, namespace.as_str()));
+        } else if let Some(default_specifier) = import.default_specifier {
+            specifiers.push(import_default_specifier(
+                allocator,
+                default_specifier.as_str(),
+            ));
+        } else {
+            for specifier in &import.specifiers {
+                specifiers.push(import_named_specifier(
+                    allocator,
+                    specifier.as_str(),
+                    ImportOrExportKind::Value,
+                ));
+            }
+        }
+        if specifiers.is_empty() {
+            return Err(TransformError::InvalidOptions(
+                "jsxRuntimeImport requires namespace, defaultSpecifier, or specifiers".into(),
+            ));
+        }
+        body.push(import_statement(
+            allocator,
+            import.source.as_str(),
+            specifiers,
+            ImportOrExportKind::Value,
+        ));
+    }
+
+    if options.native {
+        let mut specifiers = ast.vec();
+        specifiers.push(import_default_specifier(allocator, "Svg"));
+        for component in native_components {
+            specifiers.push(import_named_specifier(
+                allocator,
+                component.as_str(),
+                ImportOrExportKind::Value,
+            ));
+        }
+        body.push(import_statement(
+            allocator,
+            "react-native-svg",
+            specifiers,
+            ImportOrExportKind::Value,
+        ));
+    }
+
+    let mut react_value_imports = ast.vec();
+    if options.r#ref {
+        react_value_imports.push(import_named_specifier(
+            allocator,
+            "forwardRef",
+            ImportOrExportKind::Value,
+        ));
+    }
+    if options.memo {
+        react_value_imports.push(import_named_specifier(
+            allocator,
+            "memo",
+            ImportOrExportKind::Value,
+        ));
+    }
+    if !react_value_imports.is_empty() {
+        body.push(import_statement(
+            allocator,
+            options.import_source.as_str(),
+            react_value_imports,
+            ImportOrExportKind::Value,
+        ));
+    }
+
+    if options.typescript && (options.expand_props != ExpandProps::Disabled || options.r#ref) {
+        let mut type_imports = ast.vec();
+        if options.expand_props != ExpandProps::Disabled {
+            type_imports.push(import_named_specifier(
+                allocator,
+                if options.native {
+                    "SvgProps"
+                } else {
+                    "SVGProps"
+                },
+                ImportOrExportKind::Value,
+            ));
+        }
+        if options.r#ref && !options.native {
+            type_imports.push(import_named_specifier(
+                allocator,
+                "Ref",
+                ImportOrExportKind::Value,
+            ));
+        }
+        if !type_imports.is_empty() {
+            body.push(import_statement(
+                allocator,
+                if options.native {
+                    "react-native-svg"
+                } else {
+                    options.import_source.as_str()
+                },
+                type_imports,
+                ImportOrExportKind::Type,
+            ));
+        }
+    }
+    Ok(())
+}
+
+fn import_statement<'a>(
+    allocator: &'a Allocator,
+    source: &str,
+    specifiers: ArenaVec<'a, ImportDeclarationSpecifier<'a>>,
+    import_kind: ImportOrExportKind,
+) -> Statement<'a> {
+    let ast = AstBuilder::new(allocator);
+    Statement::ImportDeclaration(ast.alloc_import_declaration(
+        SPAN,
+        Some(specifiers),
+        ast.string_literal(SPAN, ast.str(source), None),
+        None,
+        NONE,
+        import_kind,
+    ))
+}
+
+fn import_named_specifier<'a>(
+    allocator: &'a Allocator,
+    name: &str,
+    import_kind: ImportOrExportKind,
+) -> ImportDeclarationSpecifier<'a> {
+    let ast = AstBuilder::new(allocator);
+    ast.import_declaration_specifier_import_specifier(
+        SPAN,
+        ast.module_export_name_identifier_name(SPAN, ast.str(name)),
+        ast.binding_identifier(SPAN, ast.str(name)),
+        import_kind,
+    )
+}
+
+fn import_default_specifier<'a>(
+    allocator: &'a Allocator,
+    local: &str,
+) -> ImportDeclarationSpecifier<'a> {
+    let ast = AstBuilder::new(allocator);
+    ast.import_declaration_specifier_import_default_specifier(
+        SPAN,
+        ast.binding_identifier(SPAN, ast.str(local)),
+    )
+}
+
+fn import_namespace_specifier<'a>(
+    allocator: &'a Allocator,
+    local: &str,
+) -> ImportDeclarationSpecifier<'a> {
+    let ast = AstBuilder::new(allocator);
+    ast.import_declaration_specifier_import_namespace_specifier(
+        SPAN,
+        ast.binding_identifier(SPAN, ast.str(local)),
+    )
+}
+
+fn component_statement<'a>(
+    allocator: &'a Allocator,
+    component_name: &str,
+    jsx: Expression<'a>,
+    options: &TransformOptions,
+) -> Statement<'a> {
+    let ast = AstBuilder::new(allocator);
+    let mut statements = ast.vec();
+    statements.push(ast.statement_expression(SPAN, jsx));
+    let arrow = ast.expression_arrow_function(
+        SPAN,
+        true,
+        false,
+        NONE,
+        component_params(allocator, options),
+        NONE,
+        ast.function_body(SPAN, ast.vec(), statements),
+    );
+    variable_statement(allocator, component_name, arrow)
+}
+
+fn call_wrapper_statement<'a>(
+    allocator: &'a Allocator,
+    binding_name: &str,
+    callee_name: &str,
+    argument_name: &str,
+) -> Statement<'a> {
+    let ast = AstBuilder::new(allocator);
+    let mut arguments = ast.vec();
+    arguments.push(Argument::from(
+        ast.expression_identifier(SPAN, ast.str(argument_name)),
+    ));
+    let call = ast.expression_call(
+        SPAN,
+        ast.expression_identifier(SPAN, ast.str(callee_name)),
+        NONE,
+        arguments,
+        false,
+    );
+    variable_statement(allocator, binding_name, call)
+}
+
+fn variable_statement<'a>(
+    allocator: &'a Allocator,
+    binding_name: &str,
+    init: Expression<'a>,
+) -> Statement<'a> {
+    let ast = AstBuilder::new(allocator);
+    let mut declarations = ast.vec();
+    declarations.push(ast.variable_declarator(
+        SPAN,
+        VariableDeclarationKind::Const,
+        ast.binding_pattern_binding_identifier(SPAN, ast.str(binding_name)),
+        NONE,
+        Some(init),
+        false,
+    ));
+    Statement::VariableDeclaration(ast.alloc_variable_declaration(
+        SPAN,
+        VariableDeclarationKind::Const,
+        declarations,
+        false,
+    ))
+}
+
+fn export_named_statement<'a>(
+    allocator: &'a Allocator,
+    local: &str,
+    exported: &str,
+) -> Statement<'a> {
+    let ast = AstBuilder::new(allocator);
+    let mut specifiers = ast.vec();
+    specifiers.push(ast.export_specifier(
+        SPAN,
+        ast.module_export_name_identifier_reference(SPAN, ast.str(local)),
+        ast.module_export_name_identifier_name(SPAN, ast.str(exported)),
+        ImportOrExportKind::Value,
+    ));
+    Statement::ExportNamedDeclaration(ast.alloc_export_named_declaration(
+        SPAN,
+        None,
+        specifiers,
+        None,
+        ImportOrExportKind::Value,
+        NONE,
+    ))
+}
+
+fn export_default_statement<'a>(allocator: &'a Allocator, local: &str) -> Statement<'a> {
+    let ast = AstBuilder::new(allocator);
+    Statement::ExportDefaultDeclaration(ast.alloc_export_default_declaration(
+        SPAN,
+        ExportDefaultDeclarationKind::from(ast.expression_identifier(SPAN, ast.str(local))),
+    ))
 }
 
 fn parse_program<'a>(
@@ -479,6 +762,131 @@ fn parse_program<'a>(
         });
     }
     Ok(ret.program)
+}
+
+fn parse_previous_export<'a>(
+    allocator: &'a Allocator,
+    source: &str,
+    options: &TransformOptions,
+) -> Result<ArenaVec<'a, Statement<'a>>, TransformError> {
+    let program = parse_program(allocator, source.trim(), options.typescript).map_err(|error| {
+        TransformError::InvalidOptions(format!("invalid previousExport: {error}"))
+    })?;
+    if body_exports_name(&program.body, options.named_export.as_str()) {
+        return Err(TransformError::InvalidOptions(format!(
+            "previousExport already exports `{}`",
+            options.named_export
+        )));
+    }
+    Ok(program.body)
+}
+
+fn body_exports_name(body: &ArenaVec<'_, Statement<'_>>, name: &str) -> bool {
+    body.iter()
+        .any(|statement| statement_exports_name(statement, name))
+}
+
+fn statement_exports_name(statement: &Statement<'_>, name: &str) -> bool {
+    let Statement::ExportNamedDeclaration(declaration) = statement else {
+        return false;
+    };
+    declaration
+        .specifiers
+        .iter()
+        .any(|specifier| module_export_name_matches(&specifier.exported, name))
+        || declaration
+            .declaration
+            .as_ref()
+            .is_some_and(|declaration| declaration_exports_name(declaration, name))
+}
+
+fn declaration_exports_name(declaration: &Declaration<'_>, name: &str) -> bool {
+    match declaration {
+        Declaration::VariableDeclaration(declaration) => declaration
+            .declarations
+            .iter()
+            .any(|declarator| binding_pattern_contains_name(&declarator.id, name)),
+        Declaration::FunctionDeclaration(function) => function
+            .id
+            .as_ref()
+            .is_some_and(|id| id.name.as_str() == name),
+        Declaration::ClassDeclaration(class) => {
+            class.id.as_ref().is_some_and(|id| id.name.as_str() == name)
+        }
+        Declaration::TSInterfaceDeclaration(interface) => interface.id.name.as_str() == name,
+        _ => false,
+    }
+}
+
+fn binding_pattern_contains_name(pattern: &BindingPattern<'_>, name: &str) -> bool {
+    match pattern {
+        BindingPattern::BindingIdentifier(identifier) => identifier.name.as_str() == name,
+        BindingPattern::ObjectPattern(pattern) => {
+            pattern
+                .properties
+                .iter()
+                .any(|property| binding_pattern_contains_name(&property.value, name))
+                || pattern
+                    .rest
+                    .as_ref()
+                    .is_some_and(|rest| binding_pattern_contains_name(&rest.argument, name))
+        }
+        BindingPattern::ArrayPattern(pattern) => {
+            pattern.elements.iter().any(|element| {
+                element
+                    .as_ref()
+                    .is_some_and(|element| binding_pattern_contains_name(element, name))
+            }) || pattern
+                .rest
+                .as_ref()
+                .is_some_and(|rest| binding_pattern_contains_name(&rest.argument, name))
+        }
+        BindingPattern::AssignmentPattern(pattern) => {
+            binding_pattern_contains_name(&pattern.left, name)
+        }
+    }
+}
+
+fn module_export_name_matches(export_name: &ModuleExportName<'_>, name: &str) -> bool {
+    match export_name {
+        ModuleExportName::IdentifierName(identifier) => identifier.name.as_str() == name,
+        ModuleExportName::IdentifierReference(identifier) => identifier.name.as_str() == name,
+        ModuleExportName::StringLiteral(literal) => literal.value.as_str() == name,
+    }
+}
+
+fn validate_options(options: &TransformOptions) -> Result<(), TransformError> {
+    validate_binding_name("componentName", options.component_name.as_str())?;
+    validate_binding_name("namedExport", options.named_export.as_str())?;
+    if let Some(import) = &options.jsx_runtime_import {
+        if import.namespace.is_none()
+            && import.default_specifier.is_none()
+            && import.specifiers.is_empty()
+        {
+            return Err(TransformError::InvalidOptions(
+                "jsxRuntimeImport requires namespace, defaultSpecifier, or specifiers".into(),
+            ));
+        }
+        if let Some(namespace) = &import.namespace {
+            validate_binding_name("jsxRuntimeImport.namespace", namespace)?;
+        }
+        if let Some(default_specifier) = &import.default_specifier {
+            validate_binding_name("jsxRuntimeImport.defaultSpecifier", default_specifier)?;
+        }
+        for specifier in &import.specifiers {
+            validate_binding_name("jsxRuntimeImport.specifiers[]", specifier)?;
+        }
+    }
+    Ok(())
+}
+
+fn validate_binding_name(option: &str, value: &str) -> Result<(), TransformError> {
+    if !is_identifier_name(value) || is_reserved_keyword(value) {
+        return Err(TransformError::InvalidOptions(format!(
+            "{option} must be a valid JavaScript binding identifier"
+        )));
+    }
+    Ok(())
 }
 
 pub(crate) fn parse_expression<'a>(
@@ -514,13 +922,6 @@ pub(crate) fn parse_expression<'a>(
         .ok_or_else(|| TransformError::InvalidExpression {
             expr: source.into(),
         })
-}
-
-pub(crate) fn parse_jsx_expression<'a>(
-    allocator: &'a Allocator,
-    source: &str,
-) -> Result<JSXExpression<'a>, TransformError> {
-    parse_expression(allocator, source, false).map(expression_to_jsx)
 }
 
 pub(crate) fn expression_to_jsx<'a>(expression: Expression<'a>) -> JSXExpression<'a> {
@@ -578,40 +979,6 @@ fn source_type(typescript: bool) -> SourceType {
         .with_typescript(typescript)
 }
 
-fn codegen_expression<'a>(
-    allocator: &'a Allocator,
-    expression: &Expression<'a>,
-    typescript: bool,
-) -> String {
-    let ast = AstBuilder::new(allocator);
-    let mut body = ast.vec();
-    body.push(ast.statement_expression(SPAN, expression.clone_in(allocator)));
-    let program = ast.program(
-        SPAN,
-        source_type(typescript),
-        "",
-        ast.vec(),
-        None,
-        ast.vec(),
-        body,
-    );
-    Codegen::new().build(&program).code
-}
-
-pub(crate) fn codegen_jsx_element<'a>(
-    allocator: &'a Allocator,
-    element: &JSXElement<'a>,
-    typescript: bool,
-) -> String {
-    let ast = AstBuilder::new(allocator);
-    let expression = Expression::JSXElement(ast.alloc(element.clone_in(allocator)));
-    trim_expression_statement(&codegen_expression(allocator, &expression, typescript)).to_string()
-}
-
-fn trim_expression_statement(code: &str) -> &str {
-    code.trim().trim_end_matches(';').trim()
-}
-
 pub(crate) fn element_name<'a>(name: &'a JSXElementName<'a>) -> Option<&'a str> {
     match name {
         JSXElementName::Identifier(identifier) => Some(identifier.name.as_str()),
@@ -626,100 +993,12 @@ pub(crate) fn attr_name<'a>(name: &'a JSXAttributeName<'a>) -> Option<&'a str> {
     }
 }
 
-// FIXME: it should ast based write
-fn write_imports(
-    code: &mut String,
+fn component_params<'a>(
+    allocator: &'a Allocator,
     options: &TransformOptions,
-    native_components: &BTreeSet<String>,
-) -> Result<(), TransformError> {
-    if options.jsx_runtime != JsxRuntime::Automatic {
-        let import = options
-            .jsx_runtime_import
-            .clone()
-            .unwrap_or_else(default_jsx_runtime_import);
-        if let Some(namespace) = import.namespace {
-            code.push_str("import * as ");
-            code.push_str(&namespace);
-            code.push_str(" from ");
-            code.push_str(&js_string(&import.source));
-            code.push_str(";\n");
-        } else if let Some(default_specifier) = import.default_specifier {
-            code.push_str("import ");
-            code.push_str(&default_specifier);
-            code.push_str(" from ");
-            code.push_str(&js_string(&import.source));
-            code.push_str(";\n");
-        } else if !import.specifiers.is_empty() {
-            code.push_str("import { ");
-            code.push_str(&import.specifiers.join(", "));
-            code.push_str(" } from ");
-            code.push_str(&js_string(&import.source));
-            code.push_str(";\n");
-        } else {
-            return Err(TransformError::BuildJsx(
-                "jsxRuntimeImport requires namespace, defaultSpecifier, or specifiers".into(),
-            ));
-        }
-    }
-
-    if options.native {
-        code.push_str("import Svg");
-        if !native_components.is_empty() {
-            code.push_str(", { ");
-            code.push_str(
-                &native_components
-                    .iter()
-                    .cloned()
-                    .collect::<Vec<_>>()
-                    .join(", "),
-            );
-            code.push_str(" }");
-        }
-        code.push_str(" from \"react-native-svg\";\n");
-    }
-
-    let mut named_react_imports = Vec::new();
-    if options.r#ref {
-        named_react_imports.push("forwardRef");
-    }
-    if options.memo {
-        named_react_imports.push("memo");
-    }
-    if !named_react_imports.is_empty() {
-        code.push_str("import { ");
-        code.push_str(&named_react_imports.join(", "));
-        code.push_str(" } from ");
-        code.push_str(&js_string(&options.import_source));
-        code.push_str(";\n");
-    }
-    if options.typescript && (options.expand_props != ExpandProps::Disabled || options.r#ref) {
-        let mut type_imports = Vec::new();
-        if options.expand_props != ExpandProps::Disabled {
-            type_imports.push(if options.native {
-                "SvgProps"
-            } else {
-                "SVGProps"
-            });
-        }
-        if options.r#ref && !options.native {
-            type_imports.push("Ref");
-        }
-        if !type_imports.is_empty() {
-            code.push_str("import type { ");
-            code.push_str(&type_imports.join(", "));
-            code.push_str(" } from ");
-            code.push_str(&js_string(if options.native {
-                "react-native-svg"
-            } else {
-                &options.import_source
-            }));
-            code.push_str(";\n");
-        }
-    }
-    Ok(())
-}
-
-fn component_params(options: &TransformOptions) -> String {
+) -> oxc_allocator::Box<'a, FormalParameters<'a>> {
+    let ast = AstBuilder::new(allocator);
+    let mut items = ast.vec();
     let mut props = Vec::new();
     if options.title_prop {
         props.push("title");
@@ -729,71 +1008,185 @@ fn component_params(options: &TransformOptions) -> String {
         props.push("desc");
         props.push("descId");
     }
-    let props_type = props_type(options);
-    let first = if props.is_empty() {
+
+    if props.is_empty() {
         if options.expand_props == ExpandProps::Disabled {
             if options.r#ref {
-                "_".into()
-            } else {
-                return "()".into();
+                items.push(formal_parameter(
+                    allocator,
+                    ast.binding_pattern_binding_identifier(SPAN, ast.str("_")),
+                    None,
+                ));
             }
         } else {
-            format!("props{props_type}")
+            items.push(formal_parameter(
+                allocator,
+                ast.binding_pattern_binding_identifier(SPAN, ast.str("props")),
+                props_type_annotation(allocator, options),
+            ));
         }
     } else {
-        let mut pattern = String::from("{ ");
-        pattern.push_str(&props.join(", "));
-        if options.expand_props != ExpandProps::Disabled {
-            pattern.push_str(", ...props");
+        let mut properties = ast.vec();
+        for prop in props {
+            properties.push(ast.binding_property(
+                SPAN,
+                ast.property_key_static_identifier(SPAN, ast.str(prop)),
+                ast.binding_pattern_binding_identifier(SPAN, ast.str(prop)),
+                true,
+                false,
+            ));
         }
-        pattern.push_str(" }");
-        pattern.push_str(&props_type);
-        pattern
-    };
-    if options.r#ref {
-        let ref_type = if options.typescript && !options.native {
-            ": Ref<SVGSVGElement>"
+        let rest = if options.expand_props != ExpandProps::Disabled {
+            Some(ast.alloc_binding_rest_element(
+                SPAN,
+                ast.binding_pattern_binding_identifier(SPAN, ast.str("props")),
+            ))
         } else {
-            ""
+            None
         };
-        format!("({first}, ref{ref_type})")
-    } else if options.typescript || first.starts_with('{') {
-        format!("({first})")
-    } else {
-        first
+        items.push(formal_parameter(
+            allocator,
+            ast.binding_pattern_object_pattern(SPAN, properties, rest),
+            props_type_annotation(allocator, options),
+        ));
     }
+
+    if options.r#ref {
+        items.push(formal_parameter(
+            allocator,
+            ast.binding_pattern_binding_identifier(SPAN, ast.str("ref")),
+            ref_type_annotation(allocator, options),
+        ));
+    }
+
+    ast.alloc_formal_parameters(
+        SPAN,
+        FormalParameterKind::ArrowFormalParameters,
+        items,
+        None::<oxc_allocator::Box<'a, FormalParameterRest<'a>>>,
+    )
 }
 
-fn props_type(options: &TransformOptions) -> String {
+fn formal_parameter<'a>(
+    allocator: &'a Allocator,
+    pattern: BindingPattern<'a>,
+    type_annotation: Option<oxc_allocator::Box<'a, TSTypeAnnotation<'a>>>,
+) -> FormalParameter<'a> {
+    let ast = AstBuilder::new(allocator);
+    ast.formal_parameter(
+        SPAN,
+        ast.vec(),
+        pattern,
+        type_annotation,
+        None::<oxc_allocator::Box<'a, Expression<'a>>>,
+        false,
+        None,
+        false,
+        false,
+    )
+}
+
+fn props_type_annotation<'a>(
+    allocator: &'a Allocator,
+    options: &TransformOptions,
+) -> Option<oxc_allocator::Box<'a, TSTypeAnnotation<'a>>> {
     if !options.typescript {
-        return String::new();
+        return None;
     }
-    let svg_props = if options.native {
-        "SvgProps".to_string()
-    } else {
-        "SVGProps<SVGSVGElement>".to_string()
-    };
-    match (
-        options.expand_props != ExpandProps::Disabled,
-        options.title_prop || options.desc_prop,
-    ) {
-        (true, true) => format!(": {svg_props} & SVGRProps"),
-        (true, false) => format!(": {svg_props}"),
-        (false, true) => ": SVGRProps".into(),
-        (false, false) => String::new(),
+    let ast = AstBuilder::new(allocator);
+    let mut types = ast.vec();
+    if options.expand_props != ExpandProps::Disabled {
+        types.push(svg_props_type(allocator, options.native));
+    }
+    if options.title_prop || options.desc_prop {
+        types.push(ts_reference_type(allocator, "SVGRProps", None));
+    }
+    match types.len() {
+        0 => None,
+        1 => types
+            .into_iter()
+            .next()
+            .map(|ty| ast.alloc_ts_type_annotation(SPAN, ty)),
+        _ => Some(ast.alloc_ts_type_annotation(SPAN, ast.ts_type_intersection_type(SPAN, types))),
     }
 }
 
-fn svgr_props_interface(options: &TransformOptions) -> String {
-    let mut code = String::from("interface SVGRProps {\n");
+fn ref_type_annotation<'a>(
+    allocator: &'a Allocator,
+    options: &TransformOptions,
+) -> Option<oxc_allocator::Box<'a, TSTypeAnnotation<'a>>> {
+    if !options.typescript || options.native {
+        return None;
+    }
+    let ast = AstBuilder::new(allocator);
+    let mut type_arguments = ast.vec();
+    type_arguments.push(ts_reference_type(allocator, "SVGSVGElement", None));
+    Some(ast.alloc_ts_type_annotation(
+        SPAN,
+        ts_reference_type(allocator, "Ref", Some(type_arguments)),
+    ))
+}
+
+fn svg_props_type<'a>(allocator: &'a Allocator, native: bool) -> TSType<'a> {
+    if native {
+        ts_reference_type(allocator, "SvgProps", None)
+    } else {
+        let ast = AstBuilder::new(allocator);
+        let mut type_arguments = ast.vec();
+        type_arguments.push(ts_reference_type(allocator, "SVGSVGElement", None));
+        ts_reference_type(allocator, "SVGProps", Some(type_arguments))
+    }
+}
+
+fn ts_reference_type<'a>(
+    allocator: &'a Allocator,
+    name: &str,
+    type_arguments: Option<ArenaVec<'a, TSType<'a>>>,
+) -> TSType<'a> {
+    let ast = AstBuilder::new(allocator);
+    let type_arguments =
+        type_arguments.map(|params| ast.alloc_ts_type_parameter_instantiation(SPAN, params));
+    ast.ts_type_type_reference(
+        SPAN,
+        ast.ts_type_name_identifier_reference(SPAN, ast.str(name)),
+        type_arguments,
+    )
+}
+
+fn svgr_props_interface_statement<'a>(
+    allocator: &'a Allocator,
+    options: &TransformOptions,
+) -> Statement<'a> {
+    let ast = AstBuilder::new(allocator);
+    let mut body = ast.vec();
     if options.title_prop {
-        code.push_str("title?: string;\ntitleId?: string;\n");
+        body.push(ts_string_property_signature(allocator, "title"));
+        body.push(ts_string_property_signature(allocator, "titleId"));
     }
     if options.desc_prop {
-        code.push_str("desc?: string;\ndescId?: string;\n");
+        body.push(ts_string_property_signature(allocator, "desc"));
+        body.push(ts_string_property_signature(allocator, "descId"));
     }
-    code.push_str("}\n");
-    code
+    Statement::from(ast.declaration_ts_interface(
+        SPAN,
+        ast.binding_identifier(SPAN, ast.str("SVGRProps")),
+        NONE,
+        ast.vec(),
+        ast.ts_interface_body(SPAN, body),
+        false,
+    ))
+}
+
+fn ts_string_property_signature<'a>(allocator: &'a Allocator, name: &str) -> TSSignature<'a> {
+    let ast = AstBuilder::new(allocator);
+    ast.ts_signature_property_signature(
+        SPAN,
+        false,
+        true,
+        false,
+        ast.property_key_static_identifier(SPAN, ast.str(name)),
+        Some(ast.alloc_ts_type_annotation(SPAN, ast.ts_type_string_keyword(SPAN))),
+    )
 }
 
 fn default_jsx_runtime_import() -> JsxRuntimeImport {
@@ -891,7 +1284,8 @@ fn convert_aria_attribute(name: &str) -> String {
 }
 
 fn style_to_object_expression<'a>(allocator: &'a Allocator, raw: &str) -> Option<Expression<'a>> {
-    let mut props = Vec::new();
+    let ast = AstBuilder::new(allocator);
+    let mut props = ast.vec();
     for entry in raw.split(';') {
         let style = entry.trim();
         if style.is_empty() {
@@ -905,26 +1299,32 @@ fn style_to_object_expression<'a>(allocator: &'a Allocator, raw: &str) -> Option
             continue;
         }
         let formatted_key = if key.starts_with("--") {
-            js_string(key)
+            key.to_string()
         } else {
             camelize_svg_name(key.trim_start_matches("-ms-"))
         };
         let value = value.trim();
-        let formatted_value =
-            if let Some(px) = value.strip_suffix("px").and_then(|v| numeric_value(v)) {
-                number_literal(px)
-            } else if let Some(number) = numeric_value(value) {
-                number_literal(number)
-            } else {
-                js_string(value)
-            };
-        if key.starts_with("--") {
-            props.push(format!("{formatted_key}: {formatted_value}"));
+        let value = if let Some(px) = value.strip_suffix("px").and_then(|v| numeric_value(v)) {
+            ast.expression_numeric_literal(SPAN, px, None, NumberBase::Decimal)
+        } else if let Some(number) = numeric_value(value) {
+            ast.expression_numeric_literal(SPAN, number, None, NumberBase::Decimal)
         } else {
-            props.push(format!("{formatted_key}: {formatted_value}"));
-        }
+            ast.expression_string_literal(SPAN, ast.str(value), None)
+        };
+        let key = if key.starts_with("--") || !is_identifier_name(formatted_key.as_str()) {
+            PropertyKey::StringLiteral(ast.alloc_string_literal(
+                SPAN,
+                ast.str(formatted_key.as_str()),
+                None,
+            ))
+        } else {
+            ast.property_key_static_identifier(SPAN, ast.str(formatted_key.as_str()))
+        };
+        props.push(ObjectPropertyKind::ObjectProperty(
+            ast.alloc_object_property(SPAN, PropertyKind::Init, key, value, false, false, false),
+        ));
     }
-    parse_expression(allocator, &format!("{{ {} }}", props.join(", ")), false).ok()
+    Some(ast.expression_object(SPAN, props))
 }
 
 fn numeric_value(value: &str) -> Option<f64> {
@@ -937,14 +1337,6 @@ fn numeric_value(value: &str) -> Option<f64> {
         Some(number)
     } else {
         None
-    }
-}
-
-fn number_literal(number: f64) -> String {
-    if number.fract() == 0.0 {
-        format!("{}", number as i64)
-    } else {
-        number.to_string()
     }
 }
 
@@ -999,22 +1391,6 @@ fn decode_xml(value: &str) -> String {
         }
     }
     result.push_str(rest);
-    result
-}
-
-pub(crate) fn js_string(value: &str) -> String {
-    let mut result = String::from("\"");
-    for ch in value.chars() {
-        match ch {
-            '\\' => result.push_str("\\\\"),
-            '"' => result.push_str("\\\""),
-            '\n' => result.push_str("\\n"),
-            '\r' => result.push_str("\\r"),
-            '\t' => result.push_str("\\t"),
-            ch => result.push(ch),
-        }
-    }
-    result.push('"');
     result
 }
 
@@ -1164,5 +1540,73 @@ mod tests {
         assert!(result.contains("<svg {...props} fill={props.color} role=\"img\" />"));
         assert!(!result.contains("width="));
         assert!(!result.contains("height="));
+    }
+
+    #[test]
+    fn rejects_invalid_identifier_options() {
+        let err = transform(
+            r#"<svg />"#,
+            TransformOptions {
+                component_name: "Svg;Component".into(),
+                ..TransformOptions::default()
+            },
+        )
+        .unwrap_err();
+        assert!(matches!(err, TransformError::InvalidOptions(_)));
+
+        let err = transform(
+            r#"<svg />"#,
+            TransformOptions {
+                jsx_runtime_import: Some(JsxRuntimeImport {
+                    source: "preact".into(),
+                    namespace: None,
+                    default_specifier: None,
+                    specifiers: vec!["hacked;".into()],
+                }),
+                ..TransformOptions::default()
+            },
+        )
+        .unwrap_err();
+        assert!(matches!(err, TransformError::InvalidOptions(_)));
+    }
+
+    #[test]
+    fn parses_previous_export_as_statements() {
+        let result = code(
+            r#"<svg />"#,
+            TransformOptions {
+                named_export: "Component".into(),
+                previous_export: Some(r#"const img = "logo.svg"; export default img;"#.into()),
+                ..TransformOptions::default()
+            },
+        );
+        assert!(result.contains("export { SvgComponent as Component };"));
+        assert!(result.contains("const img = \"logo.svg\";"));
+        assert!(result.contains("export default img;"));
+    }
+
+    #[test]
+    fn rejects_invalid_or_conflicting_previous_export() {
+        let err = transform(
+            r#"<svg />"#,
+            TransformOptions {
+                previous_export: Some("export default ;".into()),
+                ..TransformOptions::default()
+            },
+        )
+        .unwrap_err();
+        assert!(matches!(err, TransformError::InvalidOptions(_)));
+
+        let err = transform(
+            r#"<svg />"#,
+            TransformOptions {
+                export_type: ExportType::Named,
+                named_export: "Component".into(),
+                previous_export: Some("export { value as Component };".into()),
+                ..TransformOptions::default()
+            },
+        )
+        .unwrap_err();
+        assert!(matches!(err, TransformError::InvalidOptions(_)));
     }
 }

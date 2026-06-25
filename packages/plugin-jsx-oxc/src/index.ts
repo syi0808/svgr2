@@ -32,6 +32,8 @@ const getJsxRuntimeOptions = (config: Config): Partial<TransformOptions> => {
 
 const jsxPlugin: Plugin = (code, config, state) => {
   const result = transform(code, {
+    componentName: state.componentName,
+    previousExport: state.caller?.previousExport ?? undefined,
     ref: config.ref,
     titleProp: config.titleProp,
     descProp: config.descProp,
@@ -42,12 +44,10 @@ const jsxPlugin: Plugin = (code, config, state) => {
     svgProps: config.svgProps,
     replaceAttrValues: config.replaceAttrValues,
     typescript: config.typescript,
-    template: config.template,
     memo: config.memo,
     exportType: config.exportType,
     namedExport: config.namedExport,
     ...getJsxRuntimeOptions(config),
-    state,
   });
 
   if (!result) {
