@@ -1,6 +1,7 @@
 packages:
   - 'packages/*'
   - 'packages/*/npm/*'
+  - 'bench'
 allowBuilds:
   wasm-pack: true
 catalog:
