@@ -115,30 +115,41 @@ fn create_dynamic_tag_element<'a>(
 
 fn create_tag_id_attribute<'a>(allocator: &'a Allocator, tag: &str) -> JSXAttributeItem<'a> {
     let ast = AstBuilder::new(allocator);
+    let id_name = dynamic_tag_id_name(tag);
     ast.jsx_attribute_item_attribute(
         SPAN,
         ast.jsx_attribute_name_identifier(SPAN, ast.str("id")),
         Some(ast.jsx_attribute_value_expression_container(
             SPAN,
-            expression_to_jsx(
-                ast.expression_identifier(SPAN, ast.str(format!("{tag}Id").as_str())),
-            ),
+            expression_to_jsx(ast.expression_identifier(SPAN, ast.str(id_name))),
         )),
     )
+}
+
+fn dynamic_tag_id_name(tag: &str) -> &'static str {
+    match tag {
+        "title" => "titleId",
+        "desc" => "descId",
+        _ => unreachable!("unsupported dynamic SVG metadata tag"),
+    }
 }
 
 fn ensure_element_has_closing<'a>(allocator: &'a Allocator, element: &mut JSXElement<'a>) {
     if element.closing_element.is_some() {
         return;
     }
-    let Some(name) = element_name(&element.opening_element.name).map(ToOwned::to_owned) else {
-        return;
-    };
     let ast = AstBuilder::new(allocator);
-    element.closing_element = Some(ast.alloc_jsx_closing_element(
-        element.opening_element.span,
-        ast.jsx_element_name_identifier(element.opening_element.span, ast.str(name.as_str())),
-    ));
+    let closing = {
+        let Some(name) = element_name(&element.opening_element.name) else {
+            return;
+        };
+        let name = ast.str(name);
+        ast.alloc_jsx_closing_element(
+            element.opening_element.span,
+            ast.jsx_element_name_identifier(element.opening_element.span, name),
+        )
+    };
+    element.closing_element = Some(closing);
 }
 
 fn ensure_dynamic_tag_id<'a>(
@@ -154,27 +165,25 @@ fn ensure_dynamic_tag_id<'a>(
             continue;
         }
         let ast = AstBuilder::new(allocator);
+        let id_name = dynamic_tag_id_name(tag);
         let expr = match &attribute.value {
             Some(JSXAttributeValue::StringLiteral(lit)) => ast.expression_logical(
                 attribute.span,
-                ast.expression_identifier(attribute.span, ast.str(format!("{tag}Id").as_str())),
+                ast.expression_identifier(attribute.span, ast.str(id_name)),
                 LogicalOperator::Or,
                 ast.expression_string_literal(attribute.span, ast.str(lit.value.as_str()), None),
             ),
-            _ => ast.expression_identifier(attribute.span, ast.str(format!("{tag}Id").as_str())),
+            _ => ast.expression_identifier(attribute.span, ast.str(id_name)),
         };
         attribute.value = Some(
             ast.jsx_attribute_value_expression_container(attribute.span, expression_to_jsx(expr)),
         );
         return Ok(());
     }
-    upsert_attribute(
-        allocator,
-        &mut element.opening_element,
-        attr_spec(
-            "id",
-            AttributeValueSpec::Identifier(format!("{tag}Id")),
-            ExpandProps::End,
-        ),
-    )
+    let spec = attr_spec(
+        "id",
+        AttributeValueSpec::Identifier(dynamic_tag_id_name(tag).into()),
+        ExpandProps::End,
+    );
+    upsert_attribute(allocator, &mut element.opening_element, &spec)
 }

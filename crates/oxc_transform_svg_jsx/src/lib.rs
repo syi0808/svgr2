@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::BTreeSet;
 
 use oxc_allocator::{Allocator, TakeIn, Vec as ArenaVec};
@@ -167,14 +168,14 @@ fn parse_svg_to_jsx<'a>(
     sink.finish()
 }
 
-struct OxcJsxSink<'a> {
+struct OxcJsxSink<'src, 'a> {
     ast: AstBuilder<'a>,
     passes: SinkPasses<'a>,
-    stack: Vec<ElementFrame<'a>>,
+    stack: Vec<ElementFrame<'src, 'a>>,
     root: Option<Expression<'a>>,
 }
 
-impl<'a> OxcJsxSink<'a> {
+impl<'src, 'a> OxcJsxSink<'src, 'a> {
     fn new(allocator: &'a Allocator, options: &TransformOptions) -> Self {
         Self {
             ast: AstBuilder::new(allocator),
@@ -211,7 +212,7 @@ impl<'a> OxcJsxSink<'a> {
 
     fn build_element(
         &self,
-        frame: ElementFrame<'a>,
+        frame: ElementFrame<'src, 'a>,
         closing_span: Option<SvgSpan>,
         is_root: bool,
     ) -> Result<Option<JSXChild<'a>>, TransformError> {
@@ -222,12 +223,12 @@ impl<'a> OxcJsxSink<'a> {
         let mut opening = self.ast.alloc_jsx_opening_element(
             to_span(frame.opening_span),
             self.ast
-                .jsx_element_name_identifier(to_span(frame.name_span), self.ast.str(name.as_str())),
+                .jsx_element_name_identifier(to_span(frame.name_span), self.ast.str(name.as_ref())),
             NONE,
             frame.attributes,
         );
         self.passes.apply_opening_element(&mut opening, is_root)?;
-        let name = element_name(&opening.name).unwrap_or(name.as_str());
+        let name = element_name(&opening.name).unwrap_or(name.as_ref());
         let closing = if frame.children.is_empty() {
             None
         } else {
@@ -247,27 +248,27 @@ impl<'a> OxcJsxSink<'a> {
         ))))
     }
 
-    fn text_child(&self, text: Text<'_>) -> JSXChild<'a> {
+    fn text_child(&self, text: Text<'src>) -> JSXChild<'a> {
         let value = decode_xml(text.value);
         let expr = JSXExpression::StringLiteral(self.ast.alloc_string_literal(
             to_span(text.span),
-            self.ast.str(value.as_str()),
+            self.ast.str(value.as_ref()),
             None,
         ));
         self.ast
             .jsx_child_expression_container(to_span(text.span), expr)
     }
 
-    fn attr_item(&self, attr: Attribute<'_>, element_name: &str) -> JSXAttributeItem<'a> {
+    fn attr_item(&self, attr: Attribute<'src>, element_name: &str) -> JSXAttributeItem<'a> {
         let mapped_name = map_attribute_name(attr.name, element_name);
         let value = attr.value.map(|value| {
             self.attr_value(
-                mapped_name.as_str(),
+                mapped_name.as_ref(),
                 value,
                 attr.value_span.unwrap_or(attr.span),
             )
         });
-        let mapped_name = self.ast.str(mapped_name.as_str());
+        let mapped_name = self.ast.str(mapped_name.as_ref());
         self.ast.jsx_attribute_item_attribute(
             to_span(attr.span),
             self.ast
@@ -277,15 +278,15 @@ impl<'a> OxcJsxSink<'a> {
     }
 
     fn attr_value(&self, key: &str, raw: &str, span: SvgSpan) -> JSXAttributeValue<'a> {
-        let value = replace_spaces(&decode_xml(raw));
+        let value = normalize_attribute_value(raw);
         if key == "style" {
-            let expr = style_to_object_expression(self.ast.allocator, value.as_str())
+            let expr = style_to_object_expression(self.ast.allocator, value.as_ref())
                 .unwrap_or_else(|| self.ast.expression_object(SPAN, self.ast.vec()));
             return self
                 .ast
                 .jsx_attribute_value_expression_container(to_span(span), expression_to_jsx(expr));
         }
-        if let Some(number) = numeric_value(value.as_str()) {
+        if let Some(number) = numeric_value(value.as_ref()) {
             let expr = self.ast.expression_numeric_literal(
                 to_span(span),
                 number,
@@ -298,7 +299,7 @@ impl<'a> OxcJsxSink<'a> {
         }
         self.ast.jsx_attribute_value_string_literal(
             to_span(span),
-            self.ast.str(value.as_str()),
+            self.ast.str(value.as_ref()),
             None,
         )
     }
@@ -318,8 +319,8 @@ enum SinkError {
     Transform(#[from] TransformError),
 }
 
-struct ElementFrame<'a> {
-    name: String,
+struct ElementFrame<'src, 'a> {
+    name: &'src str,
     span: SvgSpan,
     opening_span: SvgSpan,
     name_span: SvgSpan,
@@ -327,12 +328,12 @@ struct ElementFrame<'a> {
     children: ArenaVec<'a, JSXChild<'a>>,
 }
 
-impl<'src, 'a> SvgSink<'src> for OxcJsxSink<'a> {
+impl<'src, 'a> SvgSink<'src> for OxcJsxSink<'src, 'a> {
     type Error = SinkError;
 
     fn start_element(&mut self, event: StartElement<'src>) -> Result<(), Self::Error> {
         self.stack.push(ElementFrame {
-            name: event.name.to_string(),
+            name: event.name,
             span: event.span,
             opening_span: event.span,
             name_span: event.name_span,
@@ -346,8 +347,7 @@ impl<'src, 'a> SvgSink<'src> for OxcJsxSink<'a> {
         let Some(current) = self.stack.last() else {
             return Err(SinkError::NoCurrentElement);
         };
-        let element_name = current.name.clone();
-        let item = self.attr_item(attr, &element_name);
+        let item = self.attr_item(attr, current.name);
         self.stack
             .last_mut()
             .ok_or(SinkError::NoCurrentElement)?
@@ -380,7 +380,7 @@ impl<'src, 'a> SvgSink<'src> for OxcJsxSink<'a> {
         };
         if frame.name != event.name {
             return Err(SinkError::MismatchedClosingTag {
-                expected: frame.name,
+                expected: frame.name.into(),
                 found: event.name.into(),
             });
         }
@@ -1215,70 +1215,110 @@ fn default_jsx_runtime_import() -> JsxRuntimeImport {
     }
 }
 
-fn map_element_name(name: &str) -> String {
+fn map_element_name(name: &str) -> Cow<'_, str> {
     match name {
-        "clippath" => "clipPath".into(),
-        "lineargradient" => "linearGradient".into(),
-        "radialgradient" => "radialGradient".into(),
-        "textpath" => "textPath".into(),
-        "foreignobject" => "foreignObject".into(),
-        "feblend" => "feBlend".into(),
-        "fecolormatrix" => "feColorMatrix".into(),
-        "fecomponenttransfer" => "feComponentTransfer".into(),
-        "fecomposite" => "feComposite".into(),
-        "feconvolvematrix" => "feConvolveMatrix".into(),
-        "fediffuselighting" => "feDiffuseLighting".into(),
-        "fedisplacementmap" => "feDisplacementMap".into(),
-        "fedistantlight" => "feDistantLight".into(),
-        "fedropshadow" => "feDropShadow".into(),
-        "feflood" => "feFlood".into(),
-        "fefunca" => "feFuncA".into(),
-        "fefuncb" => "feFuncB".into(),
-        "fefuncg" => "feFuncG".into(),
-        "fefuncr" => "feFuncR".into(),
-        "fegaussianblur" => "feGaussianBlur".into(),
-        "feimage" => "feImage".into(),
-        "femerge" => "feMerge".into(),
-        "femergenode" => "feMergeNode".into(),
-        "femorphology" => "feMorphology".into(),
-        "feoffset" => "feOffset".into(),
-        "fepointlight" => "fePointLight".into(),
-        "fespecularlighting" => "feSpecularLighting".into(),
-        "fespotlight" => "feSpotLight".into(),
-        "fetile" => "feTile".into(),
-        "feturbulence" => "feTurbulence".into(),
-        _ => name.into(),
+        "clippath" => Cow::Borrowed("clipPath"),
+        "lineargradient" => Cow::Borrowed("linearGradient"),
+        "radialgradient" => Cow::Borrowed("radialGradient"),
+        "textpath" => Cow::Borrowed("textPath"),
+        "foreignobject" => Cow::Borrowed("foreignObject"),
+        "feblend" => Cow::Borrowed("feBlend"),
+        "fecolormatrix" => Cow::Borrowed("feColorMatrix"),
+        "fecomponenttransfer" => Cow::Borrowed("feComponentTransfer"),
+        "fecomposite" => Cow::Borrowed("feComposite"),
+        "feconvolvematrix" => Cow::Borrowed("feConvolveMatrix"),
+        "fediffuselighting" => Cow::Borrowed("feDiffuseLighting"),
+        "fedisplacementmap" => Cow::Borrowed("feDisplacementMap"),
+        "fedistantlight" => Cow::Borrowed("feDistantLight"),
+        "fedropshadow" => Cow::Borrowed("feDropShadow"),
+        "feflood" => Cow::Borrowed("feFlood"),
+        "fefunca" => Cow::Borrowed("feFuncA"),
+        "fefuncb" => Cow::Borrowed("feFuncB"),
+        "fefuncg" => Cow::Borrowed("feFuncG"),
+        "fefuncr" => Cow::Borrowed("feFuncR"),
+        "fegaussianblur" => Cow::Borrowed("feGaussianBlur"),
+        "feimage" => Cow::Borrowed("feImage"),
+        "femerge" => Cow::Borrowed("feMerge"),
+        "femergenode" => Cow::Borrowed("feMergeNode"),
+        "femorphology" => Cow::Borrowed("feMorphology"),
+        "feoffset" => Cow::Borrowed("feOffset"),
+        "fepointlight" => Cow::Borrowed("fePointLight"),
+        "fespecularlighting" => Cow::Borrowed("feSpecularLighting"),
+        "fespotlight" => Cow::Borrowed("feSpotLight"),
+        "fetile" => Cow::Borrowed("feTile"),
+        "feturbulence" => Cow::Borrowed("feTurbulence"),
+        _ => Cow::Borrowed(name),
     }
 }
 
-fn map_attribute_name(name: &str, element_name: &str) -> String {
-    let lower = name.to_ascii_lowercase();
-    if element_name == "input" && lower == "checked" {
-        return "defaultChecked".into();
+fn map_attribute_name<'n>(name: &'n str, element_name: &str) -> Cow<'n, str> {
+    if element_name == "input" && name.eq_ignore_ascii_case("checked") {
+        return Cow::Borrowed("defaultChecked");
     }
-    if element_name == "input" && lower == "value" {
-        return "defaultValue".into();
+    if element_name == "input" && name.eq_ignore_ascii_case("value") {
+        return Cow::Borrowed("defaultValue");
     }
-    match lower.as_str() {
-        "class" | "classname" => "className".into(),
-        "for" => "htmlFor".into(),
-        "tabindex" => "tabIndex".into(),
-        "viewbox" => "viewBox".into(),
-        "preserveaspectratio" => "preserveAspectRatio".into(),
-        "xmlns:xlink" | "xmlnsxlink" => "xmlnsXlink".into(),
-        "xml:space" | "xmlspace" => "xmlSpace".into(),
-        "xml:lang" | "xmllang" => "xmlLang".into(),
-        "xlink:href" | "xlinkhref" => "xlinkHref".into(),
-        "xlink:title" | "xlinktitle" => "xlinkTitle".into(),
-        "xlink:type" | "xlinktype" => "xlinkType".into(),
-        _ if lower.starts_with("aria-") => convert_aria_attribute(&lower),
-        _ if lower.starts_with("data-") => lower,
-        _ => camelize_svg_name(name),
+    if name.eq_ignore_ascii_case("class") || name.eq_ignore_ascii_case("classname") {
+        return Cow::Borrowed("className");
     }
+    if name.eq_ignore_ascii_case("for") {
+        return Cow::Borrowed("htmlFor");
+    }
+    if name.eq_ignore_ascii_case("tabindex") {
+        return Cow::Borrowed("tabIndex");
+    }
+    if name.eq_ignore_ascii_case("viewbox") {
+        return Cow::Borrowed("viewBox");
+    }
+    if name.eq_ignore_ascii_case("preserveaspectratio") {
+        return Cow::Borrowed("preserveAspectRatio");
+    }
+    if name.eq_ignore_ascii_case("xmlns:xlink") || name.eq_ignore_ascii_case("xmlnsxlink") {
+        return Cow::Borrowed("xmlnsXlink");
+    }
+    if name.eq_ignore_ascii_case("xml:space") || name.eq_ignore_ascii_case("xmlspace") {
+        return Cow::Borrowed("xmlSpace");
+    }
+    if name.eq_ignore_ascii_case("xml:lang") || name.eq_ignore_ascii_case("xmllang") {
+        return Cow::Borrowed("xmlLang");
+    }
+    if name.eq_ignore_ascii_case("xlink:href") || name.eq_ignore_ascii_case("xlinkhref") {
+        return Cow::Borrowed("xlinkHref");
+    }
+    if name.eq_ignore_ascii_case("xlink:title") || name.eq_ignore_ascii_case("xlinktitle") {
+        return Cow::Borrowed("xlinkTitle");
+    }
+    if name.eq_ignore_ascii_case("xlink:type") || name.eq_ignore_ascii_case("xlinktype") {
+        return Cow::Borrowed("xlinkType");
+    }
+    if starts_with_ignore_ascii_case(name, "aria-") {
+        return convert_aria_attribute(name);
+    }
+    if starts_with_ignore_ascii_case(name, "data-") {
+        return if name.bytes().all(|byte| !byte.is_ascii_uppercase()) {
+            Cow::Borrowed(name)
+        } else {
+            Cow::Owned(name.to_ascii_lowercase())
+        };
+    }
+    camelize_svg_name(name)
 }
 
-fn camelize_svg_name(name: &str) -> String {
-    let mut result = String::new();
+fn starts_with_ignore_ascii_case(value: &str, prefix: &str) -> bool {
+    value
+        .get(..prefix.len())
+        .is_some_and(|head| head.eq_ignore_ascii_case(prefix))
+}
+
+fn camelize_svg_name(name: &str) -> Cow<'_, str> {
+    if !name
+        .as_bytes()
+        .iter()
+        .any(|&byte| byte == b'-' || byte == b':')
+    {
+        return Cow::Borrowed(name);
+    }
+    let mut result = String::with_capacity(name.len());
     let mut upper_next = false;
     for ch in name.chars() {
         if ch == '-' || ch == ':' {
@@ -1290,14 +1330,14 @@ fn camelize_svg_name(name: &str) -> String {
             result.push(ch);
         }
     }
-    result
+    Cow::Owned(result)
 }
 
-fn convert_aria_attribute(name: &str) -> String {
+fn convert_aria_attribute(name: &str) -> Cow<'_, str> {
     let mut parts = name.split('-');
     let first = parts.next().unwrap_or_default();
     let rest = parts.collect::<String>().to_ascii_lowercase();
-    format!("{first}-{rest}")
+    Cow::Owned(format!("{}-{rest}", first.to_ascii_lowercase()))
 }
 
 fn style_to_object_expression<'a>(allocator: &'a Allocator, raw: &str) -> Option<Expression<'a>> {
@@ -1316,7 +1356,7 @@ fn style_to_object_expression<'a>(allocator: &'a Allocator, raw: &str) -> Option
             continue;
         }
         let formatted_key = if key.starts_with("--") {
-            key.to_string()
+            Cow::Borrowed(key)
         } else {
             camelize_svg_name(key.trim_start_matches("-ms-"))
         };
@@ -1328,14 +1368,14 @@ fn style_to_object_expression<'a>(allocator: &'a Allocator, raw: &str) -> Option
         } else {
             ast.expression_string_literal(SPAN, ast.str(value), None)
         };
-        let key = if key.starts_with("--") || !is_identifier_name(formatted_key.as_str()) {
+        let key = if key.starts_with("--") || !is_identifier_name(formatted_key.as_ref()) {
             PropertyKey::StringLiteral(ast.alloc_string_literal(
                 SPAN,
-                ast.str(formatted_key.as_str()),
+                ast.str(formatted_key.as_ref()),
                 None,
             ))
         } else {
-            ast.property_key_static_identifier(SPAN, ast.str(formatted_key.as_str()))
+            ast.property_key_static_identifier(SPAN, ast.str(formatted_key.as_ref()))
         };
         props.push(ObjectPropertyKind::ObjectProperty(
             ast.alloc_object_property(SPAN, PropertyKind::Init, key, value, false, false, false),
@@ -1357,26 +1397,45 @@ fn numeric_value(value: &str) -> Option<f64> {
     }
 }
 
-fn replace_spaces(value: &str) -> String {
-    value
+fn normalize_attribute_value(value: &str) -> Cow<'_, str> {
+    let decoded = decode_xml(value);
+    if !decoded.chars().any(is_xml_space_replacement) {
+        return decoded;
+    }
+    decoded
         .chars()
-        .map(|ch| match ch {
-            '\t' | '\r' | '\n' | '\u{0085}' | '\u{2028}' | '\u{2029}' => ' ',
-            ch => ch,
+        .map(|ch| {
+            if is_xml_space_replacement(ch) {
+                ' '
+            } else {
+                ch
+            }
         })
-        .collect()
+        .collect::<String>()
+        .into()
 }
 
-fn decode_xml(value: &str) -> String {
+fn is_xml_space_replacement(ch: char) -> bool {
+    matches!(
+        ch,
+        '\t' | '\r' | '\n' | '\u{0085}' | '\u{2028}' | '\u{2029}'
+    )
+}
+
+fn decode_xml(value: &str) -> Cow<'_, str> {
+    let Some(first_entity) = value.find('&') else {
+        return Cow::Borrowed(value);
+    };
     let mut result = String::with_capacity(value.len());
     let mut rest = value;
-    while let Some(index) = rest.find('&') {
+    let mut next_entity = Some(first_entity);
+    while let Some(index) = next_entity {
         result.push_str(&rest[..index]);
         rest = &rest[index + 1..];
         let Some(end) = rest.find(';') else {
             result.push('&');
             result.push_str(rest);
-            return result;
+            return Cow::Owned(result);
         };
         let entity = &rest[..end];
         rest = &rest[end + 1..];
@@ -1406,9 +1465,10 @@ fn decode_xml(value: &str) -> String {
                 result.push(';');
             }
         }
+        next_entity = rest.find('&');
     }
     result.push_str(rest);
-    result
+    Cow::Owned(result)
 }
 
 fn to_span(span: SvgSpan) -> Span {
@@ -1589,6 +1649,23 @@ mod tests {
 
         assert!(result.contains("fill={props.color}"));
         assert!(result.contains("role=\"presentation\""));
+    }
+
+    #[test]
+    fn preserves_mapping_and_normalization_after_lazy_string_paths() {
+        let result = code(
+            r#"<svg viewbox="0 0 1 1" DATA-ID="Logo" aria-LABEL="Icon" title="A&#10;B"><title>Tom &amp; Jerry</title><path stroke-width="2" style="stroke-width: 2px; --brand-color: red" /></svg>"#,
+            TransformOptions::default(),
+        );
+
+        assert!(result.contains("viewBox=\"0 0 1 1\""));
+        assert!(result.contains("data-id=\"Logo\""));
+        assert!(result.contains("aria-label=\"Icon\""));
+        assert!(result.contains("title=\"A B\""));
+        assert!(result.contains("<title>{\"Tom & Jerry\"}</title>"));
+        assert!(result.contains("strokeWidth={2}"));
+        assert!(result.contains("strokeWidth: 2"));
+        assert!(result.contains("\"--brand-color\": \"red\""));
     }
 
     #[test]

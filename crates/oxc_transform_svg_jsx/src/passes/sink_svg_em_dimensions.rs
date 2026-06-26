@@ -3,12 +3,12 @@ use oxc_ast::ast::*;
 
 use crate::{ExpandProps, Icon, IconSize, TransformError, TransformOptions};
 
-use super::attributes::{AttributeValueSpec, attr_spec, upsert_attribute};
+use super::attributes::{AttributeSpec, AttributeValueSpec, attr_spec, upsert_attribute};
 use super::sink::{OpeningElementPass, SinkElementContext, is_svg_element};
 
 pub(super) struct SvgEmDimensions {
-    width: AttributeValueSpec,
-    height: AttributeValueSpec,
+    width: AttributeSpec,
+    height: AttributeSpec,
 }
 
 impl SvgEmDimensions {
@@ -17,7 +17,10 @@ impl SvgEmDimensions {
             return None;
         }
         let (width, height) = icon_dimensions(options);
-        Some(Self { width, height })
+        Some(Self {
+            width: attr_spec("width", width, ExpandProps::End),
+            height: attr_spec("height", height, ExpandProps::End),
+        })
     }
 }
 
@@ -31,16 +34,8 @@ impl<'a> OpeningElementPass<'a> for SvgEmDimensions {
         if !context.is_root || !is_svg_element(element) {
             return Ok(());
         }
-        upsert_attribute(
-            allocator,
-            element,
-            attr_spec("width", self.width.clone(), ExpandProps::End),
-        )?;
-        upsert_attribute(
-            allocator,
-            element,
-            attr_spec("height", self.height.clone(), ExpandProps::End),
-        )
+        upsert_attribute(allocator, element, &self.width)?;
+        upsert_attribute(allocator, element, &self.height)
     }
 }
 
@@ -51,8 +46,8 @@ fn icon_dimensions(options: &TransformOptions) -> (AttributeValueSpec, Attribute
             AttributeValueSpec::Number(*value),
         ),
         Icon::Size(IconSize::String(value)) => (
-            AttributeValueSpec::String(value.clone()),
-            AttributeValueSpec::String(value.clone()),
+            AttributeValueSpec::String(value.clone().into()),
+            AttributeValueSpec::String(value.clone().into()),
         ),
         Icon::Default if options.native => (
             AttributeValueSpec::Number(24.0),

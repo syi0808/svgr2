@@ -66,7 +66,7 @@ impl<'a> OpeningElementPass<'a> for AddJsxAttribute {
             return Ok(());
         }
         for spec in &self.attributes {
-            upsert_attribute(allocator, element, spec.clone())?;
+            upsert_attribute(allocator, element, spec)?;
         }
         Ok(())
     }

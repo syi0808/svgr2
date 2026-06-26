@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use oxc_allocator::Allocator;
 use oxc_ast::ast::*;
 
@@ -17,7 +19,7 @@ pub(crate) struct SinkElementContext {
 }
 
 pub(crate) trait ElementNamePass {
-    fn apply(&self, name: String, context: SinkElementContext) -> Option<String>;
+    fn apply(&self, name: &str, context: SinkElementContext) -> Option<&'static str>;
 }
 
 pub(crate) trait OpeningElementPass<'a> {
@@ -62,11 +64,15 @@ impl<'a> SinkPasses<'a> {
         }
     }
 
-    pub(crate) fn prepare_element_name(&self, svg_name: &str, is_root: bool) -> Option<String> {
+    pub(crate) fn prepare_element_name<'n>(
+        &self,
+        svg_name: &'n str,
+        is_root: bool,
+    ) -> Option<Cow<'n, str>> {
         let context = SinkElementContext { is_root };
         let mut name = map_element_name(svg_name);
         for pass in &self.element_name_passes {
-            name = pass.apply(name, context)?;
+            name = Cow::Borrowed(pass.apply(name.as_ref(), context)?);
         }
         Some(name)
     }

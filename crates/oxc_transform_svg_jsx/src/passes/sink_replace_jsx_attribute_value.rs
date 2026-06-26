@@ -33,19 +33,24 @@ impl<'a> OpeningElementPass<'a> for ReplaceJsxAttributeValue {
             let JSXAttributeItem::Attribute(attribute) = item else {
                 continue;
             };
-            let Some(JSXAttributeValue::StringLiteral(current)) = &attribute.value else {
+            let Some(replacement) = ({
+                let Some(JSXAttributeValue::StringLiteral(current)) = &attribute.value else {
+                    continue;
+                };
+                let current_value = current.value.as_str();
+                self.values
+                    .iter()
+                    .filter(|(old, _)| current_value == old.as_str())
+                    .map(|(_, new)| new.as_str())
+                    .last()
+            }) else {
                 continue;
             };
-            let current_value = current.value.to_string();
-            for (old, new) in &self.values {
-                if &current_value == old {
-                    attribute.value = Some(option_value_to_jsx_attr_value(
-                        allocator,
-                        new,
-                        attribute.span,
-                    )?);
-                }
-            }
+            attribute.value = Some(option_value_to_jsx_attr_value(
+                allocator,
+                replacement,
+                attribute.span,
+            )?);
         }
         Ok(())
     }

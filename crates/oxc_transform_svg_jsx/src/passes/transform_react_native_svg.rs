@@ -30,17 +30,17 @@ impl NativeElementNamePass {
 }
 
 impl ElementNamePass for NativeElementNamePass {
-    fn apply(&self, name: String, context: SinkElementContext) -> Option<String> {
+    fn apply(&self, name: &str, context: SinkElementContext) -> Option<&'static str> {
         if context.is_root && name == "Svg" {
-            return Some(name);
+            return Some("Svg");
         }
         if self.keep_title && name == "title" {
-            return Some(name);
+            return Some("title");
         }
         if self.keep_desc && name == "desc" {
-            return Some(name);
+            return Some("desc");
         }
-        native_component_name(name.as_str()).map(str::to_string)
+        native_component_name(name)
     }
 }
 
