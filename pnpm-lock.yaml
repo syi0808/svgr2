@@ -71,6 +71,9 @@ importers:
       '@svgr2/plugin-jsx-oxc':
         specifier: workspace:*
         version: link:../packages/plugin-jsx-oxc
+      '@svgr2/plugin-oxvg':
+        specifier: workspace:*
+        version: link:../packages/plugin-oxvg
       '@svgr2/plugin-svgo':
         specifier: workspace:*
         version: link:../packages/plugin-svgo
@@ -156,6 +159,25 @@ importers:
       '@svgr2/oxc-transform-svg-jsx-napi':
         specifier: workspace:*
         version: link:../oxc-transform-svg-jsx-napi
+    devDependencies:
+      '@svgr2/core':
+        specifier: workspace:*
+        version: link:../core
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.22.3(typescript@6.0.3)
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.9(@types/node@26.0.0)(vite@8.1.0(@types/node@26.0.0)(terser@5.48.0))
+
+  packages/plugin-oxvg:
+    dependencies:
+      '@oxvg/napi':
+        specifier: ^0.0.4
+        version: 0.0.4
+      cosmiconfig:
+        specifier: 'catalog:'
+        version: 9.0.2(typescript@6.0.3)
     devDependencies:
       '@svgr2/core':
         specifier: workspace:*
@@ -1096,6 +1118,34 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [win32]
+
+  '@oxvg/napi-darwin-arm64@0.0.4':
+    resolution: {integrity: sha512-1vEa6yDS0q7KQdQ4xgU3AzNOPOueLzfbkbpd8Zx1gD/QXbtUbqG7rahWe0gpAp4tkzEBJmJ0tbtcNtmWuncdMQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@oxvg/napi-darwin-x64@0.0.4':
+    resolution: {integrity: sha512-uhLkTZkauwf33hevGo2F2vy9rCNUip2wXXT8CEUUf+hHaGuQNw4nD1jPkZxhhnBSuoAnc3gIeQo1do/ajDVfsA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@oxvg/napi-linux-x64-gnu@0.0.4':
+    resolution: {integrity: sha512-6LmOHQxfIzzERyqNvhAZ0L6xrP9MoLw47HdRdhd3HJOYuzkZJxKci+4b1vULOd/IOycHBTvfdJDMSH7bI0XgVw==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@oxvg/napi-win32-x64-msvc@0.0.4':
+    resolution: {integrity: sha512-5+fI6HrteUZW0MtRUNjeUbFVysEkagWFa8L8EGGWjSjakxgEX9sfA5svButtsz1+KZVMMgW4tUpAqCD2AU1y7g==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@oxvg/napi@0.0.4':
+    resolution: {integrity: sha512-Amc2+03uKIU02XPCbPU1AsXMHdYnvHhaDzNND3qNCrVcuoezF1J75JKw/sF3dIt8iAhbrrv0ifypMqOzwOOWzA==}
 
   '@quansync/fs@1.0.0':
     resolution: {integrity: sha512-4TJ3DFtlf1L5LDMaM6CanJ/0lckGNtJcMjQ1NAV6zDmA0tEHKZtxNKin8EgPaVX1YzljbxckyT2tJrpQKAtngQ==}
@@ -2866,6 +2916,25 @@ snapshots:
 
   '@oxlint/binding-win32-x64-msvc@1.71.0':
     optional: true
+
+  '@oxvg/napi-darwin-arm64@0.0.4':
+    optional: true
+
+  '@oxvg/napi-darwin-x64@0.0.4':
+    optional: true
+
+  '@oxvg/napi-linux-x64-gnu@0.0.4':
+    optional: true
+
+  '@oxvg/napi-win32-x64-msvc@0.0.4':
+    optional: true
+
+  '@oxvg/napi@0.0.4':
+    optionalDependencies:
+      '@oxvg/napi-darwin-arm64': 0.0.4
+      '@oxvg/napi-darwin-x64': 0.0.4
+      '@oxvg/napi-linux-x64-gnu': 0.0.4
+      '@oxvg/napi-win32-x64-msvc': 0.0.4
 
   '@quansync/fs@1.0.0':
     dependencies:

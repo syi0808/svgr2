@@ -32,7 +32,7 @@ const svgCode = `
 `;
 
 const defaultSvgrPlugins = ['@svgr/plugin-svgo', '@svgr/plugin-jsx'];
-const defaultSvgr2Plugins = ['@svgr2/plugin-svgo', '@svgr2/plugin-jsx-oxc'];
+const defaultSvgr2Plugins = ['@svgr2/plugin-oxvg', '@svgr2/plugin-jsx-oxc'];
 
 const defaultSvgrConfig = {
   plugins: defaultSvgrPlugins,
@@ -42,7 +42,6 @@ const defaultSvgrConfig = {
 
 const defaultSvgr2Config = {
   plugins: defaultSvgr2Plugins,
-  svgo: true,
   icon: true,
 };
 
