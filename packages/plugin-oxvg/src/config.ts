@@ -11,6 +11,11 @@ const defaultInlineStyles = {
   usePseudos: [''],
 };
 
+const nativeInlineStyles = {
+  ...defaultInlineStyles,
+  onlyMatchedOnce: false,
+} as const
+
 const defaultPrefixIds = {
   delim: '__',
   prefix: { type: 'Default' } as const,
@@ -18,14 +23,15 @@ const defaultPrefixIds = {
   prefixClassNames: true,
 };
 
-export function getOxvgConfigFromOxvgConfig(config: Config): Jobs {
+const configCache = new WeakMap();
+
+export const getOxvgConfig = (config: Config): Jobs => {
+  if (configCache.get(config)) return configCache.get(config);
+
   const jobs: Jobs = {};
 
   if (config.native) {
-    jobs.inlineStyles = {
-      ...defaultInlineStyles,
-      onlyMatchedOnce: false,
-    } as const;
+    jobs.inlineStyles = nativeInlineStyles;
   }
 
   if (!config.icon && config.dimensions !== false) {
@@ -34,9 +40,9 @@ export function getOxvgConfigFromOxvgConfig(config: Config): Jobs {
 
   jobs.prefixIds = defaultPrefixIds;
 
-  return extend({ type: 'Default' }, jobs);
-}
+  const result = extend({ type: 'Default' }, jobs);
 
-export const getOxvgConfig = (config: Config, _state: State): Jobs => {
-  return getOxvgConfigFromOxvgConfig(config);
+  configCache.set(config, result);
+
+  return result;
 };

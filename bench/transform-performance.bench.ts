@@ -4,13 +4,13 @@ import { describe, bench } from 'vitest';
 
 // Original Svgr
 import { transform } from '@svgr/core';
+import svgo from '@svgr/plugin-svgo';
 
 // New Svgr2
 import {
   transform as svgr2Transform,
   createTransformerSync,
 } from '@svgr2/core';
-
 import oxvgPlugin from '@svgr2/plugin-oxvg';
 
 const fixtureDir = join(process.cwd(), 'fixtures/svg');
@@ -33,7 +33,7 @@ const svgCode = `
 </svg>
 `;
 
-const defaultSvgrPlugins = ['@svgr/plugin-svgo', '@svgr/plugin-jsx'];
+const defaultSvgrPlugins = [svgo, '@svgr/plugin-jsx'];
 const defaultSvgr2Plugins = [oxvgPlugin, '@svgr2/plugin-jsx-oxc'];
 
 const defaultSvgrConfig = {

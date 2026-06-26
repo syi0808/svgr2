@@ -56,6 +56,9 @@ importers:
 
   bench:
     dependencies:
+      '@oxvg/napi':
+        specifier: 0.0.4
+        version: 0.0.4
       '@svgr/core':
         specifier: ^8.1.0
         version: 8.1.0(typescript@6.0.3)
@@ -77,6 +80,10 @@ importers:
       '@svgr2/plugin-svgo':
         specifier: workspace:*
         version: link:../packages/plugin-svgo
+    devDependencies:
+      svgo:
+        specifier: 'catalog:'
+        version: 4.0.1
 
   packages/cli:
     dependencies:

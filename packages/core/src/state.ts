@@ -24,7 +24,7 @@ function getComponentName(filePath?: string): string {
 
 export function expandState(state: Partial<State>): State {
   return {
-    componentName: state.componentName || getComponentName(state.filePath),
     ...state,
+    componentName: state.componentName || getComponentName(state.filePath),
   };
 }
