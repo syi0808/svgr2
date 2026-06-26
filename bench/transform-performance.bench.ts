@@ -11,6 +11,8 @@ import {
   createTransformerSync,
 } from '@svgr2/core';
 
+import oxvgPlugin from '@svgr2/plugin-oxvg';
+
 const fixtureDir = join(process.cwd(), 'fixtures/svg');
 
 const readFixture = (name: string) =>
@@ -32,7 +34,7 @@ const svgCode = `
 `;
 
 const defaultSvgrPlugins = ['@svgr/plugin-svgo', '@svgr/plugin-jsx'];
-const defaultSvgr2Plugins = ['@svgr2/plugin-oxvg', '@svgr2/plugin-jsx-oxc'];
+const defaultSvgr2Plugins = [oxvgPlugin, '@svgr2/plugin-jsx-oxc'];
 
 const defaultSvgrConfig = {
   plugins: defaultSvgrPlugins,

@@ -2,24 +2,40 @@ import type { Jobs } from '@oxvg/napi';
 import { extend } from '@oxvg/napi';
 import type { Config, State } from '@svgr2/core';
 
-export const getOxvgConfigFromOxvgConfig = (config: Config): Jobs => {
+const enabledBoolJob = { field0: true };
+
+const defaultInlineStyles = {
+  onlyMatchedOnce: true,
+  removeMatchedSelectors: true,
+  useMqs: ['', 'screen'],
+  usePseudos: [''],
+};
+
+const defaultPrefixIds = {
+  delim: '__',
+  prefix: { type: 'Default' } as const,
+  prefixIds: true,
+  prefixClassNames: true,
+};
+
+export function getOxvgConfigFromOxvgConfig(config: Config): Jobs {
   const jobs: Jobs = {};
 
   if (config.native) {
     jobs.inlineStyles = {
+      ...defaultInlineStyles,
       onlyMatchedOnce: false,
-    };
+    } as const;
   }
 
   if (!config.icon && config.dimensions !== false) {
-    jobs.removeViewBox = true;
+    jobs.removeViewBox = enabledBoolJob;
   }
 
-  // 기존 SVGR 기본값처럼 prefixIds를 항상 켜고 싶다면
-  jobs.prefixIds = {};
+  jobs.prefixIds = defaultPrefixIds;
 
-  return extend('default', jobs);
-};
+  return extend({ type: 'Default' }, jobs);
+}
 
 export const getOxvgConfig = (config: Config, _state: State): Jobs => {
   return getOxvgConfigFromOxvgConfig(config);

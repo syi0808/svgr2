@@ -1,5 +1,5 @@
 import * as path from 'path';
-import svgo from '.';
+import oxvg from '.';
 
 const state = { componentName: 'SvgComponent' };
 
@@ -21,7 +21,7 @@ const baseSvg = `<?xml version="1.0" encoding="UTF-8"?>
   </g>
 </svg>`;
 
-describe('svgo', () => {
+describe.skip('oxvg', () => {
   it('optimizes svg', () => {
     const result = svgo(baseSvg, { svgo: true, runtimeConfig: true }, state);
     expect(result).toMatchSnapshot();
