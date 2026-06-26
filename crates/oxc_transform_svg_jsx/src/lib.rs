@@ -18,7 +18,7 @@ mod json_options;
 mod passes;
 
 pub use json_options::transform_json;
-use passes::{collect_native_components, run_jsx_passes};
+use passes::{SinkPasses, collect_native_components, run_post_jsx_passes};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TransformResult {
@@ -148,17 +148,19 @@ pub fn build_program<'a>(
     options: &TransformOptions,
 ) -> Result<Program<'a>, TransformError> {
     validate_options(options)?;
-    let mut jsx = parse_svg_to_jsx(allocator, source)?;
-    run_jsx_passes(allocator, &mut jsx, options)?;
+    let mut jsx = parse_svg_to_jsx(allocator, source, options)?;
+    run_post_jsx_passes(allocator, &mut jsx, options)?;
     build_component_program(allocator, jsx, options)
 }
 
 fn parse_svg_to_jsx<'a>(
     allocator: &'a Allocator,
     source: &'a str,
+    options: &TransformOptions,
 ) -> Result<Expression<'a>, TransformError> {
-    let mut sink = OxcJsxSink::new(allocator);
+    let mut sink = OxcJsxSink::new(allocator, options);
     parse_with_sink(source, &mut sink).map_err(|error| match error {
+        ParseError::Sink(SinkError::Transform(error)) => error,
         ParseError::Sink(error) => TransformError::BuildJsx(error.to_string()),
         error => TransformError::ParseSvg(error.to_string()),
     })?;
@@ -167,14 +169,16 @@ fn parse_svg_to_jsx<'a>(
 
 struct OxcJsxSink<'a> {
     ast: AstBuilder<'a>,
+    passes: SinkPasses<'a>,
     stack: Vec<ElementFrame<'a>>,
     root: Option<Expression<'a>>,
 }
 
 impl<'a> OxcJsxSink<'a> {
-    fn new(allocator: &'a Allocator) -> Self {
+    fn new(allocator: &'a Allocator, options: &TransformOptions) -> Self {
         Self {
             ast: AstBuilder::new(allocator),
+            passes: SinkPasses::from_options(allocator, options),
             stack: Vec::new(),
             root: None,
         }
@@ -209,31 +213,38 @@ impl<'a> OxcJsxSink<'a> {
         &self,
         frame: ElementFrame<'a>,
         closing_span: Option<SvgSpan>,
-    ) -> JSXChild<'a> {
+        is_root: bool,
+    ) -> Result<Option<JSXChild<'a>>, TransformError> {
+        let Some(name) = self.passes.prepare_element_name(&frame.name, is_root) else {
+            return Ok(None);
+        };
         let span = to_span(frame.span);
-        let name = map_element_name(&frame.name);
-        let opening = self.ast.alloc_jsx_opening_element(
+        let mut opening = self.ast.alloc_jsx_opening_element(
             to_span(frame.opening_span),
             self.ast
                 .jsx_element_name_identifier(to_span(frame.name_span), self.ast.str(name.as_str())),
             NONE,
             frame.attributes,
         );
+        self.passes.apply_opening_element(&mut opening, is_root)?;
+        let name = element_name(&opening.name).unwrap_or(name.as_str());
         let closing = if frame.children.is_empty() {
             None
         } else {
-            Some(self.ast.alloc_jsx_closing_element(
-                closing_span.map_or(span, to_span),
-                self.ast.jsx_element_name_identifier(
-                    to_span(frame.name_span),
-                    self.ast.str(name.as_str()),
+            Some(
+                self.ast.alloc_jsx_closing_element(
+                    closing_span.map_or(span, to_span),
+                    self.ast
+                        .jsx_element_name_identifier(to_span(frame.name_span), self.ast.str(name)),
                 ),
-            ))
+            )
         };
-        JSXChild::Element(
-            self.ast
-                .alloc_jsx_element(span, opening, frame.children, closing),
-        )
+        Ok(Some(JSXChild::Element(self.ast.alloc_jsx_element(
+            span,
+            opening,
+            frame.children,
+            closing,
+        ))))
     }
 
     fn text_child(&self, text: Text<'_>) -> JSXChild<'a> {
@@ -303,6 +314,8 @@ enum SinkError {
     MismatchedClosingTag { expected: String, found: String },
     #[error("SVG document contains multiple root elements")]
     MultipleRoots,
+    #[error(transparent)]
+    Transform(#[from] TransformError),
 }
 
 struct ElementFrame<'a> {
@@ -350,8 +363,10 @@ impl<'src, 'a> SvgSink<'src> for OxcJsxSink<'a> {
             };
             frame.span.end = event.span.end;
             frame.opening_span = event.span;
-            let child = self.build_element(frame, None);
-            self.attach_child(child)?;
+            let is_root = self.stack.is_empty() && self.root.is_none();
+            if let Some(child) = self.build_element(frame, None, is_root)? {
+                self.attach_child(child)?;
+            }
         } else if let Some(current) = self.stack.last_mut() {
             current.opening_span = event.span;
             current.span.end = event.span.end;
@@ -370,8 +385,10 @@ impl<'src, 'a> SvgSink<'src> for OxcJsxSink<'a> {
             });
         }
         frame.span.end = event.span.end;
-        let child = self.build_element(frame, Some(event.span));
-        self.attach_child(child)?;
+        let is_root = self.stack.is_empty() && self.root.is_none();
+        if let Some(child) = self.build_element(frame, Some(event.span), is_root)? {
+            self.attach_child(child)?;
+        }
         Ok(())
     }
 
@@ -1540,6 +1557,84 @@ mod tests {
         assert!(result.contains("<svg {...props} fill={props.color} role=\"img\" />"));
         assert!(!result.contains("width="));
         assert!(!result.contains("height="));
+    }
+
+    #[test]
+    fn dimensions_false_removes_source_dimensions_before_adding_svg_props() {
+        let options = TransformOptions {
+            dimensions: false,
+            svg_props: vec![("width".into(), "1em".into())],
+            ..TransformOptions::default()
+        };
+        let result = code(
+            r#"<svg width="10" height="20" viewBox="0 0 10 20" />"#,
+            options,
+        );
+
+        assert!(result.contains("<svg viewBox=\"0 0 10 20\" width=\"1em\" {...props} />"));
+        assert!(!result.contains("height="));
+    }
+
+    #[test]
+    fn replace_attr_values_applies_to_source_and_added_svg_attributes() {
+        let options = TransformOptions {
+            svg_props: vec![("role".into(), "img".into())],
+            replace_attr_values: vec![
+                ("#fff".into(), "{props.color}".into()),
+                ("img".into(), "presentation".into()),
+            ],
+            ..TransformOptions::default()
+        };
+        let result = code(r##"<svg fill="#fff" />"##, options);
+
+        assert!(result.contains("fill={props.color}"));
+        assert!(result.contains("role=\"presentation\""));
+    }
+
+    #[test]
+    fn native_drops_unsupported_subtrees_during_sink_time() {
+        let options = TransformOptions {
+            native: true,
+            ..TransformOptions::default()
+        };
+        let result = code(
+            r#"<svg><g><div><path d="M0 0" /></div><path d="M1 1" /></g></svg>"#,
+            options,
+        );
+
+        assert!(result.contains("import Svg, { G, Path } from \"react-native-svg\";"));
+        assert!(result.contains("<Svg {...props}><G><Path d=\"M1 1\" /></G></Svg>"));
+        assert!(!result.contains("M0 0"));
+        assert!(!result.contains("div"));
+    }
+
+    #[test]
+    fn native_preserves_existing_uppercase_svg_root() {
+        let options = TransformOptions {
+            native: true,
+            ..TransformOptions::default()
+        };
+        let result = code(r#"<Svg><path d="M0 0" /></Svg>"#, options);
+
+        assert!(result.contains("import Svg, { Path } from \"react-native-svg\";"));
+        assert!(result.contains("<Svg {...props}><Path d=\"M0 0\" /></Svg>"));
+    }
+
+    #[test]
+    fn native_keeps_dynamic_title_fallback_when_title_prop_is_enabled() {
+        let options = TransformOptions {
+            native: true,
+            title_prop: true,
+            ..TransformOptions::default()
+        };
+        let result = code(
+            r#"<svg><title id="a">Hello</title><path d="M0 0" /></svg>"#,
+            options,
+        );
+
+        assert!(result.contains("import Svg, { Path } from \"react-native-svg\";"));
+        assert!(result.contains("title === undefined ? <title id={titleId || \"a\"}>"));
+        assert!(result.contains("<Path d=\"M0 0\" />"));
     }
 
     #[test]
