@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- comment with > and -- like content boundary test -->
+  <style><![CDATA[
+    .cls-1 { fill: #000; stroke: #111; }
+  ]]></style>
+  <rect class="cls-1" x="8" y="8" width="48" height="48"/>
+</svg>
