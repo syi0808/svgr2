@@ -1,6 +1,6 @@
 import { parse as parsePath } from 'path';
-import type { ConfigPlugin } from './plugins';
 import { pascalCase } from 'change-case';
+import type { ConfigPlugin } from './plugins.js';
 
 export interface State {
   filePath?: string;

@@ -1,5 +1,6 @@
 {
   "name": "@svgr2/core",
+  "type": "module",
   "description": "Transform SVG into React Components.",
   "version": "0.1.0",
   "main": "./dist/index.cjs",

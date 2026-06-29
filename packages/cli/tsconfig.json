@@ -1,4 +1,10 @@
 {
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
   "extends": "../../tsconfig",
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

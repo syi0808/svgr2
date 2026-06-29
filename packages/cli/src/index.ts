@@ -4,11 +4,11 @@ import { globSync } from 'tinyglobby';
 import fsPromises from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { loadConfig, Config } from '@svgr2/core';
-import { fileCommand } from './fileCommand';
-import { dirCommand } from './dirCommand';
-import { exitError } from './util';
-import type { IndexTemplate } from './dirCommand';
-import { version } from '../package.json';
+import { fileCommand } from './fileCommand.js';
+import { dirCommand } from './dirCommand.js';
+import { exitError } from './util.js';
+import type { IndexTemplate } from './dirCommand.js';
+import packageJson from '../package.json' with { type: 'json' };
 
 const noUndefinedKeys = <T extends Record<string, any>>(obj: T): T => {
   return Object.entries(obj).reduce((obj, [key, value]) => {
@@ -91,7 +91,7 @@ export interface SvgrCommand {
 }
 
 program
-  .version(version)
+  .version(packageJson.version)
   .usage('[options] <file|directory>')
   .option('--config-file <file>', 'specify the path of the svgr config')
   .option(

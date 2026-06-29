@@ -1,5 +1,5 @@
 import { optimise } from '@oxvg/napi';
-import { getOxvgConfig } from './config';
+import { getOxvgConfig } from './config.js';
 import type { Plugin } from '@svgr2/core';
 
 const oxvgPlugin: Plugin<ReturnType<typeof getOxvgConfig>> = (code, config, _state, options) => {

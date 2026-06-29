@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
-import { convert, convertFile, exitError } from './util';
-import type { SvgrCommand } from './index';
+import { convert, convertFile, exitError } from './util.js';
+import type { SvgrCommand } from './index.js';
 
 const readStdin = async () => {
   return new Promise<string>((resolve) => {

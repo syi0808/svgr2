@@ -1,7 +1,7 @@
 import { cosmiconfig, cosmiconfigSync } from 'cosmiconfig';
 import type { Config as SvgoConfig } from 'svgo';
-import type { ConfigPlugin } from './plugins';
-import type { State } from './state';
+import type { ConfigPlugin } from './plugins.js';
+import type { State } from './state.js';
 
 export interface Config {
   ref?: boolean;

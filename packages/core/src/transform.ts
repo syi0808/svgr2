@@ -1,8 +1,8 @@
-import { expandState } from './state';
-import { loadConfig, loadConfigSync } from './config';
-import { resolvePlugin, getPlugins } from './plugins';
-import type { Config } from './config';
-import type { State } from './state';
+import { expandState } from './state.js';
+import { loadConfig, loadConfigSync } from './config.js';
+import { resolvePlugin, getPlugins } from './plugins.js';
+import type { Config } from './config.js';
+import type { State } from './state.js';
 
 function run(code: string, config: Config, state: Partial<State>): string {
   const expandedState = expandState(state);

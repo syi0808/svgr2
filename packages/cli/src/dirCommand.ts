@@ -7,8 +7,8 @@ import {
   transformFilename,
   politeWrite,
   formatExportName,
-} from './util';
-import type { Options, SvgrCommand } from './index';
+} from './util.js';
+import type { Options, SvgrCommand } from './index.js';
 
 const { gray, white } = c;
 

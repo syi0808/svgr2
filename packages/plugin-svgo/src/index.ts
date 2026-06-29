@@ -1,10 +1,10 @@
 import { optimize } from 'svgo';
-import { getSvgoConfig } from './config';
+import { getSvgoConfig } from './config.js';
 import type { Plugin } from '@svgr2/core';
 
 const svgoPlugin: Plugin<ReturnType<typeof getSvgoConfig>> = (code, config, state, options) => {
   const svgoConfig = getSvgoConfig(config, state);
-  const result = optimize(code, { ...svgoConfig, ...options, path: state.filePath });
+  const result = optimize(code, { ...svgoConfig, ...options, ...(state.filePath && { path: state.filePath }) });
 
   // @ts-expect-error
   if (result.modernError) {
