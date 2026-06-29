@@ -1,25 +1,20 @@
 use std::collections::BTreeMap;
 
+use oxc_transform_svg_jsx::{
+    ExpandProps, ExportType, Icon, IconSize, JsxRuntime, JsxRuntimeImport, TransformError,
+    TransformOptions,
+};
 use serde::Deserialize;
 
-use crate::{
-    ExpandProps, ExportType, Icon, IconSize, JsxRuntime, JsxRuntimeImport, TransformError,
-    TransformOptions, TransformResult, transform,
-};
-
-pub fn transform_json(
-    source: &str,
-    options_json: Option<&str>,
-) -> Result<TransformResult, TransformError> {
-    let options = match options_json {
+pub fn parse_options_json(options_json: Option<&str>) -> Result<TransformOptions, TransformError> {
+    match options_json {
         Some(raw) if !raw.trim().is_empty() => {
             let json_options: JsonTransformOptions = serde_json::from_str(raw)
                 .map_err(|error| TransformError::InvalidOptions(error.to_string()))?;
-            json_options.into_transform_options()?
+            json_options.into_transform_options()
         }
-        _ => TransformOptions::default(),
-    };
-    transform(source, options)
+        _ => Ok(TransformOptions::default()),
+    }
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -72,7 +67,7 @@ impl JsonTransformOptions {
             options.dimensions = value;
         }
         if let Some(value) = self.icon {
-            options.icon = value.into_icon()?;
+            options.icon = value.into_icon();
         }
         if let Some(value) = self.native {
             options.native = value;
@@ -145,12 +140,12 @@ enum JsonIcon {
 }
 
 impl JsonIcon {
-    fn into_icon(self) -> Result<Icon, TransformError> {
+    fn into_icon(self) -> Icon {
         match self {
-            Self::Bool(true) => Ok(Icon::Default),
-            Self::Bool(false) => Ok(Icon::Disabled),
-            Self::Number(value) => Ok(Icon::Size(IconSize::Number(value))),
-            Self::String(value) => Ok(Icon::Size(IconSize::String(value))),
+            Self::Bool(true) => Icon::Default,
+            Self::Bool(false) => Icon::Disabled,
+            Self::Number(value) => Icon::Size(IconSize::Number(value)),
+            Self::String(value) => Icon::Size(IconSize::String(value)),
         }
     }
 }
@@ -231,4 +226,135 @@ fn apply_jsx_runtime(options: &mut TransformOptions, value: &str) -> Result<(), 
 
 fn invalid_option(message: String) -> TransformError {
     TransformError::InvalidOptions(message)
+}
+
+#[cfg(test)]
+mod tests {
+    use oxc_transform_svg_jsx::{
+        ExpandProps, ExportType, Icon, IconSize, JsxRuntime, JsxRuntimeImport, TransformError,
+        TransformOptions, transform,
+    };
+
+    use super::parse_options_json;
+
+    #[test]
+    fn defaults_empty_options() {
+        assert_eq!(
+            parse_options_json(None).unwrap(),
+            TransformOptions::default()
+        );
+        assert_eq!(
+            parse_options_json(Some(" \n\t")).unwrap(),
+            TransformOptions::default()
+        );
+    }
+
+    #[test]
+    fn parses_all_option_shapes() {
+        let options = parse_options_json(Some(
+            r##"{
+                "componentName": "Icon",
+                "previousExport": "export default 'icon.svg'",
+                "ref": true,
+                "titleProp": true,
+                "descProp": true,
+                "expandProps": false,
+                "dimensions": false,
+                "icon": 24,
+                "native": true,
+                "typescript": true,
+                "memo": true,
+                "svgProps": [["role", "img"]],
+                "replaceAttrValues": {"#000": "{props.color}"},
+                "exportType": "named",
+                "namedExport": "Component",
+                "jsxRuntime": "automatic",
+                "jsxRuntimeImport": {
+                    "source": "custom",
+                    "namespace": "JSX",
+                    "defaultSpecifier": "createElement",
+                    "specifiers": ["Fragment"]
+                },
+                "importSource": "ignored"
+            }"##,
+        ))
+        .unwrap();
+
+        assert_eq!(options.component_name, "Icon");
+        assert_eq!(
+            options.previous_export.as_deref(),
+            Some("export default 'icon.svg'")
+        );
+        assert!(options.r#ref);
+        assert!(options.title_prop);
+        assert!(options.desc_prop);
+        assert_eq!(options.expand_props, ExpandProps::Disabled);
+        assert!(!options.dimensions);
+        assert_eq!(options.icon, Icon::Size(IconSize::Number(24.0)));
+        assert!(options.native);
+        assert!(options.typescript);
+        assert!(options.memo);
+        assert_eq!(options.svg_props, vec![("role".into(), "img".into())]);
+        assert_eq!(
+            options.replace_attr_values,
+            vec![("#000".into(), "{props.color}".into())]
+        );
+        assert_eq!(options.export_type, ExportType::Named);
+        assert_eq!(options.named_export, "Component");
+        assert_eq!(options.jsx_runtime, JsxRuntime::Classic);
+        assert_eq!(options.import_source, "custom");
+        assert_eq!(
+            options.jsx_runtime_import,
+            Some(JsxRuntimeImport {
+                source: "custom".into(),
+                namespace: Some("JSX".into()),
+                default_specifier: Some("createElement".into()),
+                specifiers: vec!["Fragment".into()],
+            })
+        );
+    }
+
+    #[test]
+    fn rejects_malformed_json_and_unsupported_values() {
+        assert!(matches!(
+            parse_options_json(Some("{")),
+            Err(TransformError::InvalidOptions(_))
+        ));
+        assert!(matches!(
+            parse_options_json(Some(r#"{"expandProps":"middle"}"#)),
+            Err(TransformError::InvalidOptions(_))
+        ));
+        assert!(matches!(
+            parse_options_json(Some(r#"{"exportType":"commonjs"}"#)),
+            Err(TransformError::InvalidOptions(_))
+        ));
+        assert!(matches!(
+            parse_options_json(Some(r#"{"jsxRuntime":"custom"}"#)),
+            Err(TransformError::InvalidOptions(_))
+        ));
+    }
+
+    #[test]
+    fn supports_json_options_for_wrappers() {
+        let options = parse_options_json(Some(
+            r##"{
+              "componentName": "Icon",
+              "jsxRuntime": "classic-preact",
+              "dimensions": false,
+              "svgProps": { "role": "img" },
+              "replaceAttrValues": { "#fff": "{props.color}" },
+              "expandProps": "start"
+            }"##,
+        ))
+        .unwrap();
+        let result = transform(r##"<svg width="10" height="10" fill="#fff" />"##, options)
+            .unwrap()
+            .code;
+
+        assert!(result.contains("import { h } from \"preact\";"));
+        assert!(result.contains("const Icon = (props) =>"));
+        assert!(result.contains("<svg {...props} fill={props.color} role=\"img\" />"));
+        assert!(!result.contains("width="));
+        assert!(!result.contains("height="));
+    }
 }
