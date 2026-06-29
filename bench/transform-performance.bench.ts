@@ -13,6 +13,8 @@ import oxvgPlugin from '@svgr2/plugin-oxvg';
 import { bench, describe } from 'vitest';
 import { loadFixture, type Fixture, type LoadedFixture } from './fixtures.js';
 
+const benchmarkOptions = { time: 1500, warmupTime: 300 };
+
 type Svgr2BenchmarkConfig = Svgr2Config & { svgo?: boolean };
 
 interface TransformCase {
@@ -120,17 +122,29 @@ const registerBenchmarks = (
   const transformer = createTransformerSync(benchmarkCase.svgr2Config, state);
   const suffix = benchmarkCase.benchmarkSuffix ?? '';
 
-  bench(`svgr${suffix}`, async () => {
-    await transform(fixture.source, benchmarkCase.svgrConfig, state);
-  });
+  bench(
+    `svgr${suffix}`,
+    async () => {
+      await transform(fixture.source, benchmarkCase.svgrConfig, state);
+    },
+    benchmarkOptions,
+  );
 
-  bench(`svgr2${suffix}`, async () => {
-    await svgr2Transform(fixture.source, benchmarkCase.svgr2Config, state);
-  });
+  bench(
+    `svgr2${suffix}`,
+    async () => {
+      await svgr2Transform(fixture.source, benchmarkCase.svgr2Config, state);
+    },
+    benchmarkOptions,
+  );
 
-  bench(`svgr2${suffix} with transformer`, () => {
-    transformer.transform(fixture.source);
-  });
+  bench(
+    `svgr2${suffix} with transformer`,
+    () => {
+      transformer.transform(fixture.source);
+    },
+    benchmarkOptions,
+  );
 };
 
 for (const benchmarkCase of cases) {

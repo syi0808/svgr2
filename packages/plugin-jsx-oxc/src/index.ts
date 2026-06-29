@@ -58,7 +58,9 @@ const jsxPlugin: Plugin = (code, config, state) => {
      */
     ...config,
     ...(state.componentName && { componentName: state.componentName }),
-    ...(state.caller?.previousExport && { previousExport: state.caller?.previousExport, }),
+    ...(state.caller?.previousExport && {
+      previousExport: state.caller?.previousExport,
+    }),
     ...getJsxRuntimeOptions(config),
   });
 
@@ -70,3 +72,4 @@ const jsxPlugin: Plugin = (code, config, state) => {
 };
 
 export default jsxPlugin;
+export { jsxPlugin };

@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x, 19.x]
+        node-version: [22, 24]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -39,6 +39,3 @@ jobs:
 
       - name: Test
         run: pnpm run test --ci --coverage
-
-      - name: Codecov
-        run: npx codecov
