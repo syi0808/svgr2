@@ -1,6 +1,6 @@
 import type { Jobs } from '@oxvg/napi';
 import { extend } from '@oxvg/napi';
-import type { Config, State } from '@svgr2/core';
+import type { Config } from '@svgr2/core';
 
 const enabledBoolJob = { field0: true };
 

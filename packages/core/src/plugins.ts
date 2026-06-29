@@ -1,8 +1,8 @@
 import { Config } from './config';
 import type { State } from './state';
 
-export interface Plugin {
-  (code: string, config: Config, state: State): string;
+export interface Plugin<PluginOption = Record<PropertyKey, unknown>> {
+  (code: string, config: Config, state: State, options?: Partial<PluginOption>): string;
 }
 
 export type ConfigPlugin = string | Plugin;

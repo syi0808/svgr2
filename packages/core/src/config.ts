@@ -11,15 +11,10 @@ export interface Config {
   dimensions?: boolean;
   icon?: boolean | string | number;
   native?: boolean;
-  svgProps?: {
-    [key: string]: string;
-  };
-  replaceAttrValues?: {
-    [key: string]: string;
-  };
+  svgProps?: Record<string, string>;
+  replaceAttrValues?: Record<string, string>;
   runtimeConfig?: boolean;
   typescript?: boolean;
-  svgoConfig?: SvgoConfig;
   configFile?: string;
   memo?: boolean;
   exportType?: 'named' | 'default';
@@ -32,12 +27,20 @@ export interface Config {
     defaultSpecifier?: string;
   };
 
-  // CLI only
+  /**
+   * Cli Only
+   */
   index?: boolean;
+
   plugins?: ConfigPlugin[];
 
-  // JSX
-  jsx?: {};
+  /**
+   * @deprecated Move config in svgo plugin directly.
+   * @example
+   * ❌ svgoConfig: config
+   * ⭕ plugins: [svgo(config)],
+   */
+  svgoConfig?: SvgoConfig;
 }
 
 export const DEFAULT_CONFIG: Config = {

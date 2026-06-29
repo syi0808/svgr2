@@ -1,5 +1,6 @@
 import { cosmiconfigSync } from 'cosmiconfig';
 import type { Config, State } from '@svgr2/core';
+import type { Config as SvgoConfig } from 'svgo';
 
 const explorer = cosmiconfigSync('svgo', {
   searchPlaces: [
@@ -17,7 +18,7 @@ const explorer = cosmiconfigSync('svgo', {
   cache: true,
 });
 
-const getSvgoConfigFromSvgrConfig = (config: Config): any => {
+const getSvgoConfigFromSvgrConfig = (config: Config): SvgoConfig => {
   const overrides: Record<string, any> = {};
 
   if (config.native) {
@@ -44,12 +45,13 @@ const getSvgoConfigFromSvgrConfig = (config: Config): any => {
   return { plugins };
 };
 
-export const getSvgoConfig = (config: Config, state: State): any => {
+export const getSvgoConfig = (config: Config, state: State): SvgoConfig => {
   const cwd = state.filePath || process.cwd();
-  if (config.svgoConfig) return config.svgoConfig;
+
   if (config.runtimeConfig) {
     const userConfig = explorer.search(cwd);
-    if (userConfig) return userConfig;
+    if (userConfig) return userConfig as SvgoConfig;
   }
+
   return getSvgoConfigFromSvgrConfig(config);
 };

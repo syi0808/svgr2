@@ -41,22 +41,24 @@ const getJsxRuntimeOptions = (config: Config): Partial<TransformOptions> => {
 
 const jsxPlugin: Plugin = (code, config, state) => {
   const result = transform(code, {
-    // ref: config.ref,
-    // titleProp: config.titleProp,
-    // descProp: config.descProp,
-    // expandProps: config.expandProps,
-    // dimensions: config.dimensions,
-    // icon: config.icon,
-    // native: config.native,
-    // svgProps: config.svgProps,
-    // replaceAttrValues: config.replaceAttrValues,
-    // typescript: config.typescript,
-    // memo: config.memo,
-    // exportType: config.exportType,
-    // namedExport: config.namedExport,
+    /**
+     * ref: config.ref,
+     * titleProp: config.titleProp,
+     * descProp: config.descProp,
+     * expandProps: config.expandProps,
+     * dimensions: config.dimensions,
+     * icon: config.icon,
+     * native: config.native,
+     * svgProps: config.svgProps,
+     * replaceAttrValues: config.replaceAttrValues,
+     * typescript: config.typescript,
+     * memo: config.memo,
+     * exportType: config.exportType,
+     * namedExport: config.namedExport,
+     */
     ...config,
-    componentName: state.componentName,
-    previousExport: state.caller?.previousExport ?? undefined,
+    ...(state.componentName && { componentName: state.componentName }),
+    ...(state.caller?.previousExport && { previousExport: state.caller?.previousExport, }),
     ...getJsxRuntimeOptions(config),
   });
 
