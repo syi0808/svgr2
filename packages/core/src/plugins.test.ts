@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { getPlugins, resolvePlugin } from './plugins';
 import type { State } from './state';
 import type { Config } from './config';
@@ -39,7 +40,9 @@ describe('#resolvePlugin', () => {
   });
 
   it('should load plugin', () => {
-    const plugin = resolvePlugin('./__fixtures__/plugin.cjs');
+    const plugin = resolvePlugin(
+      path.join(__dirname, '__fixtures__/plugin.cjs'),
+    );
     expect(plugin('code', {}, { componentName: 'Icon' })).toBe('code fixture');
   });
 });

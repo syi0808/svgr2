@@ -37,7 +37,7 @@ describe('svgo', () => {
       svgo(
         errorSvg,
         { svgo: true, runtimeConfig: true },
-        { ...state, filePath: path.join(__dirname, '../__fixtures__/svgo') },
+        { ...state, filePath: path.join(__dirname, '__fixtures__/svgo') },
       ),
     ).toThrowError();
   });
@@ -46,7 +46,7 @@ describe('svgo', () => {
     const result = svgo(
       baseSvg,
       { svgo: true, runtimeConfig: true },
-      { ...state, filePath: path.join(__dirname, '../__fixtures__/svgo') },
+      { ...state, filePath: path.join(__dirname, '__fixtures__/svgo') },
     );
 
     expect(result).toMatchSnapshot();
@@ -56,7 +56,7 @@ describe('svgo', () => {
     const result = svgo(
       baseSvg,
       { svgo: true, runtimeConfig: false },
-      { ...state, filePath: path.join(__dirname, '../__fixtures__/svgo') },
+      { ...state, filePath: path.join(__dirname, '__fixtures__/svgo') },
     );
     expect(result).toMatchSnapshot();
   });

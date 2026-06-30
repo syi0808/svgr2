@@ -5,7 +5,9 @@ import { promisify } from 'util';
 
 const exec = promisify(execCb);
 
-const svgr = path.join(__dirname, '../bin/svgr');
+const packageRoot = path.join(__dirname, '..');
+const packagePath = (...paths: string[]) => path.join(packageRoot, ...paths);
+const svgr = packagePath('bin/svgr');
 
 const sortCliResult = (result: string) => {
   return result
@@ -17,7 +19,7 @@ const sortCliResult = (result: string) => {
 
 describe('cli', () => {
   const cli = async (args: string) => {
-    const { stdout } = await exec(`${svgr} ${args}`);
+    const { stdout } = await exec(`${svgr} ${args}`, { cwd: packageRoot });
     return stdout;
   };
 
@@ -125,9 +127,9 @@ describe('cli', () => {
     async (index, args) => {
       const inDir = 'tests/__fixtures__/cased';
       const outDir = `__fixtures_build__/filename-case-${index}`;
-      await fs.rm(outDir, { recursive: true, force: true });
+      await fs.rm(packagePath(outDir), { recursive: true, force: true });
       await cli(`${args} ${inDir} --out-dir=${outDir}`);
-      expect(await fs.readdir(outDir)).toMatchSnapshot(args);
+      expect(await fs.readdir(packagePath(outDir))).toMatchSnapshot(args);
     },
     10000,
   );
@@ -135,16 +137,16 @@ describe('cli', () => {
   it('should support custom file extension', async () => {
     const inDir = 'tests/__fixtures__/simple';
     const outDir = '__fixtures_build__/ext';
-    await fs.rm(outDir, { recursive: true, force: true });
+    await fs.rm(packagePath(outDir), { recursive: true, force: true });
     await cli(`--ext=ts ${inDir} --out-dir=${outDir}`);
-    expect(await fs.readdir(outDir)).toMatchSnapshot();
+    expect(await fs.readdir(packagePath(outDir))).toMatchSnapshot();
   });
 
   it('should support "--ignore-existing"', async () => {
     const inDir = 'tests/__fixtures__/simple';
     const outDir = 'tests/__fixtures__/simple-existing';
     await cli(`${inDir} --out-dir=${outDir} --ignore-existing`);
-    const content = await fs.readFile(path.join(outDir, 'File.js'), 'utf-8');
+    const content = await fs.readFile(packagePath(outDir, 'File.js'), 'utf-8');
     expect(content).toBe('// nothing\n');
   });
 
@@ -158,48 +160,48 @@ describe('cli', () => {
   it('should add Svg prefix to index.js exports staring with number', async () => {
     const inDir = 'tests/__fixtures__/numeric';
     const outDir = `__fixtures_build__/prefix-exports`;
-    await fs.rm(outDir, { recursive: true, force: true });
+    await fs.rm(packagePath(outDir), { recursive: true, force: true });
     await cli(`${inDir} --out-dir=${outDir}`);
-    const content = await fs.readFile(path.join(outDir, 'index.js'), 'utf-8');
+    const content = await fs.readFile(packagePath(outDir, 'index.js'), 'utf-8');
     expect(content).toMatchSnapshot();
   });
 
   it('should support custom index.js with directory output', async () => {
     const inDir = 'tests/__fixtures__/simple';
     const outDir = `__fixtures_build__/custom-index`;
-    await fs.rm(outDir, { recursive: true, force: true });
+    await fs.rm(packagePath(outDir), { recursive: true, force: true });
     await cli(
       `${inDir} --out-dir=${outDir} --config-file=tests/__fixtures__/custom-index.config.cjs`,
     );
-    const content = await fs.readFile(path.join(outDir, 'index.js'), 'utf-8');
+    const content = await fs.readFile(packagePath(outDir, 'index.js'), 'utf-8');
     expect(content).toMatchSnapshot();
   });
 
   it('using typescript option, it creates index with `.ts` extension', async () => {
     const inDir = 'tests/__fixtures__/simple';
     const outDir = `__fixtures_build__/ts-index`;
-    await fs.rm(outDir, { recursive: true, force: true });
+    await fs.rm(packagePath(outDir), { recursive: true, force: true });
     await cli(`${inDir} --out-dir=${outDir} --typescript`);
-    const content = await fs.readFile(path.join(outDir, 'index.ts'), 'utf-8');
+    const content = await fs.readFile(packagePath(outDir, 'index.ts'), 'utf-8');
     expect(content).toMatchSnapshot();
   });
 
   it('should support --index-template in cli', async () => {
     const inDir = 'tests/__fixtures__/simple';
     const outDir = `__fixtures_build__/custom-index-arg`;
-    await fs.rm(outDir, { recursive: true, force: true });
+    await fs.rm(packagePath(outDir), { recursive: true, force: true });
     await cli(
       `${inDir} --out-dir=${outDir} --index-template=tests/__fixtures__/custom-index-template.cjs`,
     );
-    const content = await fs.readFile(path.join(outDir, 'index.js'), 'utf-8');
+    const content = await fs.readFile(packagePath(outDir, 'index.js'), 'utf-8');
     expect(content).toMatchSnapshot();
   });
 
   it('should support --no-index', async () => {
     const inDir = 'tests/__fixtures__/simple';
     const outDir = `__fixtures_build__/no-index-case`;
-    await fs.rm(outDir, { recursive: true, force: true });
+    await fs.rm(packagePath(outDir), { recursive: true, force: true });
     await cli(`--no-index ${inDir} --out-dir=${outDir}`);
-    expect(await fs.readdir(outDir)).toMatchSnapshot();
+    expect(await fs.readdir(packagePath(outDir))).toMatchSnapshot();
   });
 });

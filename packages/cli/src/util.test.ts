@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { convertFile, transformFilename, formatExportName } from './util';
 
-const FIXTURES = path.join(__dirname, '../../../tests/__fixtures__');
+const FIXTURES = path.join(__dirname, '../tests/__fixtures__');
 
 describe('util', () => {
   describe('#convertFile', () => {
@@ -14,7 +14,7 @@ describe('util', () => {
     it('should support a custom config path', async () => {
       const file = path.join(FIXTURES, 'simple/file.svg');
       const result = await convertFile(file, {
-        configFile: 'tests/__fixtures__/withSvgrRc/.svgrrc',
+        configFile: path.join(FIXTURES, 'withSvgrRc/.svgrrc'),
       });
       expect(result).toMatchSnapshot();
     });
