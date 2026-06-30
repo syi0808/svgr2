@@ -284,7 +284,9 @@ impl<'src, 'a> OxcJsxSink<'src, 'a> {
                 .ast
                 .jsx_attribute_value_expression_container(to_span(span), expression_to_jsx(expr));
         }
-        if let Some(number) = numeric_value(value.as_ref()) {
+        if !is_always_string_attribute(key)
+            && let Some(number) = numeric_value(value.as_ref())
+        {
             let expr = self.ast.expression_numeric_literal(
                 to_span(span),
                 number,
@@ -1395,7 +1397,26 @@ fn numeric_value(value: &str) -> Option<f64> {
     }
 }
 
+fn is_always_string_attribute(name: &str) -> bool {
+    matches!(
+        name,
+        "d" | "points"
+            | "viewBox"
+            | "preserveAspectRatio"
+            | "transform"
+            | "gradientTransform"
+            | "patternTransform"
+    )
+}
+
 fn normalize_attribute_value(value: &str) -> Cow<'_, str> {
+    if value
+        .as_bytes()
+        .iter()
+        .all(|byte| byte.is_ascii() && !matches!(byte, b'&' | b'\t' | b'\r' | b'\n'))
+    {
+        return Cow::Borrowed(value);
+    }
     let decoded = decode_xml(value);
     if !decoded.chars().any(is_xml_space_replacement) {
         return decoded;
@@ -1639,6 +1660,29 @@ mod tests {
         assert!(result.contains("strokeWidth={2}"));
         assert!(result.contains("strokeWidth: 2"));
         assert!(result.contains("\"--brand-color\": \"red\""));
+    }
+
+    #[test]
+    fn keeps_structured_svg_attributes_as_strings() {
+        let result = code(
+            r#"<svg viewBox="1"><path d="1" transform="1" /><polyline points="1" /></svg>"#,
+            TransformOptions::default(),
+        );
+
+        assert!(result.contains("viewBox=\"1\""));
+        assert!(result.contains("d=\"1\""));
+        assert!(result.contains("transform=\"1\""));
+        assert!(result.contains("points=\"1\""));
+    }
+
+    #[test]
+    fn borrows_attribute_values_that_need_no_normalization() {
+        assert!(matches!(
+            normalize_attribute_value("M0 0 L10 10"),
+            Cow::Borrowed(_)
+        ));
+        assert_eq!(normalize_attribute_value("A&#10;B"), "A B");
+        assert_eq!(normalize_attribute_value("A\u{2028}B"), "A B");
     }
 
     #[test]
