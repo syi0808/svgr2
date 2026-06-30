@@ -1,0 +1,16 @@
+[package]
+name = "combined_napi"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+combined = { path = "../../crates/combined" }
+napi = "3.9.4"
+napi-derive = "3.5.7"
+oxc_transform_svg_jsx = { path = "../../crates/oxc_transform_svg_jsx" }
+oxvg_optimiser = { version = "0.0.5", features = ["napi"] }

@@ -1,0 +1,33 @@
+{
+  "name": "@svgr2/combined-napi-linux-x64-musl",
+  "version": "0.1.0",
+  "cpu": [
+    "x64"
+  ],
+  "main": "combined_napi.linux-x64-musl.node",
+  "files": [
+    "combined_napi.linux-x64-musl.node"
+  ],
+  "description": "N-API wrapper for the combined OXVG and Oxc SVG-to-JSX pipeline",
+  "keywords": [
+    "svgr",
+    "oxvg",
+    "oxc",
+    "napi"
+  ],
+  "author": "Yein Sung <syi778800@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": "https://github.com/syi0808/svgr2/tree/main/packages/combined-napi",
+  "publishConfig": {
+    "access": "public"
+  },
+  "os": [
+    "linux"
+  ],
+  "libc": [
+    "musl"
+  ]
+}

@@ -71,6 +71,9 @@ importers:
       '@svgr2/core':
         specifier: workspace:*
         version: link:../packages/core
+      '@svgr2/plugin-combined':
+        specifier: workspace:*
+        version: link:../packages/plugin-combined
       '@svgr2/plugin-jsx-oxc':
         specifier: workspace:*
         version: link:../packages/plugin-jsx-oxc
@@ -116,6 +119,32 @@ importers:
         specifier: 'catalog:'
         version: 4.1.9(@types/node@26.0.0)(vite@8.1.0(@types/node@26.0.0)(terser@5.48.0))
 
+  packages/combined-napi:
+    devDependencies:
+      '@napi-rs/cli':
+        specifier: ^3.7.2
+        version: 3.7.2(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.0.0)
+
+  packages/combined-napi/npm/darwin-arm64: {}
+
+  packages/combined-napi/npm/darwin-x64: {}
+
+  packages/combined-napi/npm/linux-arm64-gnu: {}
+
+  packages/combined-napi/npm/linux-arm64-musl: {}
+
+  packages/combined-napi/npm/linux-x64-gnu: {}
+
+  packages/combined-napi/npm/linux-x64-musl: {}
+
+  packages/combined-napi/npm/win32-x64-msvc: {}
+
+  packages/combined-wasm:
+    devDependencies:
+      wasm-pack:
+        specifier: ^0.15.0
+        version: 0.15.0
+
   packages/core:
     dependencies:
       change-case:
@@ -160,6 +189,22 @@ importers:
       wasm-pack:
         specifier: ^0.15.0
         version: 0.15.0
+
+  packages/plugin-combined:
+    dependencies:
+      '@svgr2/combined-napi':
+        specifier: workspace:*
+        version: link:../combined-napi
+    devDependencies:
+      '@svgr2/core':
+        specifier: workspace:*
+        version: link:../core
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.22.3(typescript@6.0.3)
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.9(@types/node@26.0.0)(vite@8.1.0(@types/node@26.0.0)(terser@5.48.0))
 
   packages/plugin-jsx-oxc:
     dependencies:

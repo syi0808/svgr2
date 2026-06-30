@@ -9,6 +9,7 @@ import {
   transform as svgr2Transform,
   type Config as Svgr2Config,
 } from '@svgr2/core';
+import combinedPlugin from '@svgr2/plugin-combined';
 import oxvgPlugin from '@svgr2/plugin-oxvg';
 import { bench, describe } from 'vitest';
 import { loadFixture, type Fixture, type LoadedFixture } from './fixtures.js';
@@ -23,6 +24,7 @@ interface TransformCase {
   benchmarkSuffix?: string;
   svgrConfig: SvgrConfig;
   svgr2Config: Svgr2BenchmarkConfig;
+  combinedConfig?: Svgr2BenchmarkConfig;
 }
 
 const fixtures = [
@@ -46,6 +48,11 @@ const defaultSvgr2Config = {
   icon: true,
 } satisfies Svgr2BenchmarkConfig;
 
+const defaultCombinedConfig = {
+  plugins: [combinedPlugin],
+  icon: true,
+} satisfies Svgr2BenchmarkConfig;
+
 const replaceAttrValues = {
   '#000': 'currentColor',
   '#000000': 'currentColor',
@@ -61,6 +68,7 @@ const cases: readonly TransformCase[] = [
     fixtures,
     svgrConfig: defaultSvgrConfig,
     svgr2Config: defaultSvgr2Config,
+    combinedConfig: defaultCombinedConfig,
   },
   {
     name: 'replaceAttrValues',
@@ -73,6 +81,7 @@ const cases: readonly TransformCase[] = [
     ],
     svgrConfig: { ...defaultSvgrConfig, replaceAttrValues },
     svgr2Config: { ...defaultSvgr2Config, replaceAttrValues },
+    combinedConfig: { ...defaultCombinedConfig, replaceAttrValues },
   },
   {
     name: 'native',
@@ -81,6 +90,7 @@ const cases: readonly TransformCase[] = [
     ],
     svgrConfig: { ...defaultSvgrConfig, native: true },
     svgr2Config: { ...defaultSvgr2Config, native: true },
+    combinedConfig: { ...defaultCombinedConfig, native: true },
   },
   {
     name: 'title-desc',
@@ -93,6 +103,11 @@ const cases: readonly TransformCase[] = [
     ],
     svgrConfig: { ...defaultSvgrConfig, titleProp: true, descProp: true },
     svgr2Config: { ...defaultSvgr2Config, titleProp: true, descProp: true },
+    combinedConfig: {
+      ...defaultCombinedConfig,
+      titleProp: true,
+      descProp: true,
+    },
   },
   {
     name: 'jsx-only',
@@ -120,6 +135,9 @@ const registerBenchmarks = (
     filePath: fixture.filePath,
   };
   const transformer = createTransformerSync(benchmarkCase.svgr2Config, state);
+  const combinedTransformer = benchmarkCase.combinedConfig
+    ? createTransformerSync(benchmarkCase.combinedConfig, state)
+    : undefined;
   const suffix = benchmarkCase.benchmarkSuffix ?? '';
 
   bench(
@@ -145,6 +163,28 @@ const registerBenchmarks = (
     },
     benchmarkOptions,
   );
+
+  if (benchmarkCase.combinedConfig && combinedTransformer) {
+    bench(
+      `svgr2 combined${suffix}`,
+      async () => {
+        await svgr2Transform(
+          fixture.source,
+          benchmarkCase.combinedConfig,
+          state,
+        );
+      },
+      benchmarkOptions,
+    );
+
+    bench(
+      `svgr2 combined${suffix} with transformer`,
+      () => {
+        combinedTransformer.transform(fixture.source);
+      },
+      benchmarkOptions,
+    );
+  }
 };
 
 for (const benchmarkCase of cases) {

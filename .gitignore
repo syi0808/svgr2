@@ -10,4 +10,7 @@ target
 packages/oxc-transform-svg-jsx-napi/*.node
 packages/oxc-transform-svg-jsx-napi/npm/*/*.node
 packages/oxc-transform-svg-jsx-napi/binding.d.ts
+packages/combined-napi/*.node
+packages/combined-napi/npm/*/*.node
 packages/oxc-transform-svg-jsx-wasm/pkg/
+packages/combined-wasm/pkg/

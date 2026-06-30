@@ -1,0 +1,67 @@
+{
+  "name": "@svgr2/combined-napi",
+  "type": "commonjs",
+  "description": "N-API wrapper for the combined OXVG and Oxc SVG-to-JSX pipeline",
+  "version": "0.1.0",
+  "main": "./binding.js",
+  "types": "./binding.d.ts",
+  "exports": {
+    ".": {
+      "types": "./binding.d.ts",
+      "import": "./binding.js",
+      "require": "./binding.js",
+      "default": "./binding.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "binding.js",
+    "binding.d.ts",
+    "*.node"
+  ],
+  "repository": "https://github.com/syi0808/svgr2/tree/main/packages/combined-napi",
+  "author": "Yein Sung <syi778800@gmail.com>",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "svgr",
+    "oxvg",
+    "oxc",
+    "napi"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "napi build --release --platform --js binding.js --dts binding.d.ts",
+    "build:debug": "napi build --platform --js binding.js --dts binding.d.ts",
+    "create:npm-dirs": "napi create-npm-dirs",
+    "prepublish:napi": "napi pre-publish"
+  },
+  "napi": {
+    "binaryName": "combined_napi",
+    "targets": [
+      "x86_64-apple-darwin",
+      "aarch64-apple-darwin",
+      "x86_64-pc-windows-msvc",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu",
+      "x86_64-unknown-linux-musl",
+      "aarch64-unknown-linux-musl"
+    ]
+  },
+  "optionalDependencies": {
+    "@svgr2/combined-napi-darwin-arm64": "0.1.0",
+    "@svgr2/combined-napi-darwin-x64": "0.1.0",
+    "@svgr2/combined-napi-linux-arm64-gnu": "0.1.0",
+    "@svgr2/combined-napi-linux-arm64-musl": "0.1.0",
+    "@svgr2/combined-napi-linux-x64-gnu": "0.1.0",
+    "@svgr2/combined-napi-linux-x64-musl": "0.1.0",
+    "@svgr2/combined-napi-win32-x64-msvc": "0.1.0"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^3.7.2"
+  }
+}

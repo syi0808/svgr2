@@ -16,6 +16,8 @@
     "/website/.cache/",
     "/website/public/",
     "pnpm-workspace.yaml",
-    "pnpm-lock.yaml"
+    "pnpm-lock.yaml",
+    "packages/combined-napi/binding.js",
+    "packages/combined-napi/binding.d.ts"
   ]
 }

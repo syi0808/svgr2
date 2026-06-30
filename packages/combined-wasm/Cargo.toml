@@ -1,0 +1,17 @@
+[package]
+name = "combined_wasm"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+combined = { path = "../../crates/combined" }
+getrandom = { version = "0.3", features = ["wasm_js"] }
+oxc_transform_svg_jsx_options = { path = "../../crates/oxc_transform_svg_jsx_options" }
+oxvg_optimiser = "0.0.5"
+serde_json.workspace = true
+wasm-bindgen = "0.2.126"

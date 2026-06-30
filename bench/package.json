@@ -9,6 +9,7 @@
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@svgr/plugin-svgo": "^8.1.0",
+    "@svgr2/plugin-combined": "workspace:*",
     "@svgr2/core": "workspace:*",
     "@svgr2/plugin-jsx-oxc": "workspace:*",
     "@svgr2/plugin-oxvg": "workspace:*",
