@@ -9,8 +9,7 @@
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "release": "",
-    "test": "pnpm test:build && vitest run",
-    "test:build": "turbo run build --filter=@svgr2/cli... --filter=@svgr2/plugin-combined... --filter=@svgr2/plugin-oxvg..."
+    "test": "turbo run test"
   },
   "packageManager": "pnpm@11.5.2",
   "devDependencies": {
