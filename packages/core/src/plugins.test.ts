@@ -38,8 +38,8 @@ describe('#resolvePlugin', () => {
     );
   });
 
-  // TODO: move to root level test
-  it.skip('should load plugin', () => {
-    // expect(resolvePlugin('@svgr2/plugin-jsx')).toBe(jsx);
+  it('should load plugin', () => {
+    const plugin = resolvePlugin('./__fixtures__/plugin.cjs');
+    expect(plugin('code', {}, { componentName: 'Icon' })).toBe('code fixture');
   });
 });

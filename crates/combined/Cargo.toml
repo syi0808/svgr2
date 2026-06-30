@@ -10,3 +10,6 @@ oxc_transform_svg_jsx = { path = "../oxc_transform_svg_jsx" }
 oxvg_ast = { version = "0.0.5", features = ["roxmltree", "serialize"] }
 oxvg_optimiser = "0.0.5"
 thiserror = "2.0.18"
+
+[dev-dependencies]
+insta = { workspace = true }

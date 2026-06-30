@@ -9,3 +9,6 @@ description = "Parse serialized options for oxc_transform_svg_jsx"
 oxc_transform_svg_jsx = { path = "../oxc_transform_svg_jsx" }
 serde = { workspace = true }
 serde_json = { workspace = true }
+
+[dev-dependencies]
+insta = { workspace = true }

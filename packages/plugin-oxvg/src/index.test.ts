@@ -1,4 +1,3 @@
-import * as path from 'path';
 import oxvg from '.';
 
 const state = { componentName: 'SvgComponent' };
@@ -21,33 +20,9 @@ const baseSvg = `<?xml version="1.0" encoding="UTF-8"?>
   </g>
 </svg>`;
 
-describe.skip('oxvg', () => {
+describe('oxvg', () => {
   it('optimizes svg', () => {
-    const result = svgo(baseSvg, { svgo: true, runtimeConfig: true }, state);
-    expect(result).toMatchSnapshot();
-  });
-
-  it('supports `config.svgoConfig`', () => {
-    const result = svgo(
-      baseSvg,
-      {
-        svgo: true,
-        runtimeConfig: true,
-        svgoConfig: {
-          plugins: [
-            {
-              name: 'preset-default',
-              params: {
-                overrides: {
-                  removeDesc: false,
-                },
-              },
-            },
-          ],
-        },
-      },
-      state,
-    );
+    const result = oxvg(baseSvg, {}, state);
     expect(result).toMatchSnapshot();
   });
 
@@ -57,46 +32,21 @@ describe.skip('oxvg', () => {
     <path d=M51,37 L37,51" id="Shape" class="shape"></path>
   </svg>`;
 
-    expect(() =>
-      svgo(
-        errorSvg,
-        { svgo: true, runtimeConfig: true },
-        { ...state, filePath: path.join(__dirname, '../__fixtures__/svgo') },
-      ),
-    ).toThrowError();
-  });
-
-  it('uses `state.filePath` to detect configuration', () => {
-    const result = svgo(
-      baseSvg,
-      { svgo: true, runtimeConfig: true },
-      { ...state, filePath: path.join(__dirname, '../__fixtures__/svgo') },
-    );
-
-    expect(result).toMatchSnapshot();
-  });
-
-  it('does not load runtime configuration with `runtimeConfig: false`', () => {
-    const result = svgo(
-      baseSvg,
-      { svgo: true, runtimeConfig: false },
-      { ...state, filePath: path.join(__dirname, '../__fixtures__/svgo') },
-    );
-    expect(result).toMatchSnapshot();
+    expect(() => oxvg(errorSvg, {}, state)).toThrowError();
   });
 
   it('does not remove viewBox with `icon` option', () => {
-    const result = svgo(baseSvg, { svgo: true, icon: true }, state);
+    const result = oxvg(baseSvg, { icon: true }, state);
     expect(result).toMatchSnapshot();
   });
 
   it('does not remove viewBox with when `dimensions` is false', () => {
-    const result = svgo(baseSvg, { svgo: true, dimensions: false }, state);
+    const result = oxvg(baseSvg, { dimensions: false }, state);
     expect(result).toMatchSnapshot();
   });
 
   it('does remove style when `native` is true', () => {
-    const result = svgo(baseSvg, { svgo: true, native: true }, state);
+    const result = oxvg(baseSvg, { native: true }, state);
     expect(result).toMatchSnapshot();
   });
 });

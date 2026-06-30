@@ -60,7 +60,12 @@ export function politeWrite(data: string, silent?: boolean): void {
 
 export function formatExportName(name: string): string {
   if (/[-]/g.test(name) && /^\d/.test(name)) {
-    return `Svg${pascalCase(name)}`;
+    const formatted = pascalCase(name).replace(
+      /^(\d+)([a-z])/,
+      (_, digits: string, firstLetter: string) =>
+        `${digits}${firstLetter.toUpperCase()}`,
+    );
+    return `Svg${formatted}`;
   }
 
   if (/^\d/.test(name)) {

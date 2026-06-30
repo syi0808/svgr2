@@ -1,0 +1,7 @@
+---
+source: crates/oxc_transform_svg_jsx/src/lib.rs
+expression: result
+---
+import * as React from "react";
+const SvgComponent = (props) => <svg fill={props.color} role="presentation" {...props} />;
+export default SvgComponent;

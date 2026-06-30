@@ -1,0 +1,11 @@
+---
+source: crates/oxc_transform_svg_jsx/src/lib.rs
+expression: result
+---
+import * as React from "react";
+import { forwardRef, memo } from "react";
+const SvgComponent = (props, ref) => <svg ref={ref} {...props} />;
+const ForwardRef = forwardRef(SvgComponent);
+const Memo = memo(ForwardRef);
+export { Memo as Component };
+export default "logo.svg";

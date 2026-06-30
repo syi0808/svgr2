@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`plugin > uses state componentName 1`] = `
+"import * as React from "react";
+const Icon = (props) => <svg {...props} />;
+export default Icon;
+"
+`;
+
+exports[`plugin > uses state previousExport 1`] = `
+"import * as React from "react";
+const Icon = (props) => <svg {...props} />;
+export { Icon as Component };
+export default "logo.svg";
+"
+`;

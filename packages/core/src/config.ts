@@ -1,5 +1,4 @@
 import { cosmiconfig, cosmiconfigSync } from 'cosmiconfig';
-import type { Config as SvgoConfig } from 'svgo';
 import type { ConfigPlugin } from './plugins.js';
 import type { State } from './state.js';
 
@@ -33,14 +32,6 @@ export interface Config {
   index?: boolean;
 
   plugins?: ConfigPlugin[];
-
-  /**
-   * @deprecated Move config in svgo plugin directly.
-   * @example
-   * ❌ svgoConfig: config
-   * ⭕ plugins: [svgo(config)],
-   */
-  svgoConfig?: SvgoConfig;
 }
 
 export const DEFAULT_CONFIG: Config = {
@@ -53,8 +44,6 @@ export const DEFAULT_CONFIG: Config = {
   ref: false,
   // replaceAttrValues: undefined,
   // svgProps: undefined,
-  // svgoConfig: undefined,
-  // template: undefined,
   index: false,
   titleProp: false,
   descProp: false,

@@ -54,8 +54,7 @@ export default SvgComponent;
 
   it('uses state componentName', () => {
     const result = jsx('<svg />', {}, { componentName: 'Icon' });
-    expect(result).toContain('const Icon =');
-    expect(result).toContain('export default Icon;');
+    expect(result).toMatchSnapshot();
   });
 
   it('uses state previousExport', () => {
@@ -67,33 +66,6 @@ export default SvgComponent;
         caller: { previousExport: 'export default "logo.svg";' },
       },
     );
-    expect(result).toContain('export { Icon as Component };');
-    expect(result).toContain('export default "logo.svg";');
-  });
-
-  // TODO: remove or port to oxc version
-  it.skip('accepts jsx config', () => {
-    const dropTitle = () => ({
-      visitor: {
-        JSXElement(path: any) {
-          if (
-            path.get('openingElement.name').isJSXIdentifier({ name: 'title' })
-          ) {
-            path.remove();
-          }
-        },
-      },
-    });
-
-    const result = jsx(
-      svgBaseCode,
-      { jsx: { babelConfig: { plugins: [dropTitle] } } },
-      { componentName: 'SvgComponent' },
-    );
-    expect(result).toMatchInlineSnapshot(`
-      "import * as React from "react";
-      const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" {...props}><desc>{"Created with Sketch."}</desc><defs /><g id="Blocks" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd" strokeLinecap="square"><g id="Dismiss" stroke="#063855" strokeWidth={2}><path d="M51,37 L37,51" id="Shape" /><path d="M51,51 L37,37" id="Shape" /></g></g></svg>;
-      export default SvgComponent;"
-    `);
+    expect(result).toMatchSnapshot();
   });
 });

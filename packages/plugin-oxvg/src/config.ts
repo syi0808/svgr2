@@ -14,7 +14,7 @@ const defaultInlineStyles = {
 const nativeInlineStyles = {
   ...defaultInlineStyles,
   onlyMatchedOnce: false,
-} as const
+} as const;
 
 const defaultPrefixIds = {
   delim: '__',

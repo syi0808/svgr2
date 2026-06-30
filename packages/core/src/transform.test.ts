@@ -305,7 +305,6 @@ describe('convert', () => {
     );
 
     expect(result).toMatchSnapshot();
-    expect(result).not.toContain('\0');
   });
 
   describe('config', () => {

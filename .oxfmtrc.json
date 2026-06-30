@@ -18,6 +18,8 @@
     "pnpm-workspace.yaml",
     "pnpm-lock.yaml",
     "packages/combined-napi/binding.js",
-    "packages/combined-napi/binding.d.ts"
+    "packages/combined-napi/binding.d.ts",
+    "packages/oxc-transform-svg-jsx-napi/binding.js",
+    "packages/oxc-transform-svg-jsx-napi/index.d.ts"
   ]
 }

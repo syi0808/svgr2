@@ -1,0 +1,7 @@
+---
+source: crates/oxc_transform_svg_jsx/src/lib.rs
+expression: result
+---
+import * as React from "react";
+const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><g strokeWidth={2}><path d="M0 0" /></g></svg>;
+export default SvgComponent;

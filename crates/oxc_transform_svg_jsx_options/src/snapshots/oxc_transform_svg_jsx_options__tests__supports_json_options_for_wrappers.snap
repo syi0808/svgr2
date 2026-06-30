@@ -1,0 +1,7 @@
+---
+source: crates/oxc_transform_svg_jsx_options/src/lib.rs
+expression: result
+---
+import { h } from "preact";
+const Icon = (props) => <svg {...props} fill={props.color} role="img" />;
+export default Icon;

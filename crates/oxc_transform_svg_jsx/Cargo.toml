@@ -14,3 +14,6 @@ oxc_span = "0.133.0"
 oxc_syntax = "0.133.0"
 svg_parser = { path = "../svg_parser" }
 thiserror = "2.0.18"
+
+[dev-dependencies]
+insta = { workspace = true }

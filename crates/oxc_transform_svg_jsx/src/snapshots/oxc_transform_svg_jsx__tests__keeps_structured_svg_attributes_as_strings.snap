@@ -1,0 +1,7 @@
+---
+source: crates/oxc_transform_svg_jsx/src/lib.rs
+expression: result
+---
+import * as React from "react";
+const SvgComponent = (props) => <svg viewBox="1" {...props}><path d="1" transform="1" /><polyline points="1" /></svg>;
+export default SvgComponent;

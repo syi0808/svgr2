@@ -8,9 +8,7 @@ describe('plugin-combined', () => {
       { componentName: 'Icon' },
     );
 
-    expect(result).toContain('const Icon =');
-    expect(result).toContain('<path');
-    expect(result).not.toContain('remove me');
+    expect(result).toMatchSnapshot();
   });
 
   it('supports the automatic JSX runtime', () => {
@@ -20,7 +18,6 @@ describe('plugin-combined', () => {
       { componentName: 'Icon' },
     );
 
-    expect(result).not.toContain('import * as React');
-    expect(result).toContain('const Icon =');
+    expect(result).toMatchSnapshot();
   });
 });

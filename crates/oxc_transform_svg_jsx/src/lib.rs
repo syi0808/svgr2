@@ -1508,13 +1508,7 @@ mod tests {
             r#"<svg width="88px" height="88px" viewBox="0 0 88 88" version="1.1"><title>Dismiss</title><g stroke-width="2"><path d="M0 0" /></g></svg>"#,
             TransformOptions::default(),
         );
-        assert!(result.contains("import * as React from \"react\";"));
-        assert!(result.contains("const SvgComponent"));
-        assert!(result.contains("<svg width=\"88px\" height=\"88px\" viewBox=\"0 0 88 88\""));
-        assert!(result.contains("<title>{\"Dismiss\"}</title>"));
-        assert!(result.contains("strokeWidth={2}"));
-        assert!(result.contains("{...props}"));
-        assert!(result.contains("export default SvgComponent;"));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1528,8 +1522,7 @@ mod tests {
             r#"<svg width="10" height="20" viewBox="0 0 10 20" />"#,
             options,
         );
-        assert!(!result.contains("import * as React"));
-        assert!(result.contains("<svg viewBox=\"0 0 10 20\" {...props} />"));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1540,9 +1533,7 @@ mod tests {
             ..TransformOptions::default()
         };
         let result = code(r##"<svg fill="#fff" />"##, options);
-        assert!(result.contains("width={24}"));
-        assert!(result.contains("height={24}"));
-        assert!(result.contains("fill={props.color}"));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1556,11 +1547,7 @@ mod tests {
             r#"<svg><title id="a">Hello</title><desc>World</desc></svg>"#,
             options,
         );
-        assert!(result.contains("({ title, titleId, desc, descId, ...props })"));
-        assert!(result.contains("aria-labelledby={titleId}"));
-        assert!(result.contains("aria-describedby={descId}"));
-        assert!(result.contains("title === undefined ? <title id={titleId || \"a\"}>"));
-        assert!(result.contains("desc === undefined ? <desc id={descId}>"));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1571,13 +1558,7 @@ mod tests {
             ..TransformOptions::default()
         };
         let result = code(r#"<svg><g><path d="M0 0" /></g><div /></svg>"#, options);
-        assert!(result.contains("import Svg, { G, Path } from \"react-native-svg\";"));
-        assert!(
-            result.contains(
-                "<Svg width={24} height={24} {...props}><G><Path d=\"M0 0\" /></G></Svg>"
-            )
-        );
-        assert!(!result.contains("div"));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1591,11 +1572,7 @@ mod tests {
             ..TransformOptions::default()
         };
         let result = code(r#"<svg />"#, options);
-        assert!(result.contains("import { forwardRef, memo } from \"react\";"));
-        assert!(result.contains("const ForwardRef = forwardRef(SvgComponent);"));
-        assert!(result.contains("const Memo = memo(ForwardRef);"));
-        assert!(result.contains("export { Memo as Component };"));
-        assert!(result.contains("export default \"logo.svg\";"));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1607,10 +1584,7 @@ mod tests {
             ..TransformOptions::default()
         };
         let result = code(r#"<svg />"#, options);
-        assert!(result.contains("interface SVGRProps"));
-        assert!(result.contains("import type { SVGProps, Ref } from \"react\";"));
-        assert!(result.contains("SVGProps<SVGSVGElement> & SVGRProps"));
-        assert!(result.contains("ref: Ref<SVGSVGElement>"));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1625,8 +1599,7 @@ mod tests {
             options,
         );
 
-        assert!(result.contains("<svg viewBox=\"0 0 10 20\" width=\"1em\" {...props} />"));
-        assert!(!result.contains("height="));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1641,8 +1614,7 @@ mod tests {
         };
         let result = code(r##"<svg fill="#fff" />"##, options);
 
-        assert!(result.contains("fill={props.color}"));
-        assert!(result.contains("role=\"presentation\""));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1652,14 +1624,7 @@ mod tests {
             TransformOptions::default(),
         );
 
-        assert!(result.contains("viewBox=\"0 0 1 1\""));
-        assert!(result.contains("data-id=\"Logo\""));
-        assert!(result.contains("aria-label=\"Icon\""));
-        assert!(result.contains("title=\"A B\""));
-        assert!(result.contains("<title>{\"Tom & Jerry\"}</title>"));
-        assert!(result.contains("strokeWidth={2}"));
-        assert!(result.contains("strokeWidth: 2"));
-        assert!(result.contains("\"--brand-color\": \"red\""));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1669,10 +1634,7 @@ mod tests {
             TransformOptions::default(),
         );
 
-        assert!(result.contains("viewBox=\"1\""));
-        assert!(result.contains("d=\"1\""));
-        assert!(result.contains("transform=\"1\""));
-        assert!(result.contains("points=\"1\""));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1696,10 +1658,7 @@ mod tests {
             options,
         );
 
-        assert!(result.contains("import Svg, { G, Path } from \"react-native-svg\";"));
-        assert!(result.contains("<Svg {...props}><G><Path d=\"M1 1\" /></G></Svg>"));
-        assert!(!result.contains("M0 0"));
-        assert!(!result.contains("div"));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1710,8 +1669,7 @@ mod tests {
         };
         let result = code(r#"<Svg><path d="M0 0" /></Svg>"#, options);
 
-        assert!(result.contains("import Svg, { Path } from \"react-native-svg\";"));
-        assert!(result.contains("<Svg {...props}><Path d=\"M0 0\" /></Svg>"));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1726,9 +1684,7 @@ mod tests {
             options,
         );
 
-        assert!(result.contains("import Svg, { Path } from \"react-native-svg\";"));
-        assert!(result.contains("title === undefined ? <title id={titleId || \"a\"}>"));
-        assert!(result.contains("<Path d=\"M0 0\" />"));
+        insta::assert_snapshot!(result);
     }
 
     #[test]
@@ -1769,9 +1725,7 @@ mod tests {
                 ..TransformOptions::default()
             },
         );
-        assert!(result.contains("export { SvgComponent as Component };"));
-        assert!(result.contains("const img = \"logo.svg\";"));
-        assert!(result.contains("export default img;"));
+        insta::assert_snapshot!(result);
     }
 
     #[test]

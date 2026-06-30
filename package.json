@@ -9,10 +9,20 @@
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "release": "",
-    "test": "vitest"
+    "test": "pnpm test:build && vitest run",
+    "test:build": "turbo run build --filter=@svgr2/cli... --filter=@svgr2/plugin-combined... --filter=@svgr2/plugin-oxvg..."
   },
   "packageManager": "pnpm@11.5.2",
   "devDependencies": {
+    "@babel/generator": "^7.29.0",
+    "@babel/parser": "^7.29.0",
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
+    "@svgr/plugin-svgo": "^8.1.0",
+    "@svgr2/core": "workspace:*",
+    "@svgr2/plugin-jsx-oxc": "workspace:*",
+    "@svgr2/plugin-oxvg": "workspace:*",
+    "@svgr2/plugin-svgo": "workspace:*",
     "@types/node": "catalog:",
     "oxfmt": "^0.56.0",
     "oxlint": "^1.71.0",

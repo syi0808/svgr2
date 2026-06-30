@@ -1,0 +1,417 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SVGR and Svgr2 JSX compatibility > 'SVG and replacement props' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg width="88px" height="88px" viewBox="0 0 88 88" role="img" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke={props.color} fill={props.color}><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" role="img" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke={props.color} fill={props.color}><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'TypeScript props' 1`] = `
+{
+  "svgr": "import * as React from "react";
+import type { SVGProps } from "react";
+import { Ref, forwardRef } from "react";
+interface SVGRProps {
+  title?: string;
+  titleId?: string;
+  desc?: string;
+  descId?: string;
+}
+const SvgComponent = ({
+  title,
+  titleId,
+  desc,
+  descId,
+  ...props
+}: SVGProps<SVGSVGElement> & SVGRProps, ref: Ref<SVGSVGElement>) => <svg width="88px" height="88px" viewBox="0 0 88 88" ref={ref} aria-labelledby={titleId} aria-describedby={descId} {...props}>{title === undefined ? <title id={titleId}>{"Dismiss"}</title> : title ? <title id={titleId}>{title}</title> : null}{desc === undefined ? <desc id={descId}>{"Description"}</desc> : desc ? <desc id={descId}>{desc}</desc> : null}<g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+const ForwardRef = forwardRef(SvgComponent);
+export default ForwardRef;",
+  "svgr2": "import * as React from "react";
+import { forwardRef } from "react";
+import type { SVGProps, Ref } from "react";
+interface SVGRProps {
+	title?: string;
+	titleId?: string;
+	desc?: string;
+	descId?: string;
+}
+const SvgComponent = ({ title, titleId, desc, descId, ...props }: SVGProps<SVGSVGElement> & SVGRProps, ref: Ref<SVGSVGElement>) => <svg width="88px" height="88px" viewBox="0 0 88 88" ref={ref} aria-labelledby={titleId} aria-describedby={descId} {...props}>{title === undefined ? <title id={titleId}>{"Dismiss"}</title> : title ? <title id={titleId}>{title}</title> : null}{desc === undefined ? <desc id={descId}>{"Description"}</desc> : desc ? <desc id={descId}>{desc}</desc> : null}<g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+const ForwardRef = forwardRef(SvgComponent);
+export default ForwardRef;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'automatic runtime' 1`] = `
+{
+  "svgr": "const SvgComponent = props => <svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'default icon' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg width="1em" height="1em" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+const SvgComponent = (props) => <svg width="1em" height="1em" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'default' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'description prop' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = ({
+  desc,
+  descId,
+  ...props
+}) => <svg width="88px" height="88px" viewBox="0 0 88 88" aria-describedby={descId} {...props}><title>{"Dismiss"}</title>{desc === undefined ? <desc id={descId}>{"Description"}</desc> : desc ? <desc id={descId}>{desc}</desc> : null}<g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+const SvgComponent = ({ desc, descId, ...props }) => <svg width="88px" height="88px" viewBox="0 0 88 88" aria-describedby={descId} {...props}><title>{"Dismiss"}</title>{desc === undefined ? <desc id={descId}>{"Description"}</desc> : desc ? <desc id={descId}>{desc}</desc> : null}<g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'dimensions disabled' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+const SvgComponent = (props) => <svg viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'memo' 1`] = `
+{
+  "svgr": "import * as React from "react";
+import { memo } from "react";
+const SvgComponent = props => <svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+const Memo = memo(SvgComponent);
+export default Memo;",
+  "svgr2": "import * as React from "react";
+import { memo } from "react";
+const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+const Memo = memo(SvgComponent);
+export default Memo;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'named export with previous export' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export { SvgComponent as Component };
+export default "icon.svg";",
+  "svgr2": "import * as React from "react";
+const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export { SvgComponent as Component };
+export default "icon.svg";
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'native icon and ref' 1`] = `
+{
+  "svgr": "import * as React from "react";
+import Svg, { G, Path } from "react-native-svg";
+/* SVGR has dropped some elements not supported by react-native-svg: title, desc */
+import { forwardRef } from "react";
+const SvgComponent = (props, ref) => <Svg width={24} height={24} viewBox="0 0 88 88" ref={ref} {...props}><G stroke="none" fill="none"><Path d="M0 0" /></G></Svg>;
+const ForwardRef = forwardRef(SvgComponent);
+export default ForwardRef;",
+  "svgr2": "import * as React from "react";
+import Svg, { G, Path } from "react-native-svg";
+import { forwardRef } from "react";
+const SvgComponent = (props, ref) => <Svg width={24} height={24} viewBox="0 0 88 88" ref={ref} {...props}><G stroke="none" fill="none"><Path d="M0 0" /></G></Svg>;
+const ForwardRef = forwardRef(SvgComponent);
+export default ForwardRef;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'native' 1`] = `
+{
+  "svgr": "import * as React from "react";
+import Svg, { G, Path } from "react-native-svg";
+/* SVGR has dropped some elements not supported by react-native-svg: title, desc */
+const SvgComponent = props => <Svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><G stroke="none" fill="none"><Path d="M0 0" /></G></Svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+import Svg, { G, Path } from "react-native-svg";
+const SvgComponent = (props) => <Svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><G stroke="none" fill="none"><Path d="M0 0" /></G></Svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'numeric icon' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg width={24} height={24} viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+const SvgComponent = (props) => <svg width={24} height={24} viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'preact runtime' 1`] = `
+{
+  "svgr": "import { h } from "preact";
+const SvgComponent = props => <svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import { h } from "preact";
+const SvgComponent = (props) => <svg width="88px" height="88px" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'props at start' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg {...props} width="88px" height="88px" viewBox="0 0 88 88"><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+const SvgComponent = (props) => <svg {...props} width="88px" height="88px" viewBox="0 0 88 88"><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'props disabled' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = () => <svg width="88px" height="88px" viewBox="0 0 88 88"><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+const SvgComponent = () => <svg width="88px" height="88px" viewBox="0 0 88 88"><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'ref and memo' 1`] = `
+{
+  "svgr": "import * as React from "react";
+import { forwardRef, memo } from "react";
+const SvgComponent = (props, ref) => <svg width="88px" height="88px" viewBox="0 0 88 88" ref={ref} {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+const ForwardRef = forwardRef(SvgComponent);
+const Memo = memo(ForwardRef);
+export default Memo;",
+  "svgr2": "import * as React from "react";
+import { forwardRef, memo } from "react";
+const SvgComponent = (props, ref) => <svg width="88px" height="88px" viewBox="0 0 88 88" ref={ref} {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+const ForwardRef = forwardRef(SvgComponent);
+const Memo = memo(ForwardRef);
+export default Memo;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'ref' 1`] = `
+{
+  "svgr": "import * as React from "react";
+import { forwardRef } from "react";
+const SvgComponent = (props, ref) => <svg width="88px" height="88px" viewBox="0 0 88 88" ref={ref} {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+const ForwardRef = forwardRef(SvgComponent);
+export default ForwardRef;",
+  "svgr2": "import * as React from "react";
+import { forwardRef } from "react";
+const SvgComponent = (props, ref) => <svg width="88px" height="88px" viewBox="0 0 88 88" ref={ref} {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+const ForwardRef = forwardRef(SvgComponent);
+export default ForwardRef;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'string icon' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg width="2em" height="2em" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+const SvgComponent = (props) => <svg width="2em" height="2em" viewBox="0 0 88 88" {...props}><title>{"Dismiss"}</title><desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'title and description props' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = ({
+  title,
+  titleId,
+  desc,
+  descId,
+  ...props
+}) => <svg width="88px" height="88px" viewBox="0 0 88 88" aria-labelledby={titleId} aria-describedby={descId} {...props}>{title === undefined ? <title id={titleId}>{"Dismiss"}</title> : title ? <title id={titleId}>{title}</title> : null}{desc === undefined ? <desc id={descId}>{"Description"}</desc> : desc ? <desc id={descId}>{desc}</desc> : null}<g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+const SvgComponent = ({ title, titleId, desc, descId, ...props }) => <svg width="88px" height="88px" viewBox="0 0 88 88" aria-labelledby={titleId} aria-describedby={descId} {...props}>{title === undefined ? <title id={titleId}>{"Dismiss"}</title> : title ? <title id={titleId}>{title}</title> : null}{desc === undefined ? <desc id={descId}>{"Description"}</desc> : desc ? <desc id={descId}>{desc}</desc> : null}<g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 JSX compatibility > 'title prop' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = ({
+  title,
+  titleId,
+  ...props
+}) => <svg width="88px" height="88px" viewBox="0 0 88 88" aria-labelledby={titleId} {...props}>{title === undefined ? <title id={titleId}>{"Dismiss"}</title> : title ? <title id={titleId}>{title}</title> : null}<desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;",
+  "svgr2": "import * as React from "react";
+const SvgComponent = ({ title, titleId, ...props }) => <svg width="88px" height="88px" viewBox="0 0 88 88" aria-labelledby={titleId} {...props}>{title === undefined ? <title id={titleId}>{"Dismiss"}</title> : title ? <title id={titleId}>{title}</title> : null}<desc>{"Description"}</desc><g stroke="none" fill="none"><path d="M0 0" /></g></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 optimizer output > 'basic icon' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg viewBox="0 0 16 16" width="1em" height="1em" {...props}><path d="m8 1 7 14H1Z" /></svg>;
+export default SvgComponent;",
+  "svgr2Oxvg": "import * as React from "react";
+const SvgComponent = (props) => <svg viewBox="0 0 16 16" width="1em" height="1em" {...props}><path fill="#000" d="m8 1 7 14H1Z" /></svg>;
+export default SvgComponent;
+",
+  "svgr2Svgo": "import * as React from "react";
+const SvgComponent = (props) => <svg viewBox="0 0 16 16" width="1em" height="1em" {...props}><path d="m8 1 7 14H1Z" /></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 optimizer output > 'entities and text' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg viewBox="0 0 24 24" {...props}><text x={2} y={12}>{"Tom & Jerry"}</text></svg>;
+export default SvgComponent;",
+  "svgr2Oxvg": "import * as React from "react";
+const SvgComponent = (props) => <svg viewBox="0 0 24 24" {...props}><text x={2} y={12}>{"Tom & Jerry"}</text></svg>;
+export default SvgComponent;
+",
+  "svgr2Svgo": "import * as React from "react";
+const SvgComponent = (props) => <svg viewBox="0 0 24 24" {...props}><text x={2} y={12}>{"Tom & Jerry"}</text></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 optimizer output > 'native' 1`] = `
+{
+  "svgr": "import * as React from "react";
+import Svg, { Path } from "react-native-svg";
+const SvgComponent = props => <Svg viewBox="0 0 24 24" {...props}><Path d="M0 0h24v24H0z" /></Svg>;
+export default SvgComponent;",
+  "svgr2Oxvg": "import * as React from "react";
+import Svg, { Path } from "react-native-svg";
+const SvgComponent = (props) => <Svg viewBox="0 0 24 24" {...props}><Path d="M0 0h24v24H0Z" /></Svg>;
+export default SvgComponent;
+",
+  "svgr2Svgo": "import * as React from "react";
+import Svg, { Path } from "react-native-svg";
+const SvgComponent = (props) => <Svg viewBox="0 0 24 24" {...props}><Path d="M0 0h24v24H0z" /></Svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 optimizer output > 'replacement values' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg viewBox="0 0 24 24" {...props}><path stroke={props.color} d="M0 0h24v24H0z" /></svg>;
+export default SvgComponent;",
+  "svgr2Oxvg": "import * as React from "react";
+const SvgComponent = (props) => <svg viewBox="0 0 24 24" {...props}><path fill="currentColor" stroke={props.color} d="M0 0h24v24H0Z" /></svg>;
+export default SvgComponent;
+",
+  "svgr2Svgo": "import * as React from "react";
+const SvgComponent = (props) => <svg viewBox="0 0 24 24" {...props}><path stroke={props.color} d="M0 0h24v24H0z" /></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 optimizer output > 'styles' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = props => <svg viewBox="0 0 24 24" {...props}><path d="M0 0h24v24H0z" style={{
+    fill: "red",
+    stroke: "#00f"
+  }} /></svg>;
+export default SvgComponent;",
+  "svgr2Oxvg": "import * as React from "react";
+const SvgComponent = (props) => <svg viewBox="0 0 24 24" {...props}><path d="M0 0h24v24H0Z" style={{
+	fill: "red",
+	stroke: "#00f"
+}} /></svg>;
+export default SvgComponent;
+",
+  "svgr2Svgo": "import * as React from "react";
+const SvgComponent = (props) => <svg viewBox="0 0 24 24" {...props}><path d="M0 0h24v24H0z" style={{
+	fill: "red",
+	stroke: "#00f"
+}} /></svg>;
+export default SvgComponent;
+",
+}
+`;
+
+exports[`SVGR and Svgr2 optimizer output > 'title and description props' 1`] = `
+{
+  "svgr": "import * as React from "react";
+const SvgComponent = ({
+  title,
+  titleId,
+  desc,
+  descId,
+  ...props
+}) => <svg viewBox="0 0 24 24" aria-labelledby={titleId} aria-describedby={descId} {...props}>{title ? <title id={titleId}>{title}</title> : null}{desc === undefined ? <desc id={descId}>{"Description"}</desc> : desc ? <desc id={descId}>{desc}</desc> : null}<path d="M0 0h24v24H0z" /></svg>;
+export default SvgComponent;",
+  "svgr2Oxvg": "import * as React from "react";
+const SvgComponent = ({ title, titleId, desc, descId, ...props }) => <svg viewBox="0 0 24 24" aria-labelledby={titleId} aria-describedby={descId} {...props}>{title === undefined ? <title id={titleId}>{"Title"}</title> : title ? <title id={titleId}>{title}</title> : null}{desc === undefined ? <desc id={descId}>{"Description"}</desc> : desc ? <desc id={descId}>{desc}</desc> : null}<path d="M0 0h24v24H0Z" /></svg>;
+export default SvgComponent;
+",
+  "svgr2Svgo": "import * as React from "react";
+const SvgComponent = ({ title, titleId, desc, descId, ...props }) => <svg viewBox="0 0 24 24" aria-labelledby={titleId} aria-describedby={descId} {...props}>{title === undefined ? <title id={titleId}>{"Title"}</title> : title ? <title id={titleId}>{title}</title> : null}{desc === undefined ? <desc id={descId}>{"Description"}</desc> : desc ? <desc id={descId}>{desc}</desc> : null}<path d="M0 0h24v24H0z" /></svg>;
+export default SvgComponent;
+",
+}
+`;

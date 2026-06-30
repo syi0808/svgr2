@@ -12,6 +12,7 @@ describe('#getSvgoConfig', () => {
             name: 'preset-default',
             params: { overrides: {} },
           },
+          'removeViewBox',
           'prefixIds',
         ],
       });
@@ -25,7 +26,7 @@ describe('#getSvgoConfig', () => {
         plugins: [
           {
             name: 'preset-default',
-            params: { overrides: { removeViewBox: false } },
+            params: { overrides: {} },
           },
           'prefixIds',
         ],
@@ -40,7 +41,7 @@ describe('#getSvgoConfig', () => {
         plugins: [
           {
             name: 'preset-default',
-            params: { overrides: { removeViewBox: false } },
+            params: { overrides: {} },
           },
           'prefixIds',
         ],

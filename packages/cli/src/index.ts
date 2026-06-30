@@ -2,11 +2,10 @@ import { program, Command } from 'commander';
 import path from 'node:path';
 import { globSync } from 'tinyglobby';
 import fsPromises from 'node:fs/promises';
-import { readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { loadConfig, Config } from '@svgr2/core';
 import { fileCommand } from './fileCommand.js';
 import { dirCommand } from './dirCommand.js';
-import { exitError } from './util.js';
 import type { IndexTemplate } from './dirCommand.js';
 import packageJson from '../package.json' with { type: 'json' };
 
@@ -28,26 +27,6 @@ const parseObject = (arg: string, accumulation = {}) => {
 const parseObjectList = (arg: string, accumulation = {}) => {
   const args = arg.split(',').map((str) => str.trim());
   return args.reduce((acc, arg) => parseObject(arg, acc), accumulation);
-};
-
-const parseConfig = (name: string) => (arg: string) => {
-  try {
-    if (arg.endsWith('rc')) {
-      const content = readFileSync(arg, 'utf-8');
-      return JSON.parse(content);
-    }
-
-    const ext = path.extname(arg);
-    if (ext === '.js' || ext === '.json' || ext === '.cjs') {
-      return require(path.join(process.cwd(), arg));
-    }
-
-    return JSON.parse(arg);
-  } catch (error) {
-    exitError(
-      `"${name}" is not valid, please specify a valid file or use a inline JSON.`,
-    );
-  }
 };
 
 const parseExpandProps = (arg: string) => (arg === 'none' ? false : arg);
@@ -93,10 +72,11 @@ export interface SvgrCommand {
 program
   .version(packageJson.version)
   .usage('[options] <file|directory>')
+  .argument('[files...]')
   .option('--config-file <file>', 'specify the path of the svgr config')
   .option(
     '--no-runtime-config',
-    'disable runtime config (".svgrrc", ".svgo.yml", ".prettierrc")',
+    'disable runtime config (".svgrrc", ".svgo.yml")',
   )
   .option('-d, --out-dir <dirname>', 'output files into a directory')
   .option('--ignore-existing', 'ignore existing files when used with --out-dir')
@@ -135,11 +115,6 @@ program
     parseObjectList,
   )
   .option(
-    '--template <file>',
-    'specify a custom template to use',
-    parseTemplate('--template'),
-  )
-  .option(
     '--index-template <file>',
     'specify a custom index.js template to use',
     parseTemplate('--index-template'),
@@ -147,22 +122,10 @@ program
   .option('--no-index', 'disable index file generation')
   .option('--title-prop', 'create a title element linked with props')
   .option('--desc-prop', 'create a desc element linked with props')
-  .option(
-    '--prettier-config <fileOrJson>',
-    'Prettier config',
-    parseConfig('--prettier-config'),
-  )
-  .option('--no-prettier', 'disable Prettier')
-  .option(
-    '--svgo-config <fileOrJson>',
-    'SVGO config',
-    parseConfig('--svgo-config'),
-  )
-  .option('--no-svgo', 'disable SVGO')
   .option('--silent', 'suppress output')
   .option('--stdin', 'force reading input from stdin')
   .option(
-    '--stdin-filepath',
+    '--stdin-filepath <path>',
     'path to the file to pretend that stdin comes from',
   );
 
@@ -178,6 +141,7 @@ program.parse(process.argv);
 async function run() {
   const errors: string[] = [];
   const filenames = program.args.reduce((globbed, input) => {
+    if (existsSync(input)) return [...globbed, input];
     let files = globSync(input);
     if (!files.length) files = [input];
     return [...globbed, ...files];

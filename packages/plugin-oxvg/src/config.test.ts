@@ -1,49 +1,48 @@
 import { getOxvgConfig } from './config';
 
-const state = { componentName: 'Icon' };
-
 describe('#getOxvgConfig', () => {
   describe('with no specific config', () => {
-    it('returns config with `prefixIds: true`', async () => {
+    it('enables viewBox removal and ID prefixing', () => {
       const config = {};
-      expect(await getOxvgConfig(config, state)).toEqual({
-        plugins: [
-          {
-            name: 'preset-default',
-            params: { overrides: {} },
-          },
-          'prefixIds',
-        ],
+      const result = getOxvgConfig(config);
+
+      expect({
+        prefixIds: result.prefixIds,
+        removeViewBox: result.removeViewBox,
+      }).toEqual({
+        prefixIds: {
+          delim: '__',
+          prefix: { type: 'Default' },
+          prefixClassNames: true,
+          prefixIds: true,
+        },
+        removeViewBox: { field0: true },
       });
     });
   });
 
-  describe('with `config.icons` enabled', () => {
-    it('returns config with `removeViewBox: false`', async () => {
+  describe('with `config.icon` enabled', () => {
+    it('preserves the viewBox', () => {
       const config = { icon: true };
-      expect(await getOxvgConfig(config, state)).toEqual({
-        plugins: [
-          {
-            name: 'preset-default',
-            params: { overrides: { removeViewBox: false } },
-          },
-          'prefixIds',
-        ],
-      });
+      expect(getOxvgConfig(config).removeViewBox).toBeUndefined();
     });
   });
 
   describe('with `config.dimensions` disabled', () => {
-    it('returns config with `removeViewBox: false`', async () => {
+    it('preserves the viewBox', () => {
       const config = { dimensions: false };
-      expect(await getOxvgConfig(config, state)).toEqual({
-        plugins: [
-          {
-            name: 'preset-default',
-            params: { overrides: { removeViewBox: false } },
-          },
-          'prefixIds',
-        ],
+      expect(getOxvgConfig(config).removeViewBox).toBeUndefined();
+    });
+  });
+
+  describe('with `config.native` enabled', () => {
+    it('inlines all matching styles', () => {
+      const config = { native: true };
+      expect(getOxvgConfig(config).inlineStyles).toEqual({
+        onlyMatchedOnce: false,
+        removeMatchedSelectors: true,
+        useMqs: ['', 'screen'],
+        usePseudos: [''],
       });
     });
   });

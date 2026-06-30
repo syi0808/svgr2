@@ -1,0 +1,14 @@
+---
+source: crates/oxc_transform_svg_jsx/src/lib.rs
+expression: result
+---
+import * as React from "react";
+import { forwardRef } from "react";
+import type { SVGProps, Ref } from "react";
+interface SVGRProps {
+	title?: string;
+	titleId?: string;
+}
+const SvgComponent = ({ title, titleId, ...props }: SVGProps<SVGSVGElement> & SVGRProps, ref: Ref<SVGSVGElement>) => <svg ref={ref} aria-labelledby={titleId} {...props}>{title ? <title id={titleId}>{title}</title> : null}</svg>;
+const ForwardRef = forwardRef(SvgComponent);
+export default ForwardRef;

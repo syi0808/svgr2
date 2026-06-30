@@ -1,0 +1,8 @@
+---
+source: crates/oxc_transform_svg_jsx/src/lib.rs
+expression: result
+---
+import * as React from "react";
+import Svg, { Path } from "react-native-svg";
+const SvgComponent = (props) => <Svg {...props}><Path d="M0 0" /></Svg>;
+export default SvgComponent;

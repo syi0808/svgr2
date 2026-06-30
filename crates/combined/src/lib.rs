@@ -57,8 +57,6 @@ mod tests {
         .unwrap()
         .code;
 
-        assert!(result.contains("const Icon ="));
-        assert!(result.contains("<path"));
-        assert!(!result.contains("comment"));
+        insta::assert_snapshot!(result);
     }
 }

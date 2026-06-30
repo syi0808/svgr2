@@ -32,6 +32,33 @@ importers:
 
   .:
     devDependencies:
+      '@babel/generator':
+        specifier: ^7.29.0
+        version: 7.29.7
+      '@babel/parser':
+        specifier: ^7.29.0
+        version: 7.29.7
+      '@svgr/core':
+        specifier: ^8.1.0
+        version: 8.1.0(typescript@6.0.3)
+      '@svgr/plugin-jsx':
+        specifier: ^8.1.0
+        version: 8.1.0(@svgr/core@8.1.0(typescript@6.0.3))
+      '@svgr/plugin-svgo':
+        specifier: ^8.1.0
+        version: 8.1.0(@svgr/core@8.1.0(typescript@6.0.3))(typescript@6.0.3)
+      '@svgr2/core':
+        specifier: workspace:*
+        version: link:packages/core
+      '@svgr2/plugin-jsx-oxc':
+        specifier: workspace:*
+        version: link:packages/plugin-jsx-oxc
+      '@svgr2/plugin-oxvg':
+        specifier: workspace:*
+        version: link:packages/plugin-oxvg
+      '@svgr2/plugin-svgo':
+        specifier: workspace:*
+        version: link:packages/plugin-svgo
       '@types/node':
         specifier: 'catalog:'
         version: 26.0.0

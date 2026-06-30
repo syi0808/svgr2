@@ -351,10 +351,6 @@ mod tests {
             .unwrap()
             .code;
 
-        assert!(result.contains("import { h } from \"preact\";"));
-        assert!(result.contains("const Icon = (props) =>"));
-        assert!(result.contains("<svg {...props} fill={props.color} role=\"img\" />"));
-        assert!(!result.contains("width="));
-        assert!(!result.contains("height="));
+        insta::assert_snapshot!(result);
     }
 }

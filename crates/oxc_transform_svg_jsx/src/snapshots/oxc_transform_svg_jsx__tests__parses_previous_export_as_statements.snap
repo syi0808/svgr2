@@ -1,0 +1,9 @@
+---
+source: crates/oxc_transform_svg_jsx/src/lib.rs
+expression: result
+---
+import * as React from "react";
+const SvgComponent = (props) => <svg {...props} />;
+export { SvgComponent as Component };
+const img = "logo.svg";
+export default img;

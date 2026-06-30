@@ -2,7 +2,12 @@ import { Config } from './config.js';
 import type { State } from './state.js';
 
 export interface Plugin<PluginOption = Record<PropertyKey, unknown>> {
-  (code: string, config: Config, state: State, options?: Partial<PluginOption>): string;
+  (
+    code: string,
+    config: Config,
+    state: State,
+    options?: Partial<PluginOption>,
+  ): string;
 }
 
 export type ConfigPlugin = string | Plugin;
@@ -56,8 +61,7 @@ export function loadPlugin(moduleName: string): Plugin {
 
     // @ts-expect-error cause record can not caught cache exist
     return pluginCache[moduleName];
-  } catch (error) {
-    console.log(error);
+  } catch {
     throw new Error(
       `Module "${moduleName}" missing. Maybe \`npm install ${moduleName}\` could help!`,
     );

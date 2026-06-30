@@ -1,0 +1,10 @@
+---
+source: crates/oxc_transform_svg_jsx/src/lib.rs
+expression: result
+---
+import * as React from "react";
+const SvgComponent = (props) => <svg viewBox="0 0 1 1" data-id="Logo" aria-label="Icon" title="A B" {...props}><title>{"Tom & Jerry"}</title><path strokeWidth={2} style={{
+	strokeWidth: 2,
+	"--brand-color": "red"
+}} /></svg>;
+export default SvgComponent;
