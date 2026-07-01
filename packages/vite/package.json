@@ -1,0 +1,52 @@
+{
+  "name": "@svgr2/vite-plugin",
+  "type": "module",
+  "description": "Optimize SVG",
+  "version": "0.1.0",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/syi0808/svgr2/tree/main/packages/plugin-oxvg",
+  "author": "Yein Sung <syi778800@gmail.com>",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "svgr-plugin"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest"
+  },
+  "peerDependencies": {
+    "vite": ">=6"
+  },
+  "dependencies": {
+    "@rollup/pluginutils": "^5.3.0",
+    "@svgr2/core": "workspace:*",
+    "@svgr2/plugin-jsx-oxc": "workspace:*"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:",
+    "vitest": "catalog:",
+    "@svgr2/core": "workspace:*"
+  }
+}
