@@ -1,0 +1,234 @@
+name: Publish N-API packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      npm_tag:
+        description: npm dist-tag used for this release
+        required: true
+        type: choice
+        default: latest
+        options:
+          - latest
+          - next
+
+concurrency:
+  group: publish-napi-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  CARGO_INCREMENTAL: '0'
+  MACOSX_DEPLOYMENT_TARGET: '10.13'
+  NAPI_PACKAGES: >-
+    packages/combined-napi
+    packages/oxc-transform-svg-jsx-napi
+
+jobs:
+  build:
+    name: Build ${{ matrix.settings.target }}
+    runs-on: ${{ matrix.settings.host }}
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - host: macos-latest
+            target: x86_64-apple-darwin
+            build_args: ''
+          - host: macos-latest
+            target: aarch64-apple-darwin
+            build_args: ''
+          - host: windows-latest
+            target: x86_64-pc-windows-msvc
+            build_args: ''
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            build_args: --use-napi-cross
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            build_args: --use-napi-cross
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            build_args: --cross-compile
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            build_args: --cross-compile
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.settings.target }}
+
+      - name: Cache Rust build data
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            ~/.napi-rs
+            target
+          key: napi-${{ matrix.settings.target }}-${{ hashFiles('Cargo.lock') }}
+
+      - name: Set up Zig
+        if: contains(matrix.settings.target, 'musl')
+        uses: mlugg/setup-zig@v2
+        with:
+          version: 0.14.1
+
+      - name: Install cargo-zigbuild
+        if: contains(matrix.settings.target, 'musl')
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-zigbuild
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build native bindings
+        shell: bash
+        env:
+          BUILD_ARGS: ${{ matrix.settings.build_args }}
+          TARGET: ${{ matrix.settings.target }}
+        run: |
+          set -euo pipefail
+
+          for package in $NAPI_PACKAGES; do
+            pnpm --dir "$package" exec napi build \
+              --release \
+              --target "$TARGET" \
+              --js binding.js \
+              --dts binding.d.ts \
+              $BUILD_ARGS
+          done
+
+      - name: Upload native bindings
+        uses: actions/upload-artifact@v7
+        with:
+          name: bindings-${{ matrix.settings.target }}
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            packages/combined-napi/*.node
+            packages/oxc-transform-svg-jsx-napi/*.node
+
+  publish:
+    name: Publish to npm
+    needs: build
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      NPM_CONFIG_TAG: >-
+        ${{ github.event_name == 'workflow_dispatch'
+            && inputs.npm_tag
+            || (contains(github.ref_name, '-') && 'next' || 'latest') }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Install npm with trusted publishing support
+        run: npm install --global npm@11.15.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download native bindings
+        uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Assemble platform packages
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for package in $NAPI_PACKAGES; do
+            pnpm --dir "$package" exec napi artifacts \
+              --output-dir ../../artifacts
+          done
+
+      - name: Validate release version
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          combined_version="$(node -p "require('./packages/combined-napi/package.json').version")"
+          transform_version="$(node -p "require('./packages/oxc-transform-svg-jsx-napi/package.json').version")"
+
+          if [[ "$combined_version" != "$transform_version" ]]; then
+            echo "::error::N-API package versions differ: $combined_version != $transform_version"
+            exit 1
+          fi
+
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
+            tag_version="${GITHUB_REF_NAME#v}"
+            if [[ "$combined_version" != "$tag_version" ]]; then
+              echo "::error::Package version $combined_version does not match tag $GITHUB_REF_NAME"
+              exit 1
+            fi
+          fi
+
+      - name: Smoke test Linux binding
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          node -e "require('./packages/combined-napi')"
+          pnpm --dir packages/oxc-transform-svg-jsx-napi test
+
+      - name: Publish packages
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for package in $NAPI_PACKAGES; do
+            (
+              cd "$package"
+
+              # Publishes the platform-specific optional dependencies first.
+              npm exec -- napi pre-publish --tag-style npm
+
+              # The root package loads binaries from optional dependencies.
+              # Avoid publishing every platform binary in the root tarball.
+              rm -f ./*.node
+
+              npm publish --access public
+            )
+          done
